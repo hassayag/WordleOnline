@@ -46,9 +46,18 @@ class Board extends React.Component {
 
 class Square extends React.Component {
     render() {
+        // default to blank white square
+        let letter = { key: '', state: 'white' };
+
+        if (this.props.letter) {
+            letter = this.props.letter;
+        }
+
+        const squareClass = 'key-' + letter.state; // set colour of the key
+
         return (
-            <div className="square">
-                {this.props.letter}
+            <div className={squareClass}>
+                {letter.key.toUpperCase()}
             </div>
         );
     }

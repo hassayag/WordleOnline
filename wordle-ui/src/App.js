@@ -7,5 +7,6 @@ import { Wordle } from './components/wordle/wordle';
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Wordle />);
+root.render(<Wordle goalWord='poopy'/>);
 
+ 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { ArrayUtils } from '../../utils/array'
 import { Board, Keyboard } from '../../index';
 import '../../index.scss';
 
-export function Wordle() {
+export function Wordle(input) {
     // INITIALISE STATES
 
     // store the state of each letter
@@ -15,12 +16,12 @@ export function Wordle() {
         f: 'white',
         g: 'white',
         h: 'white',
-        i: 'green',
+        i: 'white',
         j: 'white',
         k: 'white',
-        l: 'grey',
-        m: 'green',
-        n: 'yellow',
+        l: 'white',
+        m: 'white',
+        n: 'white',
         o: 'white',
         p: 'white',
         q: 'white',
@@ -52,25 +53,78 @@ export function Wordle() {
         [wordRows, setWordRows] = useState(initWordRows),
         [rowInd, setRowInd] = useState(initRowInd);
 
+    const updateGameState = () => {
+        const newLetterStates = Object.assign({}, letterStates),
+            newWordRows = Object.assign({}, wordRows),
+            row = [],
+            currentRowChars = wordRows[rowInd],
+            goalWordChars= input.goalWord.split('');
+        
+        for (let i=0; i<currentRowChars.length; i++) {
+            const char = currentRowChars[i];
+
+            // can't downgrade a green keyboard key
+            if (newLetterStates === 'green') {
+                continue;
+            }
+
+            // find index of user's input character in the goal word
+            const matchedInds = ArrayUtils.findAllInds(goalWordChars, char.key);
+            console.log(matchedInds);
+            // index == current index, perfect match
+            if (matchedInds.includes(i)) {
+                char.state = 'green';
+                newLetterStates[char.key] = 'green';
+            }
+            // match not found, grey out key
+            else if (matchedInds.length === 0) {
+                char.state = 'grey';
+                if (newLetterStates[char.key] === 'white') { // can't downgrade key state from green/yellow
+                    newLetterStates[char.key] = 'grey';
+                }
+            }
+            // if neither, it must be a partial match, so set as yellow
+            else {
+                char.state = 'yellow';
+                if (newLetterStates[char.key] !== 'green') { // can't downgrade key state green
+                    newLetterStates[char.key] = 'yellow';
+                }
+            }
+
+            row.push(char);
+        }
+        
+        newWordRows[rowInd] = row;
+
+        setWordRows(newWordRows)
+        setLetterStates(newLetterStates);
+        console.log(letterStates);
+        // increment row
+        if (rowInd !== 5) {
+            setRowInd(rowInd + 1);
+        }
+    }
+
     // on keyboard input, update game state
     const onKeyPress = (key) => {
-        // don't exceed word size of 5
-        console.log(wordRows[rowInd]);
-
         // create copy and update specific row
         const newWordRows = Object.assign({}, wordRows);
 
         if (key === 'Backspace') {
             newWordRows[rowInd].pop();
         }
-
-        if (wordRows[rowInd].length > 4) {
+        else if (key === 'Enter' && wordRows[rowInd].length === 5){
+            updateGameState();
+        }
+        
+        // word length of 5
+        if (wordRows[rowInd].length >= 5) {
             return;
         }
 
         // check if input is a letter
         if (/^[a-zA-Z]$/.test(key)) {
-            newWordRows[rowInd].push(key.toUpperCase());
+            newWordRows[rowInd].push({ key: key.toLowerCase(), state: 'white'});
         }
 
         setWordRows(newWordRows);
