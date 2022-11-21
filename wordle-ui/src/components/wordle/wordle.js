@@ -51,7 +51,8 @@ export function Wordle(input) {
 
     const [letterStates, setLetterStates] = useState(initLetterStates),
         [wordRows, setWordRows] = useState(initWordRows),
-        [rowInd, setRowInd] = useState(initRowInd);
+        [rowInd, setRowInd] = useState(initRowInd),
+        [ gameIsWon, setGameIsWon ] = useState(null); 
 
     const updateGameState = () => {
         const newLetterStates = Object.assign({}, letterStates),
@@ -70,7 +71,7 @@ export function Wordle(input) {
 
             // find index of user's input character in the goal word
             const matchedInds = ArrayUtils.findAllInds(goalWordChars, char.key);
-            console.log(matchedInds);
+
             // index == current index, perfect match
             if (matchedInds.includes(i)) {
                 char.state = 'green';
@@ -98,15 +99,32 @@ export function Wordle(input) {
 
         setWordRows(newWordRows)
         setLetterStates(newLetterStates);
-        console.log(letterStates);
+        
+        // check for win
+        if (currentRowChars.map(char => char.key).every((char, ind) => char === goalWordChars[ind])) {
+            console.log('YOU WIN');
+            setGameIsWon(1);
+            return;
+        }
+        // check for loss
+        if (rowInd === 5) {
+            console.log('YOU LOSE');
+            setGameIsWon(0);
+            return;
+        }
         // increment row
-        if (rowInd !== 5) {
+        else if (rowInd < 5) {
             setRowInd(rowInd + 1);
         }
     }
 
     // on keyboard input, update game state
     const onKeyPress = (key) => {
+        // disable input if game is over
+        if (gameIsWon !== null) {
+            return;
+        }
+
         // create copy and update specific row
         const newWordRows = Object.assign({}, wordRows);
 
