@@ -14,9 +14,8 @@ module.exports.getWords = async (req, res) => {
             words.push(row[0]);
         });
     
-    // sleep to read file
-    await new Promise(r => setTimeout(r, 500));
+    // sleep to read file, please make this less jank
+    await new Promise(r => setTimeout(r, 1000));
 
-    console.log(words.length);
     res.send(words);
 }
