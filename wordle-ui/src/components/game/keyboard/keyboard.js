@@ -37,7 +37,7 @@ class Keyboard extends React.Component {
                 keyState={this.props.keyStates[letter]} />));
         }
 
-        return (<div className="keyboard-row">{row}</div>);
+        return <div key={i} className="keyboard-row">{row}</div>
     }
 
     // render all three rows of keyboard
