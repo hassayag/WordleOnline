@@ -2,19 +2,20 @@
 export class WordService {
     
     constructor() {
-        this._url = 'http://localhost:8080'
+        this._url = 'http://localhost:8081'
     }
 
-    getWords() {
-        let words;
+    getGoalWord() {
+        const request = new Request(this._url + '/words/goal-word')
 
-        const request = new Request(this._url + '/words')
+        return fetch(request)
+            .then(response => response.json());
+    }
 
-        fetch(request)
-            .then(response => response.json())
-            .then(data => console.log('data', data))
-            .catch(err => console.error('Error getting words', err));
+    getValidGuesses() {
+        const request = new Request(this._url + '/words/valid-guesses')
 
-        return words;
+        return fetch(request)
+            .then(response => response.json());
     }
 }

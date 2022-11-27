@@ -2,10 +2,25 @@ const fs = require('fs');
 const { parse } = require('csv-parse');
 const path = require('path');
 
-module.exports.getWords = async (req, res) => {
+module.exports.getValidGuesses = async (req, res) => {
+    const words = await _readFile('/word-data/valid_guesses.csv');
+
+    res.send({ words: words });
+}
+
+module.exports.getGoalWord = async (req, res) => {
+    const words = await _readFile('/word-data/valid_solutions.csv');
+
+    const randIndex = Math.floor(Math.random() * words.length),
+        randWord = words[randIndex];
+
+    res.send({ word: randWord});
+}
+
+_readFile = async (fileDir) => {
     let words = [];
 
-    const filePath = path.join(__dirname, '..', '/word-data/valid_guesses.csv');
+    const filePath = path.join(__dirname, '..', fileDir);
     
     const stream = fs.createReadStream(filePath)  
         .pipe(parse({ delimiter: ",", from_line: 2 }));
@@ -15,7 +30,7 @@ module.exports.getWords = async (req, res) => {
         });
     
     // sleep to read file, please make this less jank
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1000)); 
 
-    res.send(words);
+    return words;
 }

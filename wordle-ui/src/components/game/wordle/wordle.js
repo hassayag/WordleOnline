@@ -1,16 +1,13 @@
 import React from 'react';
 import { ArrayUtils } from '../../../utils/array'
 
-import { Board, Keyboard, WordService } from '../../../index';
+import { Board } from '../board/board';
+import { Keyboard } from '../keyboard/keyboard';
 import '../../../index.scss';
 
 export class Wordle extends React.Component {
-    constructor(goalWord) {
+    constructor() {
         super();
-
-        this._wordService = new WordService();
-
-        this._goalWord = goalWord;
         
         // store the state of each letter
         const initLetterStates = {
@@ -63,14 +60,14 @@ export class Wordle extends React.Component {
             _gameIsWon: null            
         };
     }
- 
-    async componentDidMount(){
-        const words = await this._wordService.getWords();
-        console.log(words)
-    }
 
     render() {
+        if (!this.props.goalWord) {
+            return <div> Retrieving purpose... </div>;
+        }
+
         return <div className="game">
+            {/* <div>Goal is {this.props.goalWord}</div>  */}
             <div className="game-board">
                 <Board wordRows={this.wordRows} />
             </div>
@@ -81,8 +78,8 @@ export class Wordle extends React.Component {
 
             <div className="game-info">
                 <div>{
-                    this.gameIsWon ? 
-                        this.gameIsWon === 0 ? 'You Lose!' : 'You Win!'
+                    this.gameIsWon !== null ? 
+                        this.gameIsWon === 0 ? `You Lose!\n The Word was ${this.goalWord}` : 'You Win!'
                         :
                         ''
                     }
@@ -125,7 +122,7 @@ export class Wordle extends React.Component {
             newWordRows = Object.assign({}, this.wordRows),
             row = [],
             currentRowChars = this.wordRows[this.rowInd],
-            goalWordChars= this._goalWord.goalWord.split('');
+            goalWordChars= this.props.goalWord.split('');
         
         for (let i=0; i<currentRowChars.length; i++) {
             const char = currentRowChars[i];

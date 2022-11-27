@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 var cors = require('cors');
-const port = 8080;
+const port = 8081;
 const words = require('./routes/words');
 
 app.use(cors())
