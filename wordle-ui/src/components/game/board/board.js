@@ -10,7 +10,7 @@ class Board extends React.Component {
         return (
             <div>
                 <div className="word-grid">
-                    <div className="status">{status}</div>
+                    {/* <div className="status">{status}</div> */}
                     {this.renderGrid()}
                 </div>
             </div>
@@ -19,12 +19,12 @@ class Board extends React.Component {
     
     renderGrid() {
         return <div>
-            {this.renderRow(0)}
-            {this.renderRow(1)}
-            {this.renderRow(2)}
-            {this.renderRow(3)}
-            {this.renderRow(4)}
-            {this.renderRow(5)}
+            <div>{this.renderRow(0)}</div>
+            <div>{this.renderRow(1)}</div>
+            <div>{this.renderRow(2)}</div>
+            <div>{this.renderRow(3)}</div>
+            <div>{this.renderRow(4)}</div>
+            <div>{this.renderRow(5)}</div>
         </div>
     }
     
@@ -53,10 +53,8 @@ class Square extends React.Component {
             letter = this.props.letter;
         }
 
-        const squareClass = 'key-' + letter.state; // set colour of the key
-
         return (
-            <div className={squareClass}>
+            <div className={`square ${letter.state}`}>
                 {letter.key.toUpperCase()}
             </div>
         );

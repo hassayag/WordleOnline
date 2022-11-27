@@ -1,6 +1,7 @@
 import React from 'react';
 import { Wordle } from './wordle/wordle';
 import { WordService } from '../../index';
+import './game.scss';
 
 export class Game extends React.Component {
     constructor() {
@@ -23,6 +24,11 @@ export class Game extends React.Component {
 
     render() {
         // init new worlde game with random word
-        return (<Wordle validGuesses={this.state.validGuesses} goalWord={this.state.goalWord}/>);
+        return (
+            <div>
+                <div class='board-title'> Wordle </div>
+                <Wordle validGuesses={this.state.validGuesses} goalWord={this.state.goalWord}/>
+            </div>
+        );
     }
 }

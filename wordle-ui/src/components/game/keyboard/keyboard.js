@@ -43,7 +43,7 @@ class Keyboard extends React.Component {
     // render all three rows of keyboard
     render() {        
         return (
-            <div>
+            <div className='keyboard'>
                 {this.renderRow(0)}
                 {this.renderRow(1)}
                 {this.renderRow(2)}
@@ -55,11 +55,10 @@ class Keyboard extends React.Component {
 class Key extends React.Component {
     render() {
         const { inputLetter, onPress, keyState } = this.props,
-            pressKey = () => onPress(inputLetter),
-            keyClass = 'key-' + keyState; // set colour of the key
+            pressKey = () => onPress(inputLetter);
 
         return (
-            <button className={keyClass} onClick={pressKey}>
+            <button className={`key ${keyState}`} onClick={pressKey}>
                 {inputLetter.toUpperCase()}
             </button>
         )

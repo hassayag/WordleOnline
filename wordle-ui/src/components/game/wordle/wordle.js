@@ -68,11 +68,11 @@ export class Wordle extends React.Component {
 
         return <div className="game">
             {/* <div>Goal is {this.props.goalWord}</div>  */}
-            <div className="game-board">
+            <div>
                 <Board wordRows={this.wordRows} />
             </div>
 
-            <div className="keyboard">
+            <div>
                 <Keyboard keyStates={this.letterStates} onPress={this.onKeyPress} />
             </div>
 
