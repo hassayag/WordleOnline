@@ -3,9 +3,10 @@ const { parse } = require('csv-parse');
 const path = require('path');
 
 module.exports.getValidGuesses = async (req, res) => {
-    const words = await _readFile('/word-data/valid_guesses.csv');
+    const guesses = await _readFile('/word-data/valid_guesses.csv');
+    const solutions = await _readFile('/word-data/valid_solutions.csv');
 
-    res.send({ words: words });
+    res.send({ words: [...guesses, ...solutions] });
 }
 
 module.exports.getGoalWord = async (req, res) => {

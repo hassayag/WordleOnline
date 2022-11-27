@@ -79,7 +79,7 @@ export class Wordle extends React.Component {
             <div className="game-info">
                 <div>{
                     this.gameIsWon !== null ? 
-                        this.gameIsWon === 0 ? `You Lose!\n The Word was ${this.goalWord}` : 'You Win!'
+                        this.gameIsWon === 0 ? `You Lose!\n The Word was ${this.props.goalWord}` : 'You Win!'
                         :
                         ''
                     }
@@ -100,7 +100,13 @@ export class Wordle extends React.Component {
         if (key === 'Backspace') {
             newWordRows[this.rowInd].pop();
         }
-        else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5){
+        else if (key === 'Enter' && this.wordRows[this.rowInd].length < 5) {
+            console.log('words are 5 letters *insert animation*')
+        }
+        else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5 && !this._wordIsValid(this._parseRow(newWordRows[this.rowInd]))) {
+            console.log('INVALID GUESS *insert animation*')
+        }
+        else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
             this._updateGameState();
         }
         
@@ -182,6 +188,20 @@ export class Wordle extends React.Component {
         }
     }
 
+    _parseRow(rowObj) {
+        const letters = Object.values(rowObj).map(obj => obj.key);
+
+        return letters.join('');
+    }
+
+    _wordIsValid(word) {
+        console.log(word);
+        if (this.props.validGuesses.includes(word)) {
+            return true;
+        }
+
+        return false
+    }
 
     get letterStates() { return this.state._letterStates }
     get wordRows() { return this.state._wordRows }
