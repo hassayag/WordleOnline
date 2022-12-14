@@ -3,6 +3,7 @@ import { ArrayUtils } from '../../../utils/array'
 
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
+import GameEndModal from './game-end-modal/game-end-modal';
 import '../../../index.scss';
 
 export class Wordle extends React.Component {
@@ -57,7 +58,8 @@ export class Wordle extends React.Component {
             _letterStates: initLetterStates,
             _wordRows: initWordRows,
             _rowInd: initRowInd,
-            _gameIsWon: null            
+            _gameIsWon: null,
+            _endModalOpen: false            
         };
     }
 
@@ -65,9 +67,8 @@ export class Wordle extends React.Component {
         if (!this.props.goalWord) {
             return <div> Retrieving purpose... </div>;
         }
-
+        
         return <div className="game">
-            {/* <div>Goal is {this.props.goalWord}</div>  */}
             <div>
                 <Board wordRows={this.wordRows} />
             </div>
@@ -75,16 +76,13 @@ export class Wordle extends React.Component {
             <div>
                 <Keyboard keyStates={this.letterStates} onPress={this.onKeyPress} />
             </div>
-
-            <div className="game-info">
-                <div>{
-                    this.gameIsWon !== null ? 
-                        this.gameIsWon === 0 ? `You Lose!\n The Word was ${this.props.goalWord}` : 'You Win!'
-                        :
-                        ''
-                    }
-                </div>
-            </div>
+    
+            {this.endModalOpen && 
+                <GameEndModal 
+                    isWon={this.gameIsWon} 
+                    goalWord={this.props.goalWord} 
+                    closeModal={() => this.setEndModalOpen(false)} 
+            />} 
         </div>
     }
 
@@ -172,14 +170,14 @@ export class Wordle extends React.Component {
         
         // check for win
         if (currentRowChars.map(char => char.key).every((char, ind) => char === goalWordChars[ind])) {
-            console.log('YOU WIN');
             this.gameIsWon = 1;
+            this.setEndModalOpen(true);
             return;
         }
         // check for loss
         if (this.rowInd === 5) {
-            console.log('YOU LOSE');
             this.gameIsWon = 0;
+            this.setEndModalOpen(true);
             return;
         }
         // increment row
@@ -203,13 +201,17 @@ export class Wordle extends React.Component {
         return false
     }
 
+
     get letterStates() { return this.state._letterStates }
     get wordRows() { return this.state._wordRows }
     get rowInd() { return this.state._rowInd }
     get gameIsWon() { return this.state._gameIsWon }
-    
+    get endModalOpen() { return this.state._endModalOpen }
+
     set letterStates(val) { this.setState(Object.assign(this.state, { _letterStates: val })) }
     set wordRows(val) { this.setState(Object.assign(this.state, { _wordRows: val })) }
     set rowInd(val) { this.setState(Object.assign(this.state, { _rowInd: val })) }
     set gameIsWon(val) { this.setState(Object.assign(this.state, { _gameIsWon: val })) }
+
+    setEndModalOpen(val) { this.setState(Object.assign(this.state, { _endModalOpen: val })) }
 }
