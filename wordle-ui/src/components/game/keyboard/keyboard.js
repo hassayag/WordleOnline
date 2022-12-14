@@ -19,7 +19,7 @@ class Keyboard extends React.Component {
     componentWillUnmount(){
         const pressKey = letter => this.props.onPress(letter);
 
-        this.removeEventListener("keydown", event => pressKey(event.key));
+        document.body.removeEventListener("keydown", event => pressKey(event.key));
     }
 
     // render each key in the row
