@@ -12,7 +12,7 @@
     background: white;
     border: 2px solid lightgray;
 
-    // text
+    /* text */
     color: black;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 36px;
@@ -21,7 +21,7 @@
     justify-content: center;
     align-items: center;
 
-    // box
+    /* box */
     margin: 2.5px;
     padding: 0;
     text-align: center;
@@ -29,26 +29,43 @@
     height: 60px;
 }
 
-.green {
+.square.green {
     background-color: #6AAA64;
     color: white;
     border-color: white;
 }
 
-.yellow {
+.square.yellow {
     background-color: #C9B458;
     color: white;
     border-color: white;
 }
 
-.grey {
+.square.grey {
     background-color: #787C7E;
     color: white;
     border-color:white;
 }
 
-.white {
+.square.white {
     background-color: white;
     color: black;
     border-color:lightgray;
+}
+
+.square.bad-word-anim {
+    animation-name: bad-word;
+    animation-duration: 0.05s;
+}
+
+@keyframes bad-word {
+    0% {
+        background-color: white;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: white;
+    }
 }

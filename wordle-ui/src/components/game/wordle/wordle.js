@@ -98,11 +98,8 @@ export class Wordle extends React.Component {
         if (key === 'Backspace') {
             newWordRows[this.rowInd].pop();
         }
-        else if (key === 'Enter' && this.wordRows[this.rowInd].length < 5) {
-            console.log('words are 5 letters *insert animation*')
-        }
-        else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5 && !this._wordIsValid(this._parseRow(newWordRows[this.rowInd]))) {
-            console.log('INVALID GUESS *insert animation*')
+        else if (key === 'Enter' && this.wordRows[this.rowInd].length <= 5 && !this._wordIsValid(this._parseRow(newWordRows[this.rowInd]))) {
+            this._triggerError(this.rowInd);
         }
         else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
             this._updateGameState();
@@ -184,6 +181,19 @@ export class Wordle extends React.Component {
         else if (this.rowInd < 5) {
             this.rowInd = this.rowInd + 1;
         }
+    }
+
+    _triggerError(rowInd) {
+        const newRows = Object.assign({}, this.wordRows);
+
+        newRows[rowInd].forEach(char => char.isError = true);
+        this.wordRows = newRows;
+
+        // wait for animation to finish and reset the error state
+        setTimeout(() => {
+            newRows[rowInd].forEach(char => char.isError = false);
+            this.wordRows = newRows;
+        }, 50);
     }
 
     _parseRow(rowObj) {

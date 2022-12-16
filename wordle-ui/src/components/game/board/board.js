@@ -1,10 +1,8 @@
 import React from 'react';
-import './board.scss';
+import './board.css';
 
 class Board extends React.Component {           
     render() {
-        const status = 'Player Name,  Score';
-
         this.wordRows = this.props.wordRows;
         
         return (
@@ -47,14 +45,20 @@ class Board extends React.Component {
 class Square extends React.Component {
     render() {
         // default to blank white square
-        let letter = { key: '', state: 'white' };
+        let letter = { key: '', state: 'white', isError: false };
 
         if (this.props.letter) {
             letter = this.props.letter;
         }
 
+        let className = `square ${letter.state}`;
+
+        if (letter.isError) {
+            className = `${className} bad-word-anim`;
+        }
+
         return (
-            <div className={`square ${letter.state}`}>
+            <div className={className}>
                 {letter.key.toUpperCase()}
             </div>
         );
