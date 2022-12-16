@@ -1,10 +1,10 @@
 import React from 'react';
-import { ArrayUtils } from '../../../utils/array'
+import { ArrayUtils } from 'utils/array'
 
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
-import GameEndModal from './game-end-modal/game-end-modal';
-import '../../../index.scss';
+import GameEndModal from '../game-end-modal/game-end-modal';
+import 'index.scss';
 
 export class Wordle extends React.Component {
     constructor() {

@@ -1,6 +1,7 @@
 import './home.css';
-import { Game } from "../game/game"
+import CreateGame from './create-game/create-game'
 import { Link, Route, Routes } from "react-router-dom";
+import { Game } from 'index';
 
 const Navbar = () => {
     return (
