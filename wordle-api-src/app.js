@@ -1,13 +1,19 @@
+const Config = require('./config.json');
+const cors = require('cors');
 const express = require('express');
-const app = express();
-var cors = require('cors');
-const port = 8081;
+const game = require('./routes/game');
 const words = require('./routes/words');
 
-app.use(cors())
+const initApp = () => {
+    const app = express();
+    app.use(cors())
 
-app.use('/words', words);
+    app.use('/words', words);
+    app.use('/game', game);
 
-app.listen(port, () => {
-  console.log(`Wordle API listening on port ${port}`);
-})
+    app.listen(Config.server.port, () => {
+    console.log(`Wordle API listening on port ${Config.server.port}`);
+    })
+}
+
+initApp();

@@ -3,6 +3,39 @@
     gap: 20px;
 }
 
+#button-group {
+    position: absolute;
+    left: 50%;
+    top: 120%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+}
+
+#yellow-button {
+    padding:10px 10px;
+    background: #C9B458;
+    border: none;
+    border-radius:10px;  
+
+    text-align:center;
+    color:#fff;
+
+    cursor:pointer;
+}
+
+#green-button {
+    padding:10px 10px;
+    background: #6AAA64;
+    border: none;
+    border-radius:10px;  
+
+    text-align:center;
+    color:#fff;
+
+    cursor:pointer;
+}
+
 #home-message {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;

@@ -7,7 +7,7 @@ const CreateGame = () => {
     const [name, setName] = useState('');
 
     const _initGame = () => {
-        console.log(`creating game for ${name}`)
+        GameService.createGame(name);
     }
     
     const _handleInput = (event) => {

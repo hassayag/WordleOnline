@@ -1,0 +1,11 @@
+{
+    "sql": {
+        "host": "localhost",
+        "database": "wordle-online",
+        "port": 5432,
+        "user": "postgres"
+    },
+    "server": {
+        "port": 8081
+    }
+}

@@ -5,11 +5,14 @@ export class GameService {
         const request = new Request(Config.api.url + '/game')
 
         const payload = {
-            player_a: hostName,
-            game_type: 'standard'
+            name: hostName,
+            type: 'standard'
         }
-
-        return fetch(request, { body: JSON.stringify(payload) })
-            .then(response => response.json());
+        
+        return fetch(request, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload) 
+        }).then(response => response.json());
     }
 }
