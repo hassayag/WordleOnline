@@ -1,10 +1,21 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link, Route, Routes } from "react-router-dom";
+
+// my files
 import './home.css';
-import CreateGame from './create-game/create-game'
-import { Link, Route, Routes } from "react-router-dom";
+import { GameService } from 'services/game-service';
 import { Game } from 'index';
+import CreateGame from './create-game/create-game'
 
 const Navbar = () => {
+    const [gameIds, setGameIds] = useState(null);
+
+    if (!gameIds) {
+        GameService.getGames()
+            .then(response => setGameIds(response.uuids))
+            .catch(err => console.error(err));
+    }
+
     return (
         <>
             <nav id='navbar'>
@@ -13,11 +24,22 @@ const Navbar = () => {
             </nav>
             <Routes>
                 <Route path="/" element={<Home/>} />
-                <Route path="/game" element={<Game/>} />
-                <Route path="/game/create" element={<CreateGame/>} />
-            </Routes>
+                {/* <Route path="/game" element={<Game/>} /> */}
+                <Route path="/game/create" element={<CreateGame setGameIds={setGameIds}/>} />
+                {_getGameRoutes(gameIds)}
+            </Routes>       
         </>
     )
+}
+
+const _getGameRoutes = (ids) => {
+    if (!ids?.length) {
+        return;
+    }
+
+    const routes = ids.map(id => <Route path={`/game/${id}`} element={<Game/>} />);
+
+    return routes;
 }
 
 const Home = () => {
