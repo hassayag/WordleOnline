@@ -37,7 +37,7 @@ const _getGameRoutes = (ids) => {
         return;
     }
 
-    const routes = ids.map(id => <Route path={`/game/${id}`} element={<Game/>} />);
+    const routes = ids.map(id => <Route path={`/game/${id}`} element={<Game uuid={id}/>} />);
 
     return routes;
 }

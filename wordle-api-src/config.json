@@ -3,7 +3,8 @@
         "host": "localhost",
         "database": "wordle-online",
         "port": 5432,
-        "user": "postgres"
+        "user": "postgres",
+        "password": "wordlegod"
     },
     "server": {
         "port": 8081

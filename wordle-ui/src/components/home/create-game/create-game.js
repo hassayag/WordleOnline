@@ -27,7 +27,6 @@ const CreateGame = (props) => {
         navigate(`/game/${gameId}`);
     }
 
-
     return (
         <div class='container'>
             <label id='name-input'>

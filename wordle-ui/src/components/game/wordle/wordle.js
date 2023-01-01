@@ -5,69 +5,51 @@ import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import GameEndModal from '../game-end-modal/game-end-modal';
 import 'index.scss';
+import { GameService } from 'services/game-service';
 
 export class Wordle extends React.Component {
     constructor() {
         super();
-        
+
+        this.state = {};
+    }    
+
+    async componentDidMount(){
         // store the state of each letter
-        const initLetterStates = {
-            a: 'white',
-            b: 'white',
-            c: 'white',
-            d: 'white',
-            e: 'white',
-            f: 'white',
-            g: 'white',
-            h: 'white',
-            i: 'white',
-            j: 'white',
-            k: 'white',
-            l: 'white',
-            m: 'white',
-            n: 'white',
-            o: 'white',
-            p: 'white',
-            q: 'white',
-            r: 'white',
-            s: 'white',
-            t: 'white',
-            u: 'white',
-            v: 'white',
-            w: 'white',
-            x: 'white',
-            y: 'white',
-            z: 'white'
-        },
+        console.log({props: this.props})
+        this.gameState = this.props.game.state[0];
+        this.goalWord = this.gameState.goalWord;
+
+        const initLetterStates = this.gameState.letterStates;
 
         // the letters in each line of the word grid
-        initWordRows = {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: []
-        },
+        const initWordRows = this.gameState.board;
 
         // row index
-        initRowInd = 0;
+        let initRowInd = 0;
+
+        for (let i=0; i < Object.keys(initWordRows).length; i++) {
+            if (initWordRows[i].length === 0) {
+                initRowInd = i
+                break;
+            }
+        }
         
         // init state
-        this.state = {
+        this.setState({
             _letterStates: initLetterStates,
             _wordRows: initWordRows,
             _rowInd: initRowInd,
             _gameIsWon: null,
             _endModalOpen: false            
-        };
+        });
     }
 
-    render() {
-        if (!this.props.goalWord) {
+    render() {      
+        if (!this.gameState || !this.props.validGuesses) {
             return <div> Retrieving purpose... </div>;
         }
-        
+
         return <div className="game">
             <div>
                 <Board wordRows={this.wordRows} />
@@ -80,7 +62,7 @@ export class Wordle extends React.Component {
             {this.endModalOpen && 
                 <GameEndModal 
                     isWon={this.gameIsWon} 
-                    goalWord={this.props.goalWord} 
+                    goalWord={this.goalWord} 
                     closeModal={() => this.setEndModalOpen(false)} 
             />} 
         </div>
@@ -123,7 +105,7 @@ export class Wordle extends React.Component {
             newWordRows = Object.assign({}, this.wordRows),
             row = [],
             currentRowChars = this.wordRows[this.rowInd],
-            goalWordChars= this.props.goalWord.split('');
+            goalWordChars= this.goalWord.split('');
         
         for (let i=0; i<currentRowChars.length; i++) {
             const char = currentRowChars[i];
@@ -164,6 +146,13 @@ export class Wordle extends React.Component {
         // update state
         this.wordRows = newWordRows;
         this.letterStates = newLetterStates;
+
+        // send request to update db
+        const game = Object.assign({}, this.props.game);
+        game.state[0].board = this.wordRows;
+        game.state[0].letterStates = this.letterStates;
+
+        GameService.updateGame(game.uuid, game.state[0]);
         
         // check for win
         if (currentRowChars.map(char => char.key).every((char, ind) => char === goalWordChars[ind])) {

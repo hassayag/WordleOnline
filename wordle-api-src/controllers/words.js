@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { parse } = require('csv-parse');
 const path = require('path');
+const WordsUtil = require('../utils/words-util');
 
 module.exports.getValidGuesses = async (req, res) => {
     const guesses = await _readFile('/word-data/valid_guesses.csv');
@@ -10,10 +11,7 @@ module.exports.getValidGuesses = async (req, res) => {
 }
 
 module.exports.getGoalWord = async (req, res) => {
-    const words = await _readFile('/word-data/valid_solutions.csv');
-
-    const randIndex = Math.floor(Math.random() * words.length),
-        randWord = words[randIndex];
+    const randWord = await WordsUtil.randomWord();
 
     res.send({ word: randWord});
 }
