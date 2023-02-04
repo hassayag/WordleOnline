@@ -13,5 +13,6 @@ CREATE TABLE player (
     id SERIAL PRIMARY KEY,
     name character varying(255),
     session_token character varying(255),
-    game_id integer
+    game_id integer,
+    expires_at TIMESTAMP
 );

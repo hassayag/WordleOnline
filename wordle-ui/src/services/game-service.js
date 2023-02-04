@@ -2,7 +2,7 @@ import Config from '../config.json';
 
 export class GameService {
     static getGames() {
-        const request = new Request(Config.api.url + '/game/uuids')
+        const request = new Request(Config.api.url + '/game/uuids');
 
         return fetch(request).then(response => response.json());
     }
@@ -29,7 +29,7 @@ export class GameService {
     }
 
     static updateGame(uuid, state) {
-        const request = new Request(Config.api.url + '/game/' + uuid)
+        const request = new Request(Config.api.url + '/game/' + uuid);
 
         const payload = {uuid, state};
         
