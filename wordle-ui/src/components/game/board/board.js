@@ -6,12 +6,9 @@ class Board extends React.Component {
         this.wordRows = this.props.wordRows;
         
         return (
-            <div>
                 <div className="word-grid">
-                    {/* <div className="status">{status}</div> */}
                     {this.renderGrid()}
                 </div>
-            </div>
         );
     }
     

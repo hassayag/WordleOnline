@@ -4,8 +4,9 @@ import { ArrayUtils } from 'utils/array'
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import GameEndModal from '../game-end-modal/game-end-modal';
-import 'index.scss';
 import { GameService } from 'services/game-service';
+
+import './wordle.css';
 
 export class Wordle extends React.Component {
     constructor() {
@@ -16,7 +17,6 @@ export class Wordle extends React.Component {
 
     async componentDidMount(){
         // store the state of each letter
-        console.log({props: this.props})
         this.gameState = this.props.game.state[0];
         this.goalWord = this.gameState.goalWord;
 
@@ -50,22 +50,19 @@ export class Wordle extends React.Component {
             return <div> Retrieving purpose... </div>;
         }
 
-        return <div className="game">
-            <div>
+        return (<>
+            <div id="game">
                 <Board wordRows={this.wordRows} />
-            </div>
-
-            <div>
                 <Keyboard keyStates={this.letterStates} onPress={this.onKeyPress} />
             </div>
-    
+
             {this.endModalOpen && 
                 <GameEndModal 
                     isWon={this.gameIsWon} 
                     goalWord={this.goalWord} 
                     closeModal={() => this.setEndModalOpen(false)} 
             />} 
-        </div>
+        </>)
     }
 
     onKeyPress = (key) => {

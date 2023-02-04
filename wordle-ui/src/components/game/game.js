@@ -27,6 +27,12 @@ export class Game extends React.Component {
             return <div> Retrieving purpose... </div>;
         }
 
+        // // Opening given cache and putting our data into it
+        // caches.open(cacheName).then((cache) => {
+        //     cache.put(url, data);
+        //     alert('Data Added into cache!')
+        // });        
+
         return (
             <div>
                 <div class='board-title'> Wordle </div>

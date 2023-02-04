@@ -3,8 +3,9 @@
     flex-wrap: wrap;
     position: absolute;
     top: 0px;
+    left: 0px;
     padding-top: 100px;
-    margin-left: 30%;
+    padding-left: 220px;
 }   
   
 .square {
