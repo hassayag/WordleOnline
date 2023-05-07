@@ -1,4 +1,4 @@
-DROP TABLE game;
+DROP TABLE IF EXISTS game;
 
 CREATE TABLE game (
     id SERIAL PRIMARY KEY,
@@ -7,7 +7,7 @@ CREATE TABLE game (
     state text
 );
 
-DROP TABLE session;
+DROP TABLE IF EXISTS session;
 
 CREATE TABLE session (
     id SERIAL PRIMARY KEY,

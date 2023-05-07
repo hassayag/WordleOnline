@@ -1,13 +1,14 @@
-const express = require('express');
+import express from 'express';
+import { getUuids, getGame, createGame, updateGame } from '../controllers/game.js';
 const router = express.Router();
-const controller = require('../controllers/game');
 
-const bodyParser = require('body-parser'),
-    jsonParser = bodyParser.json()
+import bodyParser from 'body-parser';
 
-router.get('/uuids', controller.getUuids);
-router.get('/:uuid', controller.getGame);
-router.post('/', jsonParser, controller.create);
-router.patch('/:uuid', jsonParser, controller.update);
+const jsonParser = bodyParser.json()
 
-module.exports = router;
+router.get('/uuids', getUuids);
+router.get('/:uuid', getGame);
+router.post('/', jsonParser, createGame);
+router.patch('/:uuid', jsonParser, updateGame);
+
+export default router

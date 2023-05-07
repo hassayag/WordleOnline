@@ -1,8 +1,8 @@
-const { v4 } = require('uuid');
-const psql = require('../utils/sql');
-const WordsUtil = require('../utils/words-util');
+import { v4 } from 'uuid';
+import psql from '../utils/sql.js';
+import { randomWord } from '../utils/words-util.js';
 
-module.exports.getUuids = async (req, res) => {
+export const getUuids = async (req, res) => {
     let games;
 
     try {
@@ -15,20 +15,20 @@ module.exports.getUuids = async (req, res) => {
     res.send({uuids: games.rows.map(game => game.uuid)});
 }
 
-module.exports.getGame = async (req, res) => {
+export const getGame = async (req, res) => {
     const game = await _getGame(req.params.uuid);
 
     res.send(game);
 }
 
-module.exports.create = async (req, res) => {
+export const createGame = async (req, res) => {
     const newPlayer = (name) => {
         return {
             name,
             client: {}
         }
     },
-        randWord = await WordsUtil.randomWord();
+        randWord = await randomWord();
 
     const uuid = v4(),
         state = JSON.stringify([{
@@ -84,7 +84,7 @@ module.exports.create = async (req, res) => {
     res.send(game)
 }
 
-module.exports.update = async (req, res) => {
+export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
     game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
@@ -101,7 +101,7 @@ module.exports.update = async (req, res) => {
     res.send(newGame);
 }
 
-_getGame = async (uuid) => {
+const _getGame = async (uuid) => {
     let rawGame;
 
     try {

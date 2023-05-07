@@ -1,13 +1,13 @@
-const { Client } = require('pg');
-const Config = require('../config.json');
+import pg from 'pg';
+import Config from '../../config.json' assert { type: "json" };
 var client;
 
-psql = () => {
+const psql = () => {
     if (client) {
         return client;
     }
 
-    client = new Client(Config.sql);
+    client = new pg.Client(Config.sql);
 
     client.connect((err) => {
         if (err) {
@@ -20,4 +20,4 @@ psql = () => {
     return client
 }
 
-module.exports = psql;
+export default psql;

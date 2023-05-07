@@ -1,10 +1,10 @@
-const { v4 } = require('uuid');
-const psql = require('../utils/sql')
+import { v4 } from 'uuid';
+import psql from '../utils/sql.js';
 
-module.exports.get = async (req, res) => {
+export const getSession = async (req, res) => {
     const sessionToken = req.params.token;
 
-    const sessions = await _getSession(sessionToken);
+    const sessions = await querySession(sessionToken);
 
     if (!sessions.length) {
         res.status(404).send('Session not found');
@@ -13,7 +13,7 @@ module.exports.get = async (req, res) => {
     res.send(sessions[0]);
 }
 
-module.exports.create = async (req, res) => {
+export const createSession = async (req, res) => {
     const MILISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
     const { name, gameId } = req.body,
@@ -35,12 +35,12 @@ module.exports.create = async (req, res) => {
         throw new Error(err.stack);
     }
 
-    const sessions = await _getSession(sessionToken);
+    const sessions = await querySession(sessionToken);
 
     res.send(sessions[0])
 }
 
-module.exports.delete = async (req, res) => {
+export const deleteSession = async (req, res) => {
     const { sessionToken } = req.body;
 
     try {
@@ -53,7 +53,7 @@ module.exports.delete = async (req, res) => {
     res.send()
 }
 
-async function _getSession (req, res) {
+async function querySession (req, res) {
     let sessions;
 
     try {

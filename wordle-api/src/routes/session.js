@@ -1,12 +1,13 @@
-const express = require('express');
+import express from 'express';
+import { getSession, createSession, deleteSession } from '../controllers/session.js';
+import bodyParser from 'body-parser';
+
 const router = express.Router();
-const controller = require('../controllers/session');
 
-const bodyParser = require('body-parser'),
-    jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json()
 
-router.get('/:token', controller.get);
-router.post('/', jsonParser, controller.create);
-router.delete('/:token', jsonParser, controller.delete);
+router.get('/:token', getSession);
+router.post('/', jsonParser, createSession);
+router.delete('/:token', jsonParser, deleteSession);
 
-module.exports = router;
+export default router;

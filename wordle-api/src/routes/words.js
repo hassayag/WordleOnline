@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { getValidGuesses, getGoalWord } from '../controllers/words.js';
+
 const router = express.Router();
-const controller = require('../controllers/words');
 
-router.get('/valid-guesses', controller.getValidGuesses);
-router.get('/goal-word', controller.getGoalWord);
+router.get('/valid-guesses', getValidGuesses);
+router.get('/goal-word', getGoalWord);
 
-module.exports = router;
+export default router;

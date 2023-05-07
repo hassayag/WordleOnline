@@ -4,7 +4,7 @@
         "database": "wordle-online",
         "port": 5432,
         "user": "postgres",
-        "password": "wordlegod"
+        "password": "test"
     },
     "server": {
         "port": 8081

@@ -1,9 +1,10 @@
-const Config = require('./config.json');
-const cors = require('cors');
-const express = require('express');
-const game = require('./routes/game');
-const session = require('./routes/session');
-const words = require('./routes/words');
+import cors from 'cors';
+import express from 'express';
+
+import Config from './config.json' assert { type: "json" };
+import game from './src/routes/game.js';
+import session from './src/routes/session.js';
+import words from './src/routes/words.js';
 
 const initApp = () => {
     const app = express();

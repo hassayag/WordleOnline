@@ -1,7 +1,10 @@
-const fs = require('fs');
-const psql = require('../utils/sql');
+import fs from 'fs';
+import path from 'path';
+import psql from '../src/utils/sql.js';
 
-const createFile = fs.readFileSync('./create.sql').toString();
+const filePath = path.resolve('./db/create.sql');
+
+const createFile = fs.readFileSync(filePath).toString();
 
 const create = async () => {
     console.log('Creating DB')
