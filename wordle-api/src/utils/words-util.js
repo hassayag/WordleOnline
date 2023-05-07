@@ -1,5 +1,9 @@
+import fs from 'fs';
+import path from 'path';
+import { parse } from 'csv-parse';
+
 export const randomWord = async () => {
-    const words = await readFile('word-data/valid_solutions.csv');
+    const words = await readFile('./db/word-data/valid_solutions.csv');
 
     const randIndex = Math.floor(Math.random() * words.length);
 
@@ -8,8 +12,7 @@ export const randomWord = async () => {
 
 export const readFile = async (fileDir) => {
     let words = [];
-
-    const filePath = path.join(__dirname, '..', fileDir);
+    const filePath = path.resolve(fileDir);
 
     const stream = fs
         .createReadStream(filePath)

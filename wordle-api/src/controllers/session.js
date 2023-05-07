@@ -18,7 +18,7 @@ export const createSession = async (req, res) => {
 
     const { name, gameId } = req.body,
         sessionToken = v4(),
-        expiresAt = Date.now() + MILISECONDS_IN_A_DAY;
+        expiresAt = new Date(Date.now() + MILISECONDS_IN_A_DAY);
 
     if (!name) {
         res.status(400).send("'name' is required");
@@ -31,7 +31,7 @@ export const createSession = async (req, res) => {
     try {
         await psql().query(
             'INSERT INTO session (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)',
-            [name, sessionToken, gameId, expiresAt]
+            [name, sessionToken, gameId, expiresAt.toISOString()]
         );
     } catch (err) {
         throw new Error(err.stack);
@@ -56,13 +56,13 @@ export const deleteSession = async (req, res) => {
     res.send();
 };
 
-async function querySession(req, res) {
+async function querySession(token) {
     let sessions;
 
     try {
         sessions = await psql().query(
             'SELECT * from session where session_token = $1 and expires_at > $2',
-            [sessionToken, Date.now()]
+            [token, (new Date()).toISOString()]
         );
     } catch (err) {
         throw new Error(err.stack);
