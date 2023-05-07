@@ -7,14 +7,13 @@ const filePath = path.resolve('./db/create.sql');
 const createFile = fs.readFileSync(filePath).toString();
 
 const create = async () => {
-    console.log('Creating DB')
+    console.log('Creating DB');
     try {
         await psql().query(createFile);
+    } catch (err) {
+        console.log(err);
     }
-    catch (err) {
-        console.log(err)
-    }
-    console.log('Done')
-}
+    console.log('Done');
+};
 
-create()
+create();

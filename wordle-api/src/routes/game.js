@@ -1,14 +1,19 @@
 import express from 'express';
-import { getUuids, getGame, createGame, updateGame } from '../controllers/game.js';
+import {
+    getUuids,
+    getGame,
+    createGame,
+    updateGame,
+} from '../controllers/game.js';
 const router = express.Router();
 
 import bodyParser from 'body-parser';
 
-const jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json();
 
 router.get('/uuids', getUuids);
 router.get('/:uuid', getGame);
 router.post('/', jsonParser, createGame);
 router.patch('/:uuid', jsonParser, updateGame);
 
-export default router
+export default router;

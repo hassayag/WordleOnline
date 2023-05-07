@@ -1,10 +1,14 @@
 import express from 'express';
-import { getSession, createSession, deleteSession } from '../controllers/session.js';
+import {
+    getSession,
+    createSession,
+    deleteSession,
+} from '../controllers/session.js';
 import bodyParser from 'body-parser';
 
 const router = express.Router();
 
-const jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json();
 
 router.get('/:token', getSession);
 router.post('/', jsonParser, createSession);

@@ -1,5 +1,5 @@
 import pg from 'pg';
-import Config from '../../config.json' assert { type: "json" };
+import Config from '../../config.json' assert { type: 'json' };
 var client;
 
 const psql = () => {
@@ -11,13 +11,13 @@ const psql = () => {
 
     client.connect((err) => {
         if (err) {
-            console.error('Error connecting to PostgreSQL', err.stack)
+            console.error('Error connecting to PostgreSQL', err.stack);
         } else {
-            console.log('Connected to PostgreSQL')
+            console.log('Connected to PostgreSQL');
         }
     });
 
-    return client
-}
+    return client;
+};
 
 export default psql;

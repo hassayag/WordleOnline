@@ -1,42 +1,41 @@
 import React from 'react';
 import './board.css';
 
-class Board extends React.Component {           
+class Board extends React.Component {
     render() {
         this.wordRows = this.props.wordRows;
-        
+
+        return <div className="word-grid">{this.renderGrid()}</div>;
+    }
+
+    renderGrid() {
         return (
-                <div className="word-grid">
-                    {this.renderGrid()}
-                </div>
+            <div>
+                <div>{this.renderRow(0)}</div>
+                <div>{this.renderRow(1)}</div>
+                <div>{this.renderRow(2)}</div>
+                <div>{this.renderRow(3)}</div>
+                <div>{this.renderRow(4)}</div>
+                <div>{this.renderRow(5)}</div>
+            </div>
         );
     }
-    
-    renderGrid() {
-        return <div>
-            <div>{this.renderRow(0)}</div>
-            <div>{this.renderRow(1)}</div>
-            <div>{this.renderRow(2)}</div>
-            <div>{this.renderRow(3)}</div>
-            <div>{this.renderRow(4)}</div>
-            <div>{this.renderRow(5)}</div>
-        </div>
-    }
-    
+
     renderRow(i) {
-        return <div>
-            {this.renderSquare(this.wordRows[i][0])}
-            {this.renderSquare(this.wordRows[i][1])}
-            {this.renderSquare(this.wordRows[i][2])}
-            {this.renderSquare(this.wordRows[i][3])}
-            {this.renderSquare(this.wordRows[i][4])}
-        </div>
+        return (
+            <div>
+                {this.renderSquare(this.wordRows[i][0])}
+                {this.renderSquare(this.wordRows[i][1])}
+                {this.renderSquare(this.wordRows[i][2])}
+                {this.renderSquare(this.wordRows[i][3])}
+                {this.renderSquare(this.wordRows[i][4])}
+            </div>
+        );
     }
-    
+
     renderSquare(letter) {
         return <Square letter={letter} />;
     }
-    
 }
 
 class Square extends React.Component {
@@ -54,12 +53,7 @@ class Square extends React.Component {
             className = `${className} bad-word-anim`;
         }
 
-        return (
-            <div className={className}>
-                {letter.key.toUpperCase()}
-            </div>
-        );
+        return <div className={className}>{letter.key.toUpperCase()}</div>;
     }
-
 }
 export { Board };

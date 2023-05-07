@@ -4,7 +4,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
 
-    width:100%;
+    width: 100%;
     height: 300px;
     background-color: black;
 }
@@ -19,17 +19,16 @@
     top: 50%;
     transform: translate(-50%, -50%);
 
-    padding:10px 10px;
-    background: #C9B458;
+    padding: 10px 10px;
+    background: #c9b458;
     border: none;
-    border-radius:10px;
+    border-radius: 10px;
 
-    text-align:center;
-    color:#fff;
+    text-align: center;
+    color: #fff;
 
-    cursor:pointer;
+    cursor: pointer;
 }
-
 
 #name-input {
     display: flex;

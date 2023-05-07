@@ -1,20 +1,20 @@
 {
-  "name": "wordle-api",
-  "version": "0.1.0",
-  "private": true,
-  "description": "`wordle-online backend`",
-  "main": "app.js",
-  "type": "module",
-  "scripts": {
-    "start": "node app.js",
-    "init:db": "node db/init.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "csv-parse": "^5.3.10",
-    "express": "^4.18.2",
-    "pg": "^8.10.0",
-    "uuid": "^9.0.0"
-  }
+    "name": "wordle-api",
+    "version": "0.1.0",
+    "private": true,
+    "description": "`wordle-online backend`",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "start": "node app.js",
+        "init:db": "node db/init.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "csv-parse": "^5.3.10",
+        "express": "^4.18.2",
+        "pg": "^8.10.0",
+        "uuid": "^9.0.0"
+    }
 }
