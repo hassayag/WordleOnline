@@ -62,7 +62,7 @@ async function querySession(token) {
     try {
         sessions = await psql().query(
             'SELECT * from session where session_token = $1 and expires_at > $2',
-            [token, (new Date()).toISOString()]
+            [token, new Date().toISOString()]
         );
     } catch (err) {
         throw new Error(err.stack);

@@ -1,13 +1,12 @@
-
-const host = process.env.API_HOST || 'http://localhost';
-const port = process.env.API_PORT || '8081';
+const host = process.env.REACT_APP_API_HOST || 'http://localhost';
+const port = process.env.REACT_APP_API_PORT || '8081';
 
 const config = {
     api: {
         host,
         port,
-        url: host + port
-    }
-}
+        url: `${host}:${port}`,
+    },
+};
 
 export default config;
