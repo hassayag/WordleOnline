@@ -6,6 +6,10 @@ module.exports.get = async (req, res) => {
 
     const sessions = await _getSession(sessionToken);
 
+    if (!sessions.length) {
+        res.status(404).send('Session not found');
+    }
+
     res.send(sessions[0]);
 }
 
@@ -16,8 +20,16 @@ module.exports.create = async (req, res) => {
         sessionToken = v4(),
         expiresAt = Date.now() + MILISECONDS_IN_A_DAY;
 
+    if (!name) {
+        res.status(400).send("'name' is required");
+    }
+    
+    if (!gameId) {
+        res.status(400).send("'game id' is required");
+    }
+
     try {
-        await psql().query('INSERT INTO game (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)', [name, sessionToken, gameId, expiresAt]);
+        await psql().query('INSERT INTO session (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)', [name, sessionToken, gameId, expiresAt]);
     }
     catch (err) {
         throw new Error(err.stack);
@@ -32,7 +44,7 @@ module.exports.delete = async (req, res) => {
     const { sessionToken } = req.body;
 
     try {
-        await psql().query('DELETE FROM game WHERE session_token = $1', [sessionToken]);
+        await psql().query('DELETE FROM session WHERE session_token = $1', [sessionToken]);
     }
     catch (err) {
         throw new Error(err.stack);
@@ -41,7 +53,7 @@ module.exports.delete = async (req, res) => {
     res.send()
 }
 
-_getSession = async (req, res) => {
+async function _getSession (req, res) {
     let sessions;
 
     try {

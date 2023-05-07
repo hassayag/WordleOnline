@@ -7,9 +7,9 @@ CREATE TABLE game (
     state text
 );
 
-DROP TABLE player;
+DROP TABLE session;
 
-CREATE TABLE player (
+CREATE TABLE session (
     id SERIAL PRIMARY KEY,
     name character varying(255),
     session_token character varying(255),

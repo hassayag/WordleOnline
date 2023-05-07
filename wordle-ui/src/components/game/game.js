@@ -2,6 +2,7 @@ import React from 'react';
 import { Wordle } from './wordle/wordle';
 import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
+import { SessionService } from 'services/session-service';
 import './game.scss';
 
 export class Game extends React.Component {
@@ -27,11 +28,23 @@ export class Game extends React.Component {
             return <div> Retrieving purpose... </div>;
         }
 
-        // // Opening given cache and putting our data into it
-        // caches.open(cacheName).then((cache) => {
-        //     cache.put(url, data);
-        //     alert('Data Added into cache!')
-        // });        
+        if ('caches' in window) {
+            // Opening given cache and putting our data into it
+            caches.open('session').then((cache) => {
+                console.log(cache)
+                let session;
+                
+                if (!cache.token ) {
+                    session = SessionService.createSession('test_name', this.state.game.id)
+                }
+                else {
+                    session = SessionService.getSession(cache);
+                }
+    
+                cache.put('session', session);
+                alert('Data Added into cache!')
+            });
+        }
 
         return (
             <div>
