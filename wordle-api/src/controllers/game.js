@@ -30,6 +30,7 @@ export const createGame = async (req, res) => {
         randWord = await randomWord();
 
     const uuid = v4(),
+        gameStatus = 'lobby',
         state = JSON.stringify([
             {
                 player: newPlayer(req.body.name),
@@ -75,8 +76,8 @@ export const createGame = async (req, res) => {
 
     try {
         await psql().query(
-            'INSERT INTO game (uuid, type, state) values ($1, $2, $3)',
-            [uuid, req.body.type, state]
+            'INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)',
+            [uuid, gameStatus, req.body.type, state]
         );
     } catch (err) {
         throw new Error(err.stack);
@@ -90,12 +91,19 @@ export const createGame = async (req, res) => {
 export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
-    game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
+
+    if (req.body.state) {
+        game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
+    }
+    if (req.body.gameStatus) {
+        game.game_status = req.body.gameStatus
+    }
 
     try {
-        await psql().query('UPDATE game SET state = $1 WHERE uuid = $2', [
+        await psql().query('UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2', [
             JSON.stringify(game.state),
-            req.params.uuid,
+            game.uuid,
+            game.game_status
         ]);
     } catch (err) {
         throw new Error(err.stack);
@@ -120,6 +128,6 @@ const _getGame = async (uuid) => {
     // get row and parse state to JSON
     const game = rawGame.rows[0];
     game.state = JSON.parse(game.state);
-
+    
     return game;
 };

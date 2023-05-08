@@ -29,10 +29,10 @@ export class GameService {
         }).then((response) => response.json());
     }
 
-    static updateGame(uuid, state) {
+    static updateGame(uuid, options) {
         const request = new Request(Config.api.url + '/game/' + uuid);
 
-        const payload = { uuid, state };
+        const payload = Object.assign({ uuid }, options);
 
         return fetch(request, {
             method: 'PATCH',

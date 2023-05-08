@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { Wordle } from './wordle/wordle';
+import Lobby from './lobby/lobby';
 import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
 import { SessionService } from 'services/session-service';
@@ -50,7 +51,9 @@ const Game = ({uuid}) => {
     if (!game) {
         return <div> Retrieving purpose... </div>;
     }
-
+    else if (game.game_status === 'lobby') {
+        return (<Lobby game={game} setGame={setGame}/>    )
+    }
 
     return (
         <div>

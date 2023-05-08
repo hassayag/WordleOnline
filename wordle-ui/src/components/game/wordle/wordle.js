@@ -12,6 +12,7 @@ export class Wordle extends React.Component {
     constructor() {
         super();
 
+        this.gameIsLoaded = false;
         this.state = {};
     }
 
@@ -43,10 +44,12 @@ export class Wordle extends React.Component {
             _gameIsWon: null,
             _endModalOpen: false,
         });
+
+        this.gameIsLoaded = true;
     }
 
     render() {
-        if (!this.gameState || !this.props.validGuesses) {
+        if (!this.gameIsLoaded) {
             return <div> Retrieving purpose... </div>;
         }
 
@@ -162,7 +165,7 @@ export class Wordle extends React.Component {
         game.state[0].board = this.wordRows;
         game.state[0].letterStates = this.letterStates;
 
-        GameService.updateGame(game.uuid, game.state[0]);
+        GameService.updateGame(game.uuid, {state:game.state[0]});
 
         // check for win
         if (
