@@ -4,7 +4,7 @@ import { useNavigate, Link, Route, Routes } from 'react-router-dom';
 // my files
 import './home.css';
 import { GameService } from 'services/game-service';
-import { Game } from 'index';
+import Game from '../game/game';
 import CreateGame from './create-game/create-game';
 
 const Navbar = () => {

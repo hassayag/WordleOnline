@@ -1,6 +1,3 @@
-import fs from 'fs';
-import { parse } from 'csv-parse';
-import path from 'path';
 import { randomWord, readFile } from '../utils/words-util.js';
 
 export const getValidGuesses = async (req, res) => {

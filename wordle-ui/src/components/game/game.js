@@ -1,69 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import CookieHelper from 'components/helpers/cookie-helper';
 import { Wordle } from './wordle/wordle';
 import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
 import { SessionService } from 'services/session-service';
 import './game.scss';
 
-export class Game extends React.Component {
-    constructor() {
-        super();
+const Game = ({uuid}) => {
 
-        this.state = { validGuesses: null, game: null };
-    }
+    // state = { validGuesses: null, game: null };
+    const [validGuesses, setValidGuesses] = useState(null);
+    const [game, setGame ] = useState(null);
 
-    async componentDidMount() {
+    useEffect(() => {
         // Get a random goal word
         WordService.getValidGuesses()
-            .then((response) =>
-                this.setState((prevState) =>
-                    Object.assign(prevState, { validGuesses: response.words })
-                )
-            )
+            .then((response) => setValidGuesses(response.words))
             .catch((err) => console.error(err));
 
-        GameService.getGame(this.props.uuid)
-            .then((response) =>
-                this.setState((prevState) =>
-                    Object.assign(prevState, { game: response })
-                )
-            )
+        GameService.getGame(uuid)
+            .then((response) => setGame(response))
             .catch((err) => console.error(err));
+    });
+
+    
+    if (!game) {
+        return <div> Retrieving purpose... </div>;
     }
 
-    render() {
-        if (!this.state.game) {
-            return <div> Retrieving purpose... </div>;
-        }
+    let session;
 
-        if ('caches' in window) {
-            // Opening given cache and putting our data into it
-            caches.open('session').then((cache) => {
-                console.log(cache);
-                let session;
+    // if (!cache.token) {
+    //     session = await SessionService.createSession(
+    //         'test_name',
+    //         state.game.id
+    //     );
+    // } else {
+    //     session = await SessionService.getSession(cache);
+    //     cache.put('session', session);
+    //     alert('Data Added into cache!');
+    // }
 
-                if (!cache.token) {
-                    session = SessionService.createSession(
-                        'test_name',
-                        this.state.game.id
-                    );
-                } else {
-                    session = SessionService.getSession(cache);
-                }
-
-                cache.put('session', session);
-                alert('Data Added into cache!');
-            });
-        }
-
-        return (
-            <div>
-                <div class="board-title"> Wordle </div>
-                <Wordle
-                    validGuesses={this.state.validGuesses}
-                    game={this.state.game}
-                />
-            </div>
-        );
-    }
+    return (
+        <div>
+            <div class="board-title"> Wordle </div>
+            <Wordle
+                validGuesses={validGuesses}
+                game={game}
+            />
+        </div>
+    );
 }
+
+export default Game;

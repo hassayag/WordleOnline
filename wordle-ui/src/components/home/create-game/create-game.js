@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import './create-game.css';
 import { GameService } from 'services/game-service';
 
-const CreateGame = (props) => {
+const CreateGame = ({ setGameIds }) => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
@@ -21,7 +22,7 @@ const CreateGame = (props) => {
 
     if (gameId) {
         // update game ids so Home component can rerender with the new game route
-        props.setGameIds((ids) => [ids, gameId]);
+        setGameIds((ids) => [ids, gameId]);
 
         navigate(`/game/${gameId}`);
     }
