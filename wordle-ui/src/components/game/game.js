@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import CookieHelper from 'components/helpers/cookie-helper';
 import { Wordle } from './wordle/wordle';
 import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
@@ -9,9 +9,9 @@ import './game.scss';
 
 const Game = ({uuid}) => {
 
-    // state = { validGuesses: null, game: null };
     const [validGuesses, setValidGuesses] = useState(null);
     const [game, setGame ] = useState(null);
+    const [cookies, setCookie] = useCookies(['session']);
 
     useEffect(() => {
         // Get a random goal word
@@ -22,16 +22,20 @@ const Game = ({uuid}) => {
         GameService.getGame(uuid)
             .then((response) => setGame(response))
             .catch((err) => console.error(err));
-    });
+    }, [ uuid ]);
 
     
     if (!game) {
         return <div> Retrieving purpose... </div>;
     }
 
-    let session;
+    let session
 
-    // if (!cache.token) {
+    setCookie('session', session, { path: '/' });
+
+    console.log(cookies);
+
+    // if (!cookies.token) {
     //     session = await SessionService.createSession(
     //         'test_name',
     //         state.game.id

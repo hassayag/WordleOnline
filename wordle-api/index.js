@@ -8,7 +8,13 @@ import words from './src/routes/words.js';
 
 const initApp = () => {
     const app = express();
-    app.use(cors());
+    app.use(cors({
+        origin: Config.client.host + ':' + Config.client.port,
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
+        credentials: true
+    }));
 
     app.use('/game', game);
     app.use('/session', session);
