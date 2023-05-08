@@ -14,37 +14,43 @@ const Game = ({uuid}) => {
     const [cookies, setCookie] = useCookies(['session']);
 
     useEffect(() => {
-        // Get a random goal word
-        WordService.getValidGuesses()
-            .then((response) => setValidGuesses(response.words))
-            .catch((err) => console.error(err));
+        async function fetchData() {
+            // Get a random goal word
+            const { words } = await WordService.getValidGuesses();
+            setValidGuesses(words);
 
-        GameService.getGame(uuid)
-            .then((response) => setGame(response))
-            .catch((err) => console.error(err));
-    }, [ uuid ]);
+            const game = await GameService.getGame(uuid)
+            setGame(game);
+            
+            if (!game) {
+                console.warn(`Game ID ${uuid} not found`);
+                return;
+            }
 
+            if (!words) {
+                console.warn(`Words not found`);
+                return;
+            }
+
+            let session
+
+            if (!cookies.session || cookies.session === 'undefined' ) {
+                session = await SessionService.createSession('Harry', game.id);
+            } else {
+                session = await SessionService.getSession(cookies.session);
+            }
+
+            if (session.session_token) {
+                setCookie('session', session.session_token, { path: '/' });
+            }
+        }
+        fetchData();
+    }, [uuid, cookies?.session, game?.id, setCookie])
     
     if (!game) {
         return <div> Retrieving purpose... </div>;
     }
 
-    let session
-
-    setCookie('session', session, { path: '/' });
-
-    console.log(cookies);
-
-    // if (!cookies.token) {
-    //     session = await SessionService.createSession(
-    //         'test_name',
-    //         state.game.id
-    //     );
-    // } else {
-    //     session = await SessionService.getSession(cache);
-    //     cache.put('session', session);
-    //     alert('Data Added into cache!');
-    // }
 
     return (
         <div>

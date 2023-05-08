@@ -4,13 +4,14 @@ import psql from '../utils/sql.js';
 export const getSession = async (req, res) => {
     const sessionToken = req.params.token;
 
-    const sessions = await querySession(sessionToken);
+    const session = await querySession(sessionToken);
 
-    if (!sessions.length) {
-        res.status(404).send('Session not found');
+    if (session){
+        res.send(session)
     }
-
-    res.send(sessions[0]);
+    else {
+        res.status(404).send("Session not found")
+    }
 };
 
 export const createSession = async (req, res) => {
@@ -37,9 +38,14 @@ export const createSession = async (req, res) => {
         throw new Error(err.stack);
     }
 
-    const sessions = await querySession(sessionToken);
-
-    res.send(sessions[0]);
+    const session = await querySession(sessionToken);
+    
+    if (session){
+        res.send(session)
+    }
+    else {
+        res.status(404).send("Session not found")
+    }
 };
 
 export const deleteSession = async (req, res) => {
@@ -68,5 +74,5 @@ async function querySession(token) {
         throw new Error(err.stack);
     }
 
-    return sessions;
+    return sessions?.rows?.[0];
 }
