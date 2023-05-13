@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Typography } from '@mui/material'
+import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Typography, Paper } from '@mui/material'
 import { Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
 
 import './home.css';
@@ -90,8 +90,9 @@ const Navbar = () => {
                 variant="permanent"
                 anchor="left"
                 PaperProps={{
+                    elevation: 24,
                     sx: {
-                        backgroundColor: "#696969"
+                        backgroundColor: "#787c7e"
                     }
                 }}
                 >

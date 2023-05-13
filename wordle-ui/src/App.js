@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from "react-cookie";
 
-import CssBaseline from '@mui/material/CssBaseline';
+import {CssBaseline} from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme'
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { ArrayUtils } from 'utils/array';
-
+import {Paper} from '@mui/material'
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import GameEndModal from '../game-end-modal/game-end-modal';
 import { GameService } from 'services/game-service';
 
 import './wordle.css';
+import { Box } from '@mui/system';
 
 export class Wordle extends React.Component {
     constructor() {
@@ -55,14 +56,23 @@ export class Wordle extends React.Component {
 
         return (
             <>
-                <div id="game">
-                    <Board wordRows={this.wordRows} />
-                    <Keyboard
-                        keyStates={this.letterStates}
-                        onPress={this.onKeyPress}
-                    />
-                </div>
-
+                <Paper elevation={10}>
+                    <Box sx={{
+                        width: 600,
+                        marginTop: 8,
+                        marginBottom: 8,
+                        display: 'flex',
+                        gap: "80px",
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}>
+                            <Board wordRows={this.wordRows} />
+                            <Keyboard
+                                keyStates={this.letterStates}
+                                onPress={this.onKeyPress}
+                            />
+                    </Box>
+                </Paper>
                 {this.endModalOpen && (
                     <GameEndModal
                         isWon={this.gameIsWon}
@@ -209,7 +219,6 @@ export class Wordle extends React.Component {
     }
 
     _wordIsValid(word) {
-        console.log(word);
         if (this.props.validGuesses.includes(word)) {
             return true;
         }
