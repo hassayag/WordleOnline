@@ -1,10 +1,14 @@
-{
+// loads the custom .env vars
+import {config} from 'dotenv'
+config()
+
+export default {
     "sql": {
         "host": "localhost",
         "database": "wordle-online",
         "port": 5432,
-        "user": "postgres",
-        "password": "test"
+        "user": process.env.POSTGRES_USER,
+        "password": process.env.POSTGRES_PASS
     },
     "server": {
         "host": "http://localhost",
@@ -12,6 +16,6 @@
     },
     "client": {
         "host": "http://localhost",
-        "port": 3001
+        "port": 3000
     }
 }

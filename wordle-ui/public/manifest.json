@@ -1,9 +1,9 @@
 {
-    "short_name": "React App",
-    "name": "Create React App Sample",
+    "short_name": "Wordle Online",
+    "name": "Wordle, but ya know... Online?",
     "icons": [
         {
-            "src": "favicon.ico",
+            "src": "wwe.bmp",
             "sizes": "64x64 32x32 24x24 16x16",
             "type": "image/x-icon"
         },

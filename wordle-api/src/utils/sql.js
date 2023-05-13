@@ -1,5 +1,5 @@
 import pg from 'pg';
-import Config from '../../config.json' assert { type: 'json' };
+import Config from '../../config.js';
 var client;
 
 const psql = () => {

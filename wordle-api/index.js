@@ -1,10 +1,11 @@
 import cors from 'cors';
 import express from 'express';
 
-import Config from './config.json' assert { type: 'json' };
+import Config from './config.js';
 import game from './src/routes/game.js';
 import session from './src/routes/session.js';
 import words from './src/routes/words.js';
+
 
 const initApp = () => {
     const app = express();
