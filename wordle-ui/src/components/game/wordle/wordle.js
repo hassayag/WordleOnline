@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrayUtils } from 'utils/array';
-import {Paper} from '@mui/material'
+import {Button, Modal, Paper, Typography} from '@mui/material'
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import GameEndModal from '../game-end-modal/game-end-modal';
@@ -43,13 +43,13 @@ export class Wordle extends React.Component {
             _wordRows: initWordRows,
             _rowInd: initRowInd,
             _gameIsWon: null,
-            _endModalOpen: false,
+            _endModalOpen: false || this.props.game.game_status === 'done',
         });
-
+        
         this.gameIsLoaded = true;
     }
-
     render() {
+        console.log(this.state)
         if (!this.gameIsLoaded) {
             return <div> Retrieving purpose... </div>;
         }
@@ -73,13 +73,51 @@ export class Wordle extends React.Component {
                             />
                     </Box>
                 </Paper>
-                {this.endModalOpen && (
-                    <GameEndModal
-                        isWon={this.gameIsWon}
-                        goalWord={this.goalWord}
-                        closeModal={() => this.setEndModalOpen(false)}
-                    />
-                )}
+
+                <Modal
+                    open={this.endModalOpen}
+                    onClose={() => this.setEndModalOpen(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >   
+                <Box sx={{
+                    position:'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'gray',
+                    border: '2px',
+                    boxShadow: 24,
+                    p: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    outline: 0
+                }}>
+                    <Typography id="modal-modal-title" >
+                        {this.gameIsWon
+                        ? 'You have won!'
+                        : `You have lost :(      The word was "${this.goalWord}"`}                    
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        {/* Play again? */}
+                    </Typography>
+
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: 2
+                    }}>
+                        <Button sx={{position: 'absolute', bottom: 4, left: 4}} variant="contained" color="secondary" onClick={() => this.setEndModalOpen(false)}> 
+                            Close 
+                        </Button>
+                        <Button sx={{position: 'absolute', bottom: 4, right: 4}} variant="contained" color="primary" onClick={() => this.setEndModalOpen(false)}> 
+                            Play Again 
+                        </Button>
+                    </Box>
+                </Box>
+                </Modal>
             </>
         );
     }
@@ -175,8 +213,6 @@ export class Wordle extends React.Component {
         game.state[0].board = this.wordRows;
         game.state[0].letterStates = this.letterStates;
 
-        GameService.updateGame(game.uuid, {state:game.state[0]});
-
         // check for win
         if (
             currentRowChars
@@ -185,18 +221,25 @@ export class Wordle extends React.Component {
         ) {
             this.gameIsWon = 1;
             this.setEndModalOpen(true);
-            return;
         }
         // check for loss
-        if (this.rowInd === 5) {
+        else if (this.rowInd === 5) {
             this.gameIsWon = 0;
             this.setEndModalOpen(true);
-            return;
         }
         // increment row
         else if (this.rowInd < 5) {
             this.rowInd = this.rowInd + 1;
         }
+
+        const updateOptions = {
+            state:game.state[0]
+        }
+        if (this.gameIsWon !== null) {
+            updateOptions.gameStatus = 'done'
+        }
+
+        GameService.updateGame(game.uuid, updateOptions);
     }
 
     _triggerError(rowInd) {

@@ -19,6 +19,10 @@ const theme = createTheme({
             fontSize: 36,
             fontWeight: "bold",
             color: "black"
+        },
+        button: {
+            textTransform: "none",
+            color: "#FFFFFF"
         }
     },
     palette: {
@@ -31,7 +35,8 @@ const theme = createTheme({
         error: {
         main: red.A400,
         },
-    },
+    }
+    
 });
 
 export default theme;

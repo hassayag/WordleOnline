@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse';
 
-export const randomWord = async () => {
-    const words = await readFile('./db/word-data/valid_solutions.csv');
+const words = await readFile('./db/word-data/valid_solutions.csv');
 
+export const randomWord = async () => {
     const randIndex = Math.floor(Math.random() * words.length);
 
     return words[randIndex];

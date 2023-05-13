@@ -91,7 +91,7 @@ export const createGame = async (req, res) => {
 export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
-
+    
     if (req.body.state) {
         game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
     }

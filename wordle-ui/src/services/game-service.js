@@ -30,6 +30,7 @@ export class GameService {
     }
 
     static updateGame(uuid, options) {
+        console.log('UPDATING GAME', options)
         const request = new Request(Config.api.url + '/game/' + uuid);
 
         const payload = Object.assign({ uuid }, options);

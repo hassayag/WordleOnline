@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Typography, Paper } from '@mui/material'
+import { Box, Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Typography } from '@mui/material'
 import { Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
 
 import './home.css';
@@ -105,9 +105,19 @@ const Navbar = () => {
 const Home = () => {
     return (
         <Container component="main" maxWidth="sm">
-            <Typography variant="h4" component="h1" gutterBottom>
-                Welcome to WordleOnline
-            </Typography>
+            <Box sx={{
+                width: 500,
+                height: 500,
+                marginTop: 8,
+                display: 'flex',
+                gap: "8px",
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Welcome to WordleOnline
+                </Typography>
+            </Box>
         </Container>
     );
 };
