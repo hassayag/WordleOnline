@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import './game-end-modal.css';
 
 const GameEndModal = (props) => {
@@ -11,9 +12,10 @@ const GameEndModal = (props) => {
                         ? 'You have won!'
                         : `You have lost :(\n\n The word was "${goalWord}"`}
                 </div>
-                <button class="button" onClick={() => closeModal()}>
+                
+                <Button variant="contained" onClick={() => closeModal()}>
                     Close
-                </button>
+                </Button>
             </div>
         </>
     );

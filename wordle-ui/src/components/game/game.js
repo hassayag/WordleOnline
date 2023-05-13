@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import {Box, Container} from '@mui/material'
 
 import { Wordle } from './wordle/wordle';
 import Lobby from './lobby/lobby';
@@ -47,7 +48,8 @@ const Game = ({uuid}) => {
         }
         fetchData();
     }, [uuid, cookies?.session, game?.id, setCookie])
-    
+
+    console.log({game})
     if (!game) {
         return <div> Retrieving purpose... </div>;
     }
@@ -56,13 +58,22 @@ const Game = ({uuid}) => {
     }
 
     return (
-        <div>
-            <div class="board-title"> Wordle </div>
-            <Wordle
-                validGuesses={validGuesses}
-                game={game}
-            />
-        </div>
+        <Container component="main" maxWidth="sm">
+            <Box sx={{
+                width: 500,
+                height: 500,
+                marginTop: 8,
+                display: 'flex',
+                gap: "8px",
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
+                <Wordle
+                    validGuesses={validGuesses}
+                    game={game}
+                />
+            </Box>
+        </Container>
     );
 }
 
