@@ -6,11 +6,10 @@ export const getSession = async (req, res) => {
 
     const session = await querySession(sessionToken);
 
-    if (session){
-        res.send(session)
-    }
-    else {
-        res.status(404).send("Session not found")
+    if (session) {
+        res.send(session);
+    } else {
+        res.status(404).send('Session not found');
     }
 };
 
@@ -39,12 +38,11 @@ export const createSession = async (req, res) => {
     }
 
     const session = await querySession(sessionToken);
-    
-    if (session){
-        res.send(session)
-    }
-    else {
-        res.status(404).send("Session not found")
+
+    if (session) {
+        res.send(session);
+    } else {
+        res.status(404).send('Session not found');
     }
 };
 

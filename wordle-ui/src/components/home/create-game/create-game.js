@@ -4,7 +4,6 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import { GameService } from 'services/game-service';
 
-  
 const CreateGame = ({ setGameIds }) => {
     const navigate = useNavigate();
 
@@ -32,17 +31,23 @@ const CreateGame = ({ setGameIds }) => {
 
     return (
         <Container component="main" maxWidth="sm">
-            <Box sx={{
-                width: 500,
-                height: 500,
-                marginTop: 8,
-                display: 'flex',
-                gap: "8px",
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>
-                <TextField id="outlined-basic" label="Enter Name" variant="outlined"  
-                    onChange={(event) => _handleInput(event)}/>
+            <Box
+                sx={{
+                    width: 500,
+                    height: 500,
+                    marginTop: 8,
+                    display: 'flex',
+                    gap: '8px',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <TextField
+                    id="outlined-basic"
+                    label="Enter Name"
+                    variant="outlined"
+                    onChange={(event) => _handleInput(event)}
+                />
 
                 <Button variant="contained" onClick={() => _initGame()}>
                     Create game

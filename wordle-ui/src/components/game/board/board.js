@@ -1,12 +1,12 @@
 import React from 'react';
-import {Paper} from '@mui/material'
+import { Paper } from '@mui/material';
 import './board.css';
 
 class Board extends React.Component {
     render() {
         this.wordRows = this.props.wordRows;
 
-        return (<div className="word-grid">{this.renderGrid()}</div>)
+        return <div className="word-grid">{this.renderGrid()}</div>;
     }
 
     renderGrid() {
@@ -54,11 +54,11 @@ class Square extends React.Component {
             className = `${className} bad-word-anim`;
         }
 
-        return  (
-            <Paper elevation={1} className={className} >
+        return (
+            <Paper elevation={1} className={className}>
                 {letter.key.toUpperCase()}
             </Paper>
-        )
+        );
     }
 }
 export { Board };

@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import { Box, Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Typography } from '@mui/material'
+import {
+    Box,
+    Container,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Drawer,
+    Typography,
+} from '@mui/material';
 import { Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
 
 import './home.css';
@@ -16,64 +26,63 @@ const Navbar = () => {
 
     useEffect(() => {
         GameService.getGames()
-        .then((response) => setGameIds(response.uuids))
-        .catch((err) => console.error(err));
+            .then((response) => setGameIds(response.uuids))
+            .catch((err) => console.error(err));
 
         setDrawerLinks({
             home: {
                 label: 'Home',
                 path: '/',
-                component: <Home/>,
-                icon: <HomeIcon color="primary"/>
+                component: <Home />,
+                icon: <HomeIcon color="primary" />,
             },
             create_game: {
                 label: 'Create Game',
                 path: '/game/create',
-                component: <CreateGame setGameIds={setGameIds}/>,
-                icon: <AddIcon color="secondary"/>
-            }
+                component: <CreateGame setGameIds={setGameIds} />,
+                icon: <AddIcon color="secondary" />,
+            },
         });
-        
+
         setRoutes({
             home: {
                 path: '/',
-                component: <Home/>,
+                component: <Home />,
             },
             create_game: {
                 path: '/game/create',
-                component: <CreateGame setGameIds={setGameIds}/>,
-            }
+                component: <CreateGame setGameIds={setGameIds} />,
+            },
         });
-    }, [])
+    }, []);
 
-    useEffect(() =>{
+    useEffect(() => {
         // add all gameId routes to links object
         const gameRoutes = {};
 
-        gameIds.forEach(id => {
+        gameIds.forEach((id) => {
             gameRoutes[`game_${id}`] = {
                 path: `/game/${id}`,
-                component: <Game uuid={id} />
-            }
-        })
+                component: <Game uuid={id} />,
+            };
+        });
 
-        setRoutes(routes => Object.assign(routes, gameRoutes));
+        setRoutes((routes) => Object.assign(routes, gameRoutes));
 
-        setNavItems(Object.keys(drawerLinks).map((key) => {
+        setNavItems(
+            Object.keys(drawerLinks).map((key) => {
                 const { path, label, icon } = drawerLinks[key];
 
-                return (<ListItem key={key} disablePadding>
-                    <ListItemButton LinkComponent={Link} to={path}>
-                        <ListItemIcon>
-                            {icon}
-                        </ListItemIcon>
-                        <ListItemText primary={label} />
-                    </ListItemButton>
-                </ListItem>)
+                return (
+                    <ListItem key={key} disablePadding>
+                        <ListItemButton LinkComponent={Link} to={path}>
+                            <ListItemIcon>{icon}</ListItemIcon>
+                            <ListItemText primary={label} />
+                        </ListItemButton>
+                    </ListItem>
+                );
             })
-        )
-
-
+        );
     }, [gameIds]);
 
     if (!routes) {
@@ -83,7 +92,9 @@ const Navbar = () => {
     return (
         <>
             <Routes>
-                {Object.values(routes).map(item => <Route path={item.path} element={item.component} />)}
+                {Object.values(routes).map((item) => (
+                    <Route path={item.path} element={item.component} />
+                ))}
             </Routes>
 
             <Drawer
@@ -92,28 +103,30 @@ const Navbar = () => {
                 PaperProps={{
                     elevation: 24,
                     sx: {
-                        backgroundColor: "#787c7e"
-                    }
+                        backgroundColor: '#787c7e',
+                    },
                 }}
-                >
-            <List>{navItems}</List>
+            >
+                <List>{navItems}</List>
             </Drawer>
         </>
     );
-};  
+};
 
 const Home = () => {
     return (
         <Container component="main" maxWidth="sm">
-            <Box sx={{
-                width: 500,
-                height: 500,
-                marginTop: 8,
-                display: 'flex',
-                gap: "8px",
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>
+            <Box
+                sx={{
+                    width: 500,
+                    height: 500,
+                    marginTop: 8,
+                    display: 'flex',
+                    gap: '8px',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
                 <Typography variant="h4" component="h1" gutterBottom>
                     Welcome to WordleOnline
                 </Typography>

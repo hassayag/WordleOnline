@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Paper} from '@mui/material'
+import { Box, Paper } from '@mui/material';
 import './keyboard.scss';
 
 class Keyboard extends React.Component {
@@ -53,12 +53,14 @@ class Keyboard extends React.Component {
     // render all three rows of keyboard
     render() {
         return (
-            <Box sx={{
-                display: 'flex',
-                gap: "8px",
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>                    
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: '8px',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
                 {this.renderRow(0)}
                 {this.renderRow(1)}
                 {this.renderRow(2)}
@@ -73,10 +75,10 @@ class Key extends React.Component {
             pressKey = () => onPress(inputLetter);
 
         return (
-            <Paper elevation={1} >
-            <button className={`key ${keyState}`} onClick={pressKey}>
-                {inputLetter.toUpperCase()}
-            </button>
+            <Paper elevation={1}>
+                <button className={`key ${keyState}`} onClick={pressKey}>
+                    {inputLetter.toUpperCase()}
+                </button>
             </Paper>
         );
     }

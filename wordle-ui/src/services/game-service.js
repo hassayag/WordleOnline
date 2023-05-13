@@ -4,13 +4,17 @@ export class GameService {
     static getGames() {
         const request = new Request(Config.api.url + '/game/uuids');
 
-        return fetch(request, {credentials: 'include'}).then((response) => response.json());
+        return fetch(request, { credentials: 'include' }).then((response) =>
+            response.json()
+        );
     }
 
     static getGame(uuid) {
         const request = new Request(Config.api.url + '/game/' + uuid);
 
-        return fetch(request, { credentials: 'include' }).then((response) => response.json());
+        return fetch(request, { credentials: 'include' }).then((response) =>
+            response.json()
+        );
     }
 
     static createGame(hostName) {
@@ -25,12 +29,12 @@ export class GameService {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            credentials: 'include'
+            credentials: 'include',
         }).then((response) => response.json());
     }
 
     static updateGame(uuid, options) {
-        console.log('UPDATING GAME', options)
+        console.log('UPDATING GAME', options);
         const request = new Request(Config.api.url + '/game/' + uuid);
 
         const payload = Object.assign({ uuid }, options);
@@ -39,7 +43,7 @@ export class GameService {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            credentials: 'include'
+            credentials: 'include',
         }).then((response) => response.json());
     }
 }

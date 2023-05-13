@@ -91,20 +91,19 @@ export const createGame = async (req, res) => {
 export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
-    
+
     if (req.body.state) {
         game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
     }
     if (req.body.gameStatus) {
-        game.game_status = req.body.gameStatus
+        game.game_status = req.body.gameStatus;
     }
 
     try {
-        await psql().query('UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2', [
-            JSON.stringify(game.state),
-            game.uuid,
-            game.game_status
-        ]);
+        await psql().query(
+            'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',
+            [JSON.stringify(game.state), game.uuid, game.game_status]
+        );
     } catch (err) {
         throw new Error(err.stack);
     }
@@ -128,6 +127,6 @@ const _getGame = async (uuid) => {
     // get row and parse state to JSON
     const game = rawGame.rows[0];
     game.state = JSON.parse(game.state);
-    
+
     return game;
 };

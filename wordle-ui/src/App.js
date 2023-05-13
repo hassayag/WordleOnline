@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { CookiesProvider } from "react-cookie";
+import { CookiesProvider } from 'react-cookie';
 
-import {CssBaseline} from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme'
+import theme from './theme';
 
 import './index.scss';
 
@@ -16,9 +16,9 @@ root.render(
     <CookiesProvider>
         <ThemeProvider theme={theme}>
             <CssBaseline />
-                <BrowserRouter>
-                    <Navbar />
-                </BrowserRouter>
+            <BrowserRouter>
+                <Navbar />
+            </BrowserRouter>
         </ThemeProvider>
     </CookiesProvider>
 );
