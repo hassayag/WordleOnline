@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
-import psql from '../utils/sql.js';
-import { randomWord } from '../utils/words-util.js';
+import psql from '../utils/sql';
+import { randomWord } from '../utils/words-util';
+import { Game, GameStatus } from './types'
 
 // get uuids of all games
 export const getUuids = async (req, res) => {
@@ -16,9 +17,9 @@ export const getUuids = async (req, res) => {
 };
 
 export const getGame = async (req, res) => {
-    const game = await _getGame(req.params.uuid);
-
-    if (game.game_status !== 'lobby') {
+    const game: Game = await _getGame(req.params.uuid);
+    
+    if (game.gameStatus !== GameStatus.Lobby) {
         const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
             res.status(404).send('Game not found')
@@ -90,7 +91,7 @@ export const createGame = async (req, res) => {
 
     try {
         await psql().query(
-            'INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)',
+            'INSERT INTO game (uuid, gameStatus, type, state) values ($1, $2, $3, $4)',
             [uuid, gameStatus, req.body.type, state]
         );
     } catch (err) {
@@ -106,7 +107,7 @@ export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
 
-    if (game.game_status !== 'lobby') {
+    if (game.gameStatus !== GameStatus.Lobby) {
         const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
             res.status(404).send('Game not found')
@@ -118,13 +119,13 @@ export const updateGame = async (req, res) => {
         game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
     }
     if (req.body.gameStatus) {
-        game.game_status = req.body.gameStatus;
+        game.gameStatus = req.body.gameStatus;
     }
 
     try {
         await psql().query(
-            'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',
-            [JSON.stringify(game.state), game.uuid, game.game_status]
+            'UPDATE game SET state = $1, gameStatus = $3 WHERE uuid = $2',
+            [JSON.stringify(game.state), game.uuid, game.gameStatus]
         );
     } catch (err) {
         throw new Error(err.stack);
@@ -150,5 +151,5 @@ const _getGame = async (uuid) => {
     const game = rawGame.rows[0];
     game.state = JSON.parse(game.state);
 
-    return game;
+    return game as Game;
 };

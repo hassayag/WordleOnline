@@ -18,13 +18,8 @@ const CreateGame = ({ setGameIds }) => {
     
         if (!cookies.session || cookies.session === 'undefined') {
             session = await SessionService.createSession(name);
-        } else {
-            session = await SessionService.getSession(cookies.session);
-        }
-
-        if (session.session_token) {
             setCookie('session', session.session_token, { path: '/' });
-        }
+        } 
 
         GameService.createGame(name)
             .then((response) => setGameId(response.uuid))

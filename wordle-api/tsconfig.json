@@ -1,11 +1,12 @@
 {
+    "exclude": ["node_modules", "dist", "scripts"],
     "compilerOptions": {
-      "module": "ES6",
       "esModuleInterop": true,
-      "target": "es6",
+      "target": "ES2019",
       "moduleResolution": "node",
       "sourceMap": true,
-      "outDir": "dist"
+      "outDir": "dist",
+      "resolveJsonModule": true
     },
-    "lib": ["es2015"]
+    "lib": ["ES2019"]
   }

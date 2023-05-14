@@ -66,7 +66,7 @@ const Game = ({ uuid }) => {
     if (!game) {
         return <div> Retrieving purpose... </div>;
     } 
-    else if (game.game_status === 'lobby') {
+    else if (game.gameStatus === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;
     }
 

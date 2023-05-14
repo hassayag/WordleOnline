@@ -1,29 +1,20 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { v4 } from 'uuid';
-import psql from '../utils/sql.js';
-import { randomWord } from '../utils/words-util.js';
+import psql from '../utils/sql';
+import { randomWord } from '../utils/words-util';
 import { GameStatus } from './types';
 // get uuids of all games
-export const getUuids = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const getUuids = async (req, res) => {
     let games;
     try {
-        games = yield psql().query('SELECT uuid from game');
+        games = await psql().query('SELECT uuid from game');
     }
     catch (err) {
         throw new Error(err.stack);
     }
     res.send({ uuids: games.rows.map((game) => game.uuid) });
-});
-export const getGame = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const game = yield _getGame(req.params.uuid);
+};
+export const getGame = async (req, res) => {
+    const game = await _getGame(req.params.uuid);
     if (game.gameStatus !== GameStatus.Lobby) {
         const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
@@ -32,8 +23,8 @@ export const getGame = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     res.send(game);
-});
-export const createGame = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+export const createGame = async (req, res) => {
     var _a;
     if (!((_a = req.cookies) === null || _a === void 0 ? void 0 : _a.session)) {
         res.status(400).send('Session token not found');
@@ -44,7 +35,7 @@ export const createGame = (req, res) => __awaiter(void 0, void 0, void 0, functi
             name,
             sessionToken
         };
-    }, randWord = yield randomWord();
+    }, randWord = await randomWord();
     const uuid = v4(), gameStatus = 'lobby', state = JSON.stringify([
         {
             player: newPlayer(req.body.name, req.cookies.session),
@@ -88,17 +79,17 @@ export const createGame = (req, res) => __awaiter(void 0, void 0, void 0, functi
         },
     ]);
     try {
-        yield psql().query('INSERT INTO game (uuid, gameStatus, type, state) values ($1, $2, $3, $4)', [uuid, gameStatus, req.body.type, state]);
+        await psql().query('INSERT INTO game (uuid, gameStatus, type, state) values ($1, $2, $3, $4)', [uuid, gameStatus, req.body.type, state]);
     }
     catch (err) {
         throw new Error(err.stack);
     }
-    const game = yield _getGame(uuid);
+    const game = await _getGame(uuid);
     res.send(game);
-});
-export const updateGame = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
-    const game = yield _getGame(req.params.uuid);
+    const game = await _getGame(req.params.uuid);
     if (game.gameStatus !== GameStatus.Lobby) {
         const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
@@ -113,18 +104,18 @@ export const updateGame = (req, res) => __awaiter(void 0, void 0, void 0, functi
         game.gameStatus = req.body.gameStatus;
     }
     try {
-        yield psql().query('UPDATE game SET state = $1, gameStatus = $3 WHERE uuid = $2', [JSON.stringify(game.state), game.uuid, game.gameStatus]);
+        await psql().query('UPDATE game SET state = $1, gameStatus = $3 WHERE uuid = $2', [JSON.stringify(game.state), game.uuid, game.gameStatus]);
     }
     catch (err) {
         throw new Error(err.stack);
     }
-    const newGame = yield _getGame(req.params.uuid);
+    const newGame = await _getGame(req.params.uuid);
     res.send(newGame);
-});
-const _getGame = (uuid) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const _getGame = async (uuid) => {
     let rawGame;
     try {
-        rawGame = yield psql().query('SELECT * FROM game WHERE uuid = $1', [
+        rawGame = await psql().query('SELECT * FROM game WHERE uuid = $1', [
             uuid,
         ]);
     }
@@ -135,5 +126,5 @@ const _getGame = (uuid) => __awaiter(void 0, void 0, void 0, function* () {
     const game = rawGame.rows[0];
     game.state = JSON.parse(game.state);
     return game;
-});
+};
 //# sourceMappingURL=controller.js.map

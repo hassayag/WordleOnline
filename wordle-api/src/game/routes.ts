@@ -4,7 +4,7 @@ import {
     getGame,
     createGame,
     updateGame,
-} from './controller.ts';
+} from './controller';
 const router = express.Router();
 
 import bodyParser from 'body-parser';

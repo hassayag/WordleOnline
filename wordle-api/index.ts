@@ -1,10 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import Config from './config.js';
-import game from './src/game/routes.js';
-import session from './src/session/routes.js';
-import words from './src/words/routes.js';
+import Config from './config';
+import game from './src/game/routes';
+import session from './src/session/routes';
+import words from './src/words/routes';
 
 
 const initApp = () => {

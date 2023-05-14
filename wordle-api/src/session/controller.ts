@@ -1,11 +1,11 @@
 import { v4 } from 'uuid';
-import psql from '../utils/sql.js';
+import psql from '../utils/sql';
 
 export const getSession = async (req, res) => {
     const sessionToken = req.params.token;
 
     const session = await querySession(sessionToken);
-
+    
     if (session) {
         res.send(session);
     } else {

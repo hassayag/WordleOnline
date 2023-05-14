@@ -57,7 +57,7 @@ const Lobby = ({ game, setGame }) => {
                                         gameStatus: 'in_progress',
                                     });
                                     Object.assign(game, {
-                                        game_status: 'in_progress',
+                                        gameStatus: 'in_progress',
                                     });
                                 })
                             }

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import psql from '../src/utils/sql.js';
+import psql from '../src/utils/sql';
 
 const filePath = path.resolve('./db/create.sql');
 
