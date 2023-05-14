@@ -1,15 +1,17 @@
 {
     "version": 2,
+    "cleanUrls": true,
+    "trailingSlash": false,
     "builds": [
-        {
-            "src": "index.js",
-            "use": "@now/node"
-        }
+      {
+        "src": "*.js",
+        "use": "@vercel/node"
+      }
     ],
     "routes": [
         {
-            "src": "/(.*)",
-            "dest": "index.js"
+          "src": "/(.*)",
+          "dest": "index.js"
         }
     ]
-}
+  }
