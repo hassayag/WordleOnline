@@ -2,6 +2,7 @@ import { v4 } from 'uuid';
 import psql from '../utils/sql.js';
 import { randomWord } from '../utils/words-util.js';
 
+// get uuids of all games
 export const getUuids = async (req, res) => {
     let games;
 
