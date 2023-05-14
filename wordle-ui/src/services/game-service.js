@@ -4,17 +4,17 @@ export class GameService {
     static getGames() {
         const request = new Request(Config.api.url + '/game/uuids');
 
-        return fetch(request, { credentials: 'include' }).then((response) =>
-            response.json()
-        ).catch(err => console.error(err.message));;
+        return fetch(request, { credentials: 'include' })
+            .then((response) => response.json())
+            .catch((err) => console.error(err.message));
     }
 
     static getGame(uuid) {
         const request = new Request(Config.api.url + '/game/' + uuid);
 
-        return fetch(request, { credentials: 'include' }).then((response) =>
-            response.json()
-        ).catch(err => console.error(err.message));
+        return fetch(request, { credentials: 'include' })
+            .then((response) => response.json())
+            .catch((err) => console.error(err.message));
     }
 
     static createGame(hostName) {
@@ -30,8 +30,9 @@ export class GameService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             credentials: 'include',
-        }).then((response) => response.json())
-        .catch(err => console.error(err.message));;
+        })
+            .then((response) => response.json())
+            .catch((err) => console.error(err.message));
     }
 
     static updateGame(uuid, options) {
@@ -45,7 +46,8 @@ export class GameService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             credentials: 'include',
-        }).then((response) => response.json())
-        .catch(err => console.error(err.message));;
+        })
+            .then((response) => response.json())
+            .catch((err) => console.error(err.message));
     }
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUuids, getGame, createGame, updateGame, } from './controller';
+import { getUuids, getGame, createGame, updateGame } from './controller';
 const router = express.Router();
 import bodyParser from 'body-parser';
 const jsonParser = bodyParser.json();

@@ -23,32 +23,33 @@ const Game = ({ uuid }) => {
             // Get a random goal word
             const { words } = await WordService.getValidGuesses();
             setValidGuesses(words);
-            
+
             if (!words) {
                 console.warn(`Words not found`);
             }
 
             const gameObj = await GameService.getGame(uuid);
-            
+
             if (!gameObj) {
                 console.warn(`Game ID ${uuid} not found`);
                 setPlayerIsValid(false);
-            }
-            else {                
+            } else {
                 setGame(gameObj);
                 setPlayerIsValid(true);
 
                 let session;
-    
-                if (!cookies.session || cookies.session === 'undefined') {
-                    session = await SessionService.createSession('Harry', game.id);
-                    setCookie('session', session.session_token, { path: '/' });
 
-                } 
+                if (!cookies.session || cookies.session === 'undefined') {
+                    session = await SessionService.createSession(
+                        'Harry',
+                        game.id
+                    );
+                    setCookie('session', session.session_token, { path: '/' });
+                }
                 // else {
                 //     session = await SessionService.getSession(cookies.session);
                 // }
-    
+
                 // if (session?.session_token) {
                 //     setCookie('session', session.session_token, { path: '/' });
                 // }
@@ -60,16 +61,14 @@ const Game = ({ uuid }) => {
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {
         navigate(`/`);
-        return; 
-    }
-    
-    if (!game) {
-        return <div> Retrieving purpose... </div>;
-    } 
-    else if (game.gameStatus === 'lobby') {
-        return <Lobby game={game} setGame={setGame} />;
+        return;
     }
 
+    if (!game) {
+        return <div> Retrieving purpose... </div>;
+    } else if (game.gameStatus === 'lobby') {
+        return <Lobby game={game} setGame={setGame} />;
+    }
 
     return (
         <Slide direction="up" in={true} mountOnEnter unmountOnExit>

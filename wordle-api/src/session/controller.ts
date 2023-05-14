@@ -5,7 +5,7 @@ export const getSession = async (req, res) => {
     const sessionToken = req.params.token;
 
     const session = await querySession(sessionToken);
-    
+
     if (session) {
         res.send(session);
     } else {

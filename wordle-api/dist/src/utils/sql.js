@@ -1,6 +1,6 @@
 import pg from 'pg';
 import Config from '../../config';
-var client;
+let client;
 const psql = () => {
     if (client) {
         return client;

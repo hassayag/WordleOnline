@@ -3,12 +3,13 @@ import { GameService } from 'services/game-service';
 import PlayerCard from './player-card/player-card';
 
 const Lobby = ({ game, setGame }) => {
-    const names = game.state.map(item => item.player.name);
+    const names = game.state.map((item) => item.player.name);
 
     return (
         <>
             <Container component="main" maxWidth="sm">
-                <Box sx={{
+                <Box
+                    sx={{
                         position: 'absolute',
                         left: 100,
                         width: 2000,
@@ -19,7 +20,8 @@ const Lobby = ({ game, setGame }) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Box sx={{
+                    <Box
+                        sx={{
                             width: 500,
                             display: 'flex',
                             gap: '8px',
@@ -27,7 +29,7 @@ const Lobby = ({ game, setGame }) => {
                             alignItems: 'center',
                         }}
                     >
-                        <Players names={names}/>
+                        <Players names={names} />
                     </Box>
 
                     <Box
@@ -45,7 +47,11 @@ const Lobby = ({ game, setGame }) => {
                             Game Lobby
                         </Typography>
 
-                        <Typography variant="black" component="body" gutterBottom>
+                        <Typography
+                            variant="black"
+                            component="body"
+                            gutterBottom
+                        >
                             Share this link to play with a friend - {game.uuid}
                         </Typography>
 
@@ -71,10 +77,15 @@ const Lobby = ({ game, setGame }) => {
     );
 };
 
-const Players = ({names}) => {
-    return  names.map(name => {
-                return <Typography component='body' variant='nameTag'> {name} </Typography>
-            })
-}
+const Players = ({ names }) => {
+    return names.map((name) => {
+        return (
+            <Typography component="body" variant="nameTag">
+                {' '}
+                {name}{' '}
+            </Typography>
+        );
+    });
+};
 
 export default Lobby;

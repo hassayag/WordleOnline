@@ -15,11 +15,11 @@ const CreateGame = ({ setGameIds }) => {
 
     const _initGame = async () => {
         let session;
-    
+
         if (!cookies.session || cookies.session === 'undefined') {
             session = await SessionService.createSession(name);
             setCookie('session', session.session_token, { path: '/' });
-        } 
+        }
 
         GameService.createGame(name)
             .then((response) => setGameId(response.uuid))
@@ -38,9 +38,6 @@ const CreateGame = ({ setGameIds }) => {
             navigate(`/game/${gameId}`);
         }
     }, [gameId]);
-    
-
-
 
     return (
         <Container component="main" maxWidth="sm">
@@ -55,17 +52,21 @@ const CreateGame = ({ setGameIds }) => {
                     alignItems: 'center',
                 }}
             >
-            <TextField
-                required={!name}
-                error={!name}
-                label="Enter Name"
-                variant="outlined"
-                onChange={(event) => _handleInput(event)}
-            />
+                <TextField
+                    required={!name}
+                    error={!name}
+                    label="Enter Name"
+                    variant="outlined"
+                    onChange={(event) => _handleInput(event)}
+                />
 
-            <Button disabled={!name} variant="contained" onClick={() => _initGame()}>
-                Create Game
-            </Button>               
+                <Button
+                    disabled={!name}
+                    variant="contained"
+                    onClick={() => _initGame()}
+                >
+                    Create Game
+                </Button>
             </Box>
         </Container>
     );

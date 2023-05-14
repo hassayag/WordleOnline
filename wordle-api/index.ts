@@ -6,7 +6,6 @@ import game from './src/game/routes';
 import session from './src/session/routes';
 import words from './src/words/routes';
 
-
 const initApp = () => {
     const app = express();
     app.use(

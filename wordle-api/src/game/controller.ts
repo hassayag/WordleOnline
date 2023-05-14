@@ -1,7 +1,8 @@
 import { v4 } from 'uuid';
+
 import psql from '../utils/sql';
 import { randomWord } from '../utils/words-util';
-import { Game, GameStatus } from './types'
+import { CreateGameReq, Game, GameStatus, UpdateGameReq } from './types';
 
 // get uuids of all games
 export const getUuids = async (req, res) => {
@@ -18,19 +19,21 @@ export const getUuids = async (req, res) => {
 
 export const getGame = async (req, res) => {
     const game: Game = await _getGame(req.params.uuid);
-    
+
     if (game.gameStatus !== GameStatus.Lobby) {
-        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        const playerState = game.state.find(
+            (item) => item.player.sessionToken === req.cookies.session
+        );
         if (!playerState) {
-            res.status(404).send('Game not found')
+            res.status(404).send('Game not found');
             return;
         }
     }
-    
+
     res.send(game);
 };
 
-export const createGame = async (req, res) => {
+export const createGame = async (req: CreateGameReq, res) => {
     if (!req.cookies?.session) {
         res.status(400).send('Session token not found');
         return;
@@ -39,7 +42,7 @@ export const createGame = async (req, res) => {
     const newPlayer = (name, sessionToken) => {
             return {
                 name,
-                sessionToken
+                sessionToken,
             };
         },
         randWord = await randomWord();
@@ -103,14 +106,16 @@ export const createGame = async (req, res) => {
     res.send(game);
 };
 
-export const updateGame = async (req, res) => {
+export const updateGame = async (req: UpdateGameReq, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
 
     if (game.gameStatus !== GameStatus.Lobby) {
-        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        const playerState = game.state.find(
+            (item) => item.player.sessionToken === req.cookies.session
+        );
         if (!playerState) {
-            res.status(404).send('Game not found')
+            res.status(404).send('Game not found');
             return;
         }
     }

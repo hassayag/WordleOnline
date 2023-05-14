@@ -29,7 +29,7 @@ const theme = createTheme({
             fontSize: 50,
             fontWeight: 'bold',
             color: 'black',
-        }
+        },
     },
     palette: {
         primary: {

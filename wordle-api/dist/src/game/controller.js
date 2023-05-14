@@ -16,7 +16,7 @@ export const getUuids = async (req, res) => {
 export const getGame = async (req, res) => {
     const game = await _getGame(req.params.uuid);
     if (game.gameStatus !== GameStatus.Lobby) {
-        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        const playerState = game.state.find((item) => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
             res.status(404).send('Game not found');
             return;
@@ -33,7 +33,7 @@ export const createGame = async (req, res) => {
     const newPlayer = (name, sessionToken) => {
         return {
             name,
-            sessionToken
+            sessionToken,
         };
     }, randWord = await randomWord();
     const uuid = v4(), gameStatus = 'lobby', state = JSON.stringify([
@@ -91,7 +91,7 @@ export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
     if (game.gameStatus !== GameStatus.Lobby) {
-        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        const playerState = game.state.find((item) => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
             res.status(404).send('Game not found');
             return;
