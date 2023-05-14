@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-
+import cookieParser from 'cookie-parser';
 import Config from './config.js';
 import game from './src/routes/game.js';
 import session from './src/routes/session.js';
@@ -18,6 +18,8 @@ const initApp = () => {
             credentials: true,
         })
     );
+
+    app.use(cookieParser());
 
     app.use('/game', game);
     app.use('/session', session);

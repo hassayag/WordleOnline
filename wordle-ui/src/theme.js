@@ -9,7 +9,7 @@ const theme = createTheme({
         allVariants: {
             color: 'white',
         },
-        body2: {
+        black: {
             fontFamily: 'Arial, Helvetica, sans-serif',
             fontSize: 12,
             color: 'black',
@@ -24,6 +24,12 @@ const theme = createTheme({
             textTransform: 'none',
             color: '#FFFFFF',
         },
+        nameTag: {
+            fontFamily: 'Arial, Helvetica, sans-serif',
+            fontSize: 50,
+            fontWeight: 'bold',
+            color: 'black',
+        }
     },
     palette: {
         primary: {

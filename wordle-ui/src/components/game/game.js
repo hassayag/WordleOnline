@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Box, Container, Slide } from '@mui/material';
 
@@ -10,49 +11,62 @@ import { SessionService } from 'services/session-service';
 import './game.scss';
 
 const Game = ({ uuid }) => {
+    const navigate = useNavigate();
+
     const [validGuesses, setValidGuesses] = useState(null);
     const [game, setGame] = useState(null);
     const [cookies, setCookie] = useCookies(['session']);
+    const [gameIsLoaded, setGameIsLoaded] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
             // Get a random goal word
             const { words } = await WordService.getValidGuesses();
             setValidGuesses(words);
-
-            const game = await GameService.getGame(uuid);
-            setGame(game);
-
-            if (!game) {
-                console.warn(`Game ID ${uuid} not found`);
-                return;
-            }
-
+            
             if (!words) {
                 console.warn(`Words not found`);
-                return;
             }
 
-            let session;
-
-            if (!cookies.session || cookies.session === 'undefined') {
-                session = await SessionService.createSession('Harry', game.id);
-            } else {
-                session = await SessionService.getSession(cookies.session);
+            const gameObj = await GameService.getGame(uuid);
+            
+            if (!gameObj) {
+                console.warn(`Game ID ${uuid} not found`);
+            }
+            else {                
+                setGame(gameObj);
+    
+                let session;
+    
+                if (!cookies.session || cookies.session === 'undefined') {
+                    session = await SessionService.createSession('Harry', game.id);
+                } else {
+                    session = await SessionService.getSession(cookies.session);
+                }
+    
+                if (session.session_token) {
+                    setCookie('session', session.session_token, { path: '/' });
+                }
             }
 
-            if (session.session_token) {
-                setCookie('session', session.session_token, { path: '/' });
-            }
+            setGameIsLoaded(true);
         }
         fetchData();
     }, [uuid, cookies?.session, game?.id, setCookie]);
 
-    if (!game) {
+    if (!gameIsLoaded) {
         return <div> Retrieving purpose... </div>;
-    } else if (game.game_status === 'lobby') {
+    } 
+    // if there is no game at this point, then the use must not be validated
+    // so redirect them to home
+    else if (!game) {
+        navigate(`/`);
+        return; 
+    }
+    else if (game.game_status === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;
     }
+
 
     return (
         <Slide direction="up" in={true} mountOnEnter unmountOnExit>

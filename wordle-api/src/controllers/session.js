@@ -24,14 +24,10 @@ export const createSession = async (req, res) => {
         res.status(400).send("'name' is required");
     }
 
-    if (!gameId) {
-        res.status(400).send("'game id' is required");
-    }
-
     try {
         await psql().query(
             'INSERT INTO session (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)',
-            [name, sessionToken, gameId, expiresAt.toISOString()]
+            [name, sessionToken, gameId || null, expiresAt.toISOString()]
         );
     } catch (err) {
         throw new Error(err.stack);

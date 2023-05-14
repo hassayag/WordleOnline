@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // loads the custom .env vars
 import {config} from 'dotenv'
 config()

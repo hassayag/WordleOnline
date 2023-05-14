@@ -6,7 +6,7 @@ export class GameService {
 
         return fetch(request, { credentials: 'include' }).then((response) =>
             response.json()
-        );
+        ).catch(err => console.error(err.message));;
     }
 
     static getGame(uuid) {
@@ -14,7 +14,7 @@ export class GameService {
 
         return fetch(request, { credentials: 'include' }).then((response) =>
             response.json()
-        );
+        ).catch(err => console.error(err.message));
     }
 
     static createGame(hostName) {
@@ -30,7 +30,8 @@ export class GameService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             credentials: 'include',
-        }).then((response) => response.json());
+        }).then((response) => response.json())
+        .catch(err => console.error(err.message));;
     }
 
     static updateGame(uuid, options) {
@@ -44,6 +45,7 @@ export class GameService {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             credentials: 'include',
-        }).then((response) => response.json());
+        }).then((response) => response.json())
+        .catch(err => console.error(err.message));;
     }
 }

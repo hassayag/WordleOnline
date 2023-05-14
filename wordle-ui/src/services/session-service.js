@@ -9,12 +9,11 @@ export class SessionService {
         );
     }
 
-    static createSession(name, gameId) {
+    static createSession(name) {
         const request = new Request(Config.api.url + '/session');
 
         const payload = {
             name,
-            gameId,
         };
 
         return fetch(request, {

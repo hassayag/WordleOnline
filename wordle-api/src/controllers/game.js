@@ -17,14 +17,27 @@ export const getUuids = async (req, res) => {
 export const getGame = async (req, res) => {
     const game = await _getGame(req.params.uuid);
 
+    if (game.game_status !== 'lobby') {
+        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        if (!playerState) {
+            res.status(404).send('Game not found')
+            return;
+        }
+    }
+    
     res.send(game);
 };
 
 export const createGame = async (req, res) => {
-    const newPlayer = (name) => {
+    if (!req.cookies?.session) {
+        res.status(400).send('Session token not found');
+        return;
+    }
+
+    const newPlayer = (name, sessionToken) => {
             return {
                 name,
-                client: {},
+                sessionToken
             };
         },
         randWord = await randomWord();
@@ -33,7 +46,7 @@ export const createGame = async (req, res) => {
         gameStatus = 'lobby',
         state = JSON.stringify([
             {
-                player: newPlayer(req.body.name),
+                player: newPlayer(req.body.name, req.cookies.session),
                 goalWord: randWord,
                 board: {
                     0: [],
@@ -91,6 +104,14 @@ export const createGame = async (req, res) => {
 export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
     const game = await _getGame(req.params.uuid);
+
+    if (game.game_status !== 'lobby') {
+        const playerState = game.state.find(item => item.player.sessionToken === req.cookies.session);
+        if (!playerState) {
+            res.status(404).send('Game not found')
+            return;
+        }
+    }
 
     if (req.body.state) {
         game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
