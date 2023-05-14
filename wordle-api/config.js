@@ -4,18 +4,18 @@ config()
 
 export default {
     "sql": {
-        "host": "localhost",
+        "host": process.env.POSTGRES_HOST || "localhost",
         "database": "wordle-online",
-        "port": 5432,
+        "port": process.env.POSTGRES_PORT || 5432,
         "user": process.env.POSTGRES_USER,
         "password": process.env.POSTGRES_PASS
     },
     "server": {
-        "host": "http://localhost",
-        "port": 8081
+        "host": process.env.SERVER_HOST || "http://localhost",
+        "port": process.env.SERVER_PORT || 8081
     },
     "client": {
-        "host": "http://localhost",
-        "port": 3000
+        "host": process.env.CLIENT_HOST || "http://localhost",
+        "port": process.env.CLIENT_PORT || 3000
     }
 }
