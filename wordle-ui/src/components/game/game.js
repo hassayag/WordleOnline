@@ -16,7 +16,7 @@ const Game = ({ uuid }) => {
     const [validGuesses, setValidGuesses] = useState(null);
     const [game, setGame] = useState(null);
     const [cookies, setCookie] = useCookies(['session']);
-    const [gameIsLoaded, setGameIsLoaded] = useState(false);
+    const [playerIsValid, setPlayerIsValid] = useState(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -32,37 +32,40 @@ const Game = ({ uuid }) => {
             
             if (!gameObj) {
                 console.warn(`Game ID ${uuid} not found`);
+                setPlayerIsValid(false);
             }
             else {                
                 setGame(gameObj);
-    
+                setPlayerIsValid(true);
+
                 let session;
     
                 if (!cookies.session || cookies.session === 'undefined') {
                     session = await SessionService.createSession('Harry', game.id);
-                } else {
-                    session = await SessionService.getSession(cookies.session);
-                }
-    
-                if (session.session_token) {
                     setCookie('session', session.session_token, { path: '/' });
-                }
-            }
 
-            setGameIsLoaded(true);
+                } 
+                // else {
+                //     session = await SessionService.getSession(cookies.session);
+                // }
+    
+                // if (session?.session_token) {
+                //     setCookie('session', session.session_token, { path: '/' });
+                // }
+            }
         }
         fetchData();
     }, [uuid, cookies?.session, game?.id, setCookie]);
 
-    if (!gameIsLoaded) {
-        return <div> Retrieving purpose... </div>;
-    } 
-    // if there is no game at this point, then the use must not be validated
-    // so redirect them to home
-    else if (!game) {
+    // player has not passed validation, so navigate to hom
+    if (playerIsValid === false) {
         navigate(`/`);
         return; 
     }
+    
+    if (!game) {
+        return <div> Retrieving purpose... </div>;
+    } 
     else if (game.game_status === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;
     }
