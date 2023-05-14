@@ -43,6 +43,9 @@ const CreateGame = ({ setGameIds }) => {
             navigate(`/game/${gameId}`);
         }
     }, [gameId]);
+    
+
+
 
     return (
         <Container component="main" maxWidth="sm">
@@ -57,16 +60,17 @@ const CreateGame = ({ setGameIds }) => {
                     alignItems: 'center',
                 }}
             >
-                <TextField
-                    id="outlined-basic"
-                    label="Enter Name"
-                    variant="outlined"
-                    onChange={(event) => _handleInput(event)}
-                />
+            <TextField
+                required={!name}
+                error={!name}
+                label="Enter Name"
+                variant="outlined"
+                onChange={(event) => _handleInput(event)}
+            />
 
-                <Button variant="contained" onClick={() => _initGame()}>
-                    Create game
-                </Button>
+            <Button disabled={!name} variant="contained" onClick={() => _initGame()}>
+                Create Game
+            </Button>               
             </Box>
         </Container>
     );

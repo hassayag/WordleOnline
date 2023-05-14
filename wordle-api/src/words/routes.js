@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
-import { getValidGuesses, getGoalWord } from '../controllers/words.js';
+import { getValidGuesses, getGoalWord } from './controller.js'
 
 const router = express.Router();
 

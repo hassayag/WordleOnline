@@ -2,9 +2,9 @@ import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import Config from './config.js';
-import game from './src/routes/game.js';
-import session from './src/routes/session.js';
-import words from './src/routes/words.js';
+import game from './src/game/routes.js';
+import session from './src/session/routes.js';
+import words from './src/words/routes.js';
 
 
 const initApp = () => {

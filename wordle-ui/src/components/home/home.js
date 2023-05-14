@@ -103,7 +103,7 @@ const Navbar = () => {
                 PaperProps={{
                     elevation: 24,
                     sx: {
-                        backgroundColor: '#787c7e',
+                        backgroundColor: '#483248',
                     },
                 }}
             >

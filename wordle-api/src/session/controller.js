@@ -22,6 +22,7 @@ export const createSession = async (req, res) => {
 
     if (!name) {
         res.status(400).send("'name' is required");
+        return;
     }
 
     try {

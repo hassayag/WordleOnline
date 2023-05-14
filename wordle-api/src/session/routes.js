@@ -3,7 +3,7 @@ import {
     getSession,
     createSession,
     deleteSession,
-} from '../controllers/session.js';
+} from '../session/controller.js';
 import bodyParser from 'body-parser';
 
 const router = express.Router();

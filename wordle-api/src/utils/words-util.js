@@ -13,8 +13,8 @@ export const readFile = async (fileDir) => {
     const filePath = path.resolve(fileDir);
     
     const stream = fs
-    .createReadStream(filePath)
-    .pipe(parse({ delimiter: ',', from_line: 2 }));
+        .createReadStream(filePath)
+        .pipe(parse({ delimiter: ',', from_line: 2 }));
     
     stream.on('data', function (row) {
         words.push(row[0]);

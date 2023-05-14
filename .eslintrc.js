@@ -3,13 +3,19 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    extends: ['plugin:react/recommended', 'eslint:recommended'],
+    extends: [
+        'plugin:react/recommended',
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended", 
+        'plugin:import/recommended', 
+        'eslint:recommended'
+    ],
     overrides: [],
     parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['react'],
+    plugins: ['react', '@typescript-eslint'],
     rules: {
         indent: ['error', 4],
         'no-unused-vars': 'warn',
