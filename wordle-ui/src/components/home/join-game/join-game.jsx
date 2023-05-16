@@ -1,33 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import { GameService } from 'services/game-service';
+import { SessionService } from 'services/session-service';
 
-const CreateGame = ({ setGameIds }) => {
+const JoinGame = ({ setGameIds }) => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState('');
+    const [cookies, setCookie] = useCookies(['session']);
 
-    const _initGame = () => {
-        GameService.createGame(name)
-            .then((response) => setGameId(response.uuid))
-            .catch((err) => console.error(err));
-    };
+    const initGame = async () => {
+        let session;
 
-    const _handleInput = (event) => {
-        setName(event.target.value);
-    };
-
-    useEffect(() => {
-        if (gameId) {
-            // update game ids so Home component can rerender with the new game route
-            setGameIds((ids) => [...ids, gameId]);
-
-            navigate(`/game/${gameId}`);
+        if (!cookies.session || cookies.session === 'undefined') {
+            session = await SessionService.createSession(name);
+            setCookie('session', session.session_token, { path: '/' });
         }
-    }, [gameId]);
+
+        GameService.joinGame()
+    };
 
     return (
         <Container component="main" maxWidth="sm">
@@ -46,15 +41,15 @@ const CreateGame = ({ setGameIds }) => {
                     id="outlined-basic"
                     label="Enter Name"
                     variant="outlined"
-                    onChange={(event) => _handleInput(event)}
+                    onChange={(event) => setName(event.target.value)}
                 />
 
-                <Button variant="contained" onClick={() => _initGame()}>
-                    Create game
+                <Button variant="contained" onClick={() => initGame()}>
+                    Join Game
                 </Button>
             </Box>
         </Container>
     );
 };
 
-export default CreateGame;
+export default JoinGame;

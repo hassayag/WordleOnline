@@ -1,20 +1,13 @@
 import { v4 } from 'uuid';
-import psql from '../utils/sql';
 import { randomWord } from '../utils/words-util';
-import { GameStatus } from './types';
+import db from './db-utils';
+import { GameStatus, LetterColour } from './types';
 // get uuids of all games
 export const getUuids = async (req, res) => {
-    let games;
-    try {
-        games = await psql().query('SELECT uuid from game');
-    }
-    catch (err) {
-        throw new Error(err.stack);
-    }
-    res.send({ uuids: games.rows.map((game) => game.uuid) });
+    res.send(await db.getUuids());
 };
 export const getGame = async (req, res) => {
-    const game = await _getGame(req.params.uuid);
+    const game = await db.get(req.params.uuid);
     if (game.game_status !== GameStatus.Lobby) {
         const playerState = game.state.find((item) => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
@@ -36,7 +29,7 @@ export const createGame = async (req, res) => {
             sessionToken,
         };
     }, randWord = await randomWord();
-    const uuid = v4(), game_status = 'lobby', state = JSON.stringify([
+    const uuid = v4(), game_status = GameStatus.Lobby, state = [
         {
             player: newPlayer(req.body.name, req.cookies.session),
             goalWord: randWord,
@@ -49,47 +42,42 @@ export const createGame = async (req, res) => {
                 5: [],
             },
             letterStates: {
-                a: 'white',
-                b: 'white',
-                c: 'white',
-                d: 'white',
-                e: 'white',
-                f: 'white',
-                g: 'white',
-                h: 'white',
-                i: 'white',
-                j: 'white',
-                k: 'white',
-                l: 'white',
-                m: 'white',
-                n: 'white',
-                o: 'white',
-                p: 'white',
-                q: 'white',
-                r: 'white',
-                s: 'white',
-                t: 'white',
-                u: 'white',
-                v: 'white',
-                w: 'white',
-                x: 'white',
-                y: 'white',
-                z: 'white',
+                a: LetterColour.White,
+                b: LetterColour.White,
+                c: LetterColour.White,
+                d: LetterColour.White,
+                e: LetterColour.White,
+                f: LetterColour.White,
+                g: LetterColour.White,
+                h: LetterColour.White,
+                i: LetterColour.White,
+                j: LetterColour.White,
+                k: LetterColour.White,
+                l: LetterColour.White,
+                m: LetterColour.White,
+                n: LetterColour.White,
+                o: LetterColour.White,
+                p: LetterColour.White,
+                q: LetterColour.White,
+                r: LetterColour.White,
+                s: LetterColour.White,
+                t: LetterColour.White,
+                u: LetterColour.White,
+                v: LetterColour.White,
+                w: LetterColour.White,
+                x: LetterColour.White,
+                y: LetterColour.White,
+                z: LetterColour.White,
             },
         },
-    ]);
-    try {
-        await psql().query('INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)', [uuid, game_status, req.body.type, state]);
-    }
-    catch (err) {
-        throw new Error(err.stack);
-    }
-    const game = await _getGame(uuid);
+    ];
+    const game = await db.create({ uuid, game_status, type: req.body.type, state });
+    console.log(game);
     res.send(game);
 };
 export const updateGame = async (req, res) => {
     // assign the user's game state to the correct part of state object
-    const game = await _getGame(req.params.uuid);
+    const game = await db.get(req.params.uuid);
     if (game.game_status !== GameStatus.Lobby) {
         const playerState = game.state.find((item) => item.player.sessionToken === req.cookies.session);
         if (!playerState) {
@@ -103,29 +91,14 @@ export const updateGame = async (req, res) => {
     if (req.body.game_status) {
         game.game_status = req.body.game_status;
     }
-    try {
-        await psql().query('UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2', [JSON.stringify(game.state), game.uuid, game.game_status]);
-    }
-    catch (err) {
-        throw new Error(err.stack);
-    }
-    const newGame = await _getGame(req.params.uuid);
+    const newGame = await db.update(game);
     res.send(newGame);
 };
-const _getGame = async (uuid) => {
-    let rawGame;
-    try {
-        rawGame = await psql().query('SELECT * FROM game WHERE uuid = $1', [
-            uuid,
-        ]);
+export const joinGame = async (req, res) => {
+    const game = await db.get(req.params.uuid);
+    if (game.game_status !== GameStatus.Lobby) {
+        res.status(400).send('Game has already started');
+        return;
     }
-    catch (err) {
-        throw new Error(err.stack);
-    }
-    // get row and parse state to JSON
-    console.log(rawGame.rows);
-    const game = rawGame.rows[0];
-    game.state = JSON.parse(game.state);
-    return game;
 };
 //# sourceMappingURL=controller.js.map

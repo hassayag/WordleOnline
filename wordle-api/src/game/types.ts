@@ -39,7 +39,6 @@ export enum GameStatus {
 }
 
 // Request Interfaces
-
 export interface CreateGameReq extends Request {
     body: {
         name: string;
@@ -50,5 +49,11 @@ export interface UpdateGameReq extends Request {
     body: {
         state: PlayerState;
         game_status: GameStatus;
+    };
+}
+
+export interface JoinGameReq extends Request {
+    body: {
+        uuid: string;
     };
 }
