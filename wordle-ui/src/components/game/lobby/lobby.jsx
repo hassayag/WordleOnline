@@ -1,6 +1,5 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { GameService } from 'services/game-service';
-import PlayerCard from './player-card/player-card';
 
 const Lobby = ({ game, setGame }) => {
     const names = game.state.map((item) => item.player.name);
@@ -60,10 +59,10 @@ const Lobby = ({ game, setGame }) => {
                             onClick={() =>
                                 setGame((game) => {
                                     GameService.updateGame(game.uuid, {
-                                        gameStatus: 'in_progress',
+                                        game_status: 'in_progress',
                                     });
                                     Object.assign(game, {
-                                        gameStatus: 'in_progress',
+                                        game_status: 'in_progress',
                                     });
                                 })
                             }

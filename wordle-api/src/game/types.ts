@@ -3,7 +3,7 @@ import { Request } from 'express';
 export interface Game {
     id: number;
     uuid: string;
-    gameStatus: GameStatus;
+    game_status: GameStatus;
     type: 'standard' | string;
     state: PlayerState[];
 }
@@ -49,6 +49,6 @@ export interface CreateGameReq extends Request {
 export interface UpdateGameReq extends Request {
     body: {
         state: PlayerState;
-        gameStatus: GameStatus;
+        game_status: GameStatus;
     };
 }

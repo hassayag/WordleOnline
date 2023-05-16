@@ -43,7 +43,7 @@ export class Wordle extends React.Component {
             _wordRows: initWordRows,
             _rowInd: initRowInd,
             _gameIsWon: null,
-            _endModalOpen: false || this.props.game.gameStatus === 'done',
+            _endModalOpen: false || this.props.game.game_status === 'done',
         });
 
         this.gameIsLoaded = true;
@@ -259,7 +259,7 @@ export class Wordle extends React.Component {
             state: game.state[0],
         };
         if (this.gameIsWon !== null) {
-            updateOptions.gameStatus = 'done';
+            updateOptions.game_status = 'done';
         }
 
         GameService.updateGame(game.uuid, updateOptions);

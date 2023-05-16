@@ -63,10 +63,10 @@ const Game = ({ uuid }) => {
         navigate(`/`);
         return;
     }
-
+    console.log(game)
     if (!game) {
         return <div> Retrieving purpose... </div>;
-    } else if (game.gameStatus === 'lobby') {
+    } else if (game.game_status === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;
     }
 
