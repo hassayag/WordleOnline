@@ -58,7 +58,7 @@ class GameDbUtils {
             throw new Error(err.stack);
         }
     
-        await this.get(uuid);
+        return await this.get(uuid);
     }
 }
 

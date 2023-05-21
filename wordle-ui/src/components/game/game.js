@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { Box, Container, Slide } from '@mui/material';
+import { Box, Container, Slide, Stack } from '@mui/material';
 
 import { Wordle } from './wordle/wordle';
 import Lobby from './lobby/lobby';
 import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
 import { SessionService } from 'services/session-service';
+import SynthControl from 'components/synth/synth-control';
 import './game.scss';
 
 const Game = ({ uuid }) => {
@@ -63,7 +64,6 @@ const Game = ({ uuid }) => {
         navigate(`/`);
         return;
     }
-    console.log(game)
     if (!game) {
         return <div> Retrieving purpose... </div>;
     } else if (game.game_status === 'lobby') {
@@ -71,23 +71,34 @@ const Game = ({ uuid }) => {
     }
 
     return (
-        <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-            <Container component="main" maxWidth="sm">
-                <Box
-                    sx={{
-                        width: 500,
-                        height: 500,
-                        marginTop: 8,
-                        display: 'flex',
-                        gap: '8px',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Wordle validGuesses={validGuesses} game={game} />
-                </Box>
-            </Container>
-        </Slide>
+        <Box sx={{
+                width: 1000,
+                display: 'flex',
+                gap: '8px',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginLeft: 100,
+        }}>
+            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                <Container component="main" maxWidth="sm">
+                    <Box
+                        sx={{
+                            width: 500,
+                            height: 500,
+                            marginTop: 8,
+                            display: 'flex',
+                            gap: '8px',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Wordle validGuesses={validGuesses} game={game} />
+                    </Box>
+                </Container>
+            </Slide>
+        
+            <SynthControl/>
+        </Box>
     );
 };
 

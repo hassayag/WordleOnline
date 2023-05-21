@@ -72,7 +72,6 @@ export const createGame = async (req, res) => {
         },
     ];
     const game = await db.create({ uuid, game_status, type: req.body.type, state });
-    console.log(game);
     res.send(game);
 };
 export const updateGame = async (req, res) => {
