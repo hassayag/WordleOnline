@@ -1,8 +1,8 @@
-import Config from '../config.js';
+import config from 'config/config'
 
 export class WordService {
     static getGoalWord() {
-        const request = new Request(Config.api.url + '/words/goal-word');
+        const request = new Request(config.api.url + '/words/goal-word');
 
         return fetch(request)
             .then((response) => response.json())
@@ -10,7 +10,7 @@ export class WordService {
     }
 
     static getValidGuesses() {
-        const request = new Request(Config.api.url + '/words/valid-guesses');
+        const request = new Request(config.api.url + '/words/valid-guesses');
 
         return fetch(request)
             .then((response) => response.json())

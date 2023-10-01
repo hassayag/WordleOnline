@@ -1,8 +1,8 @@
-import Config from '../config.js';
+import config from 'config/config'
 
 export class GameService {
     static getGames() {
-        const request = new Request(Config.api.url + '/game/uuids');
+        const request = new Request(config.api.url + '/game/uuids');
 
         return fetch(request, { credentials: 'include' })
             .then((response) => response.json())
@@ -10,7 +10,7 @@ export class GameService {
     }
 
     static getGame(uuid) {
-        const request = new Request(Config.api.url + '/game/' + uuid);
+        const request = new Request(config.api.url + '/game/' + uuid);
 
         return fetch(request, { credentials: 'include' })
             .then((response) => response.json())
@@ -18,7 +18,7 @@ export class GameService {
     }
 
     static createGame(hostName) {
-        const request = new Request(Config.api.url + '/game');
+        const request = new Request(config.api.url + '/game');
 
         const payload = {
             name: hostName,
@@ -36,7 +36,7 @@ export class GameService {
     }
 
     static updateGame(uuid, options) {
-        const request = new Request(Config.api.url + '/game/' + uuid);
+        const request = new Request(config.api.url + '/game/' + uuid);
 
         const payload = Object.assign({ uuid }, options);
 

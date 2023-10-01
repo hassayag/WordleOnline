@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 // loads the custom .env vars
 import { config } from 'dotenv';
+
 config();
 
 export default {
@@ -18,5 +19,5 @@ export default {
     client: {
         host: process.env.CLIENT_HOST || 'http://localhost',
         port: process.env.CLIENT_PORT || 3000,
-    },
+    }
 };

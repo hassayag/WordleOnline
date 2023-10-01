@@ -3,6 +3,7 @@ import { Box, Paper } from '@mui/material';
 
 import './keyboard.scss';
 import synthService from '../../../services/synth-service'
+import config from 'config/config'
 
 class Keyboard extends React.Component {
     letters = [
@@ -14,7 +15,10 @@ class Keyboard extends React.Component {
     componentDidMount() {
         const pressKey = (letter) => {
             this.props.onPress(letter);
-            synthService.triggerSound(letter)
+
+            if (config.feature_flags.synth) {
+                synthService.triggerSound(letter)
+            }
         }
 
         document.body.addEventListener('keydown', (event) =>
@@ -25,7 +29,9 @@ class Keyboard extends React.Component {
     componentWillUnmount() {
         const pressKey = (letter) => this.props.onPress(letter);
 
-        synthService.stopLoops();
+        if (config.feature_flags.synth) {
+            synthService.stopLoops();
+        }
 
         document.body.removeEventListener('keydown', (event) =>
             pressKey(event.key)
@@ -79,7 +85,9 @@ class Keyboard extends React.Component {
 const Key = ({ inputLetter, onPress, keyState }) => {
     const pressKey = () => {
         onPress(inputLetter);
-        synthService.triggerSound(inputLetter)
+        if (config.feature_flags.synth) {
+            synthService.triggerSound(inputLetter)
+        }
     }
 
     return (

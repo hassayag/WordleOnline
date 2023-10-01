@@ -5,6 +5,7 @@ import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import { GameService } from 'services/game-service';
 import synthService from 'services/synth-service';
+import config from 'config/config'
 
 import './wordle.css';
 import { Box } from '@mui/system';
@@ -163,7 +164,9 @@ export class Wordle extends React.Component {
         ) {
             this._triggerError(this.rowInd);
         } else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
-            synthService.startLoop(this.wordRows[this.rowInd].map(letter => letter.key))
+            if (config.feature_flags.synth) {
+                synthService.startLoop(this.wordRows[this.rowInd].map(letter => letter.key))
+            }
             this._updateGameState();
         }
 

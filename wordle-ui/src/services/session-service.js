@@ -1,8 +1,8 @@
-import Config from '../config.js';
+import config from 'config/config'
 
 export class SessionService {
     static getSession(token) {
-        const request = new Request(Config.api.url + '/session/' + token);
+        const request = new Request(config.api.url + '/session/' + token);
 
         return fetch(request, { credentials: 'include' }).then((response) =>
             response.json()
@@ -10,7 +10,7 @@ export class SessionService {
     }
 
     static createSession(name) {
-        const request = new Request(Config.api.url + '/session');
+        const request = new Request(config.api.url + '/session');
 
         const payload = {
             name,
@@ -29,7 +29,7 @@ export class SessionService {
     // }
 
     static deleteSession(token) {
-        const request = new Request(Config.api.url + '/session/' + token);
+        const request = new Request(config.api.url + '/session/' + token);
 
         return fetch(request, {
             method: 'DELETE',

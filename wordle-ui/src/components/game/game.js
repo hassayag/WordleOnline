@@ -9,6 +9,7 @@ import { WordService } from 'services/word-service';
 import { GameService } from 'services/game-service';
 import { SessionService } from 'services/session-service';
 import SynthControl from 'components/synth/synth-control';
+import config from 'config/config'
 import './game.scss';
 
 const Game = ({ uuid }) => {
@@ -97,7 +98,7 @@ const Game = ({ uuid }) => {
                 </Container>
             </Slide>
         
-            <SynthControl/>
+            {config.feature_flags.synth && <SynthControl/>}
         </Box>
     );
 };
