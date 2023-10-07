@@ -7,29 +7,23 @@ const theme = createTheme({
         fontFamily: 'Arial, Helvetica, sans-serif',
         fontSize: 16,
         allVariants: {
-            color: 'grey',
+            color: '#555555',
         },
         body2: {
             fontFamily: 'Arial, Helvetica, sans-serif',
             fontSize: 14,
-            color: 'black',
+            color: '#404040',
         },
         h4: {
             fontFamily: 'Arial, Helvetica, sans-serif',
             fontSize: 36,
             fontWeight: 'bold',
-            color: 'black',
+            color: '404040',
         },
         button: {
             textTransform: 'none',
             color: '#FFFFFF',
-        },
-        nameTag: {
-            fontFamily: 'Arial, Helvetica, sans-serif',
-            fontSize: 50,
-            fontWeight: 'bold',
-            color: 'black',
-        },
+        }
     },
     palette: {
         primary: {

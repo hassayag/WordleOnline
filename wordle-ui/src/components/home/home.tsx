@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {
     Box,
     Container,
@@ -11,7 +11,7 @@ import {
     Drawer,
     Typography,
 } from '@mui/material';
-import { Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
+import { Home as HomeIcon, Add as AddIcon, People as PeopleIcon } from '@mui/icons-material';
 
 import './home.css';
 import { GameService } from '@/services/game-service';
@@ -60,7 +60,7 @@ const Navbar = () => {
                 label: 'Join Game',
                 path: '/game/join',
                 component: <JoinGame />,
-                icon: <AddIcon color="secondary" />,
+                icon: <PeopleIcon color="secondary" />,
             },
         }
         setDrawerLinks(initDrawerLinks);
@@ -123,7 +123,7 @@ const Navbar = () => {
                 PaperProps={{
                     elevation: 24,
                     sx: {
-                        backgroundColor: '#202020',
+                        backgroundColor: '#eeeeee',
                     },
                 }}
             >

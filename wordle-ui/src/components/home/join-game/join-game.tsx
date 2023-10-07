@@ -22,6 +22,7 @@ const JoinGame = () => {
         }
 
         GameService.joinGame(gameId, name);
+        navigate(`/game/${gameId}`)
     };
 
     return (
