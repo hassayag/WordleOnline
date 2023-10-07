@@ -1,8 +1,9 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { GameService } from '@/services/game-service';
 import React from 'react';
+import { Game, GameStatus } from '../game/types';
 
-const Lobby = ({ game, setGame }) => {
+const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | null>}) => {
     const names = game.state.map((item) => item.player.name);
 
     return (
@@ -61,16 +62,15 @@ const Lobby = ({ game, setGame }) => {
 
                         <Button
                             variant="contained"
-                            onClick={() =>
-                                setGame((game) => {
-                                    GameService.updateGame(game.uuid, {
-                                        game_status: 'in_progress',
-                                    });
-                                    Object.assign(game, {
-                                        game_status: 'in_progress',
-                                    });
+                            onClick={() => {
+                                GameService.updateGame(game.uuid, {
+                                    game_status: GameStatus.InProgress,
+                                });
+                                setGame({
+                                    ...game,
+                                    game_status: GameStatus.InProgress
                                 })
-                            }
+                            }}
                         >
                             Start Game
                         </Button>
@@ -81,8 +81,8 @@ const Lobby = ({ game, setGame }) => {
     );
 };
 
-const Players = ({ names }) => {
-    return names.map((name) => {
+const Players = ({ names }: any) => {
+    return names.map((name: string) => {
         return (
             <Typography component="body" variant="body2">
                 {' '}

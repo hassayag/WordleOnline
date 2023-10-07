@@ -11,14 +11,17 @@ import './index.scss';
 
 import Navbar from './components/home/home';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    <CookiesProvider>
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <BrowserRouter>
-                <Navbar />
-            </BrowserRouter>
-        </ThemeProvider>
-    </CookiesProvider>
-);
+const rootElem = document.getElementById('root')
+if (rootElem) {
+    const root = ReactDOM.createRoot(rootElem);
+    root.render(
+        <CookiesProvider>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <BrowserRouter>
+                    <Navbar />
+                </BrowserRouter>
+            </ThemeProvider>
+        </CookiesProvider>
+    );
+}

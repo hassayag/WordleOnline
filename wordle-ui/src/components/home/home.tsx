@@ -16,9 +16,9 @@ import { Home as HomeIcon, Add as AddIcon, People as PeopleIcon } from '@mui/ico
 import './home.css';
 import { GameService } from '@/services/game-service';
 import Game from '../game/game';
-import CreateGame from './create-game/create-game';
+import CreateGame from '../create-game/create-game';
 import React from 'react';
-import JoinGame from './join-game/join-game';
+import JoinGame from '../join-game/join-game';
 
 interface RouteItem {
     path: string,
@@ -33,14 +33,14 @@ interface DrawerItem {
 }
 
 const Navbar = () => {
-    const [gameIds, setGameIds] = useState<number[]>([]);
+    const [gameUuids, setGameUuids] = useState<string[]>([]);
     const [routes, setRoutes] = useState<Record<string, RouteItem>>({});
-    const [navItems, setNavItems] = useState([]);
+    const [navItems, setNavItems] = useState<any[]>([]);
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>({});
 
     useEffect(() => {
         GameService.getGames()
-            .then((response) => setGameIds(response.uuids))
+            .then((response) => setGameUuids(response.uuids))
             .catch((err) => console.error(err));
 
         const initDrawerLinks: Record<string, DrawerItem> = {
@@ -53,7 +53,7 @@ const Navbar = () => {
             create_game: {
                 label: 'Create Game',
                 path: '/game/create',
-                component: <CreateGame setGameIds={setGameIds} />,
+                component: <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />,
                 icon: <AddIcon color="secondary" />,
             },
             join_game: {
@@ -78,9 +78,9 @@ const Navbar = () => {
 
     useEffect(() => {
         // add all gameId routes to links object
-        const gameRoutes = {};
+        const gameRoutes: Record<string, RouteItem> = {};
 
-        gameIds.forEach((id) => {
+        gameUuids.forEach((id) => {
             gameRoutes[`game_${id}`] = {
                 path: `/game/${id}`,
                 component: <Game uuid={id} />,
@@ -101,12 +101,12 @@ const Navbar = () => {
                         </ListItemButton>
                     </ListItem>
                 );
-            })
+            }) as any
         );
-    }, [drawerLinks, gameIds]);
+    }, [drawerLinks, gameUuids]);
 
     if (!routes) {
-        return;
+        return <></>
     }
 
     return (

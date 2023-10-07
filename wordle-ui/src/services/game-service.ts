@@ -1,3 +1,4 @@
+import { Game } from '@/components/game/types';
 import config from '@/config/config'
 
 export class GameService {
@@ -35,7 +36,7 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static updateGame(uuid: string, options) {
+    static updateGame(uuid: string, options: Partial<Game>) {
         const request = new Request(config.api.url + '/game/' + uuid);
 
         const payload = Object.assign({ uuid }, options);

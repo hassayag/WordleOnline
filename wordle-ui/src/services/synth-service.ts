@@ -24,7 +24,7 @@ class SynthService {
         const notes = letters.map(letter => this.getPitch(letter))
         console.log({letters, notes})
         
-        const loop = new Loop(notes)
+        const loop = new Loop(notes as any)
         loop.start()
 
         this.loops.push(loop);
@@ -61,7 +61,7 @@ class SynthService {
         return `${pitch}${register}`
     }
 
-    setEnvelope(envelope) {
+    setEnvelope(envelope: any) {
         console.log('updating envelopes for ', this.loops.length)
         this.loops.forEach(loop => loop.synth.set({envelope}))
     }

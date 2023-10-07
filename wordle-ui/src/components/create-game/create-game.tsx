@@ -6,11 +6,11 @@ import { Box, Button, Container, TextField } from '@mui/material';
 import { GameService } from '@/services/game-service';
 import { SessionService } from '@/services/session-service';
 
-const CreateGame = ({ setGameIds }) => {
+const CreateGame = ({ gameUuids, setGameUuids }: {gameUuids: string[], setGameUuids: React.Dispatch<string[]>}) => {
     const navigate = useNavigate();
 
-    const [name, setName] = useState('');
-    const [gameId, setGameId] = useState('');
+    const [name, setName] = useState<string>('');
+    const [gameUuid, setGameUuid] = useState<string>('');
     const [cookies, setCookie] = useCookies(['session']);
 
     const _initGame = async () => {
@@ -22,22 +22,22 @@ const CreateGame = ({ setGameIds }) => {
         }
 
         GameService.createGame(name)
-            .then((response) => setGameId(response.uuid))
+            .then((response) => setGameUuid(response.uuid))
             .catch((err) => console.error(err));
     };
 
-    const _handleInput = (event) => {
+    const _handleInput = (event: React.ChangeEvent<any>) => {
         setName(event.target.value);
     };
 
     useEffect(() => {
-        if (gameId) {
+        if (gameUuid) {
             // update game ids so Home component can rerender with the new game route
-            setGameIds((ids) => [...ids, gameId]);
+            setGameUuids([...gameUuids, gameUuid]);
 
-            navigate(`/game/${gameId}`);
+            navigate(`/game/${gameUuid}`);
         }
-    }, [gameId]);
+    }, [gameUuid]);
 
     return (
         <main>

@@ -11,14 +11,16 @@ import { SessionService } from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config'
 import './game.scss';
+import OppponentBoard from './opponent-board/opponent-board';
+import { Game } from './types'
 
-const Game = ({ uuid }) => {
+const GameComponent = ({ uuid }: {uuid: string}) => {
     const navigate = useNavigate();
 
     const [validGuesses, setValidGuesses] = useState(null);
-    const [game, setGame] = useState(null);
+    const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session']);
-    const [playerIsValid, setPlayerIsValid] = useState(null);
+    const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -30,7 +32,7 @@ const Game = ({ uuid }) => {
                 console.warn(`Words not found`);
             }
 
-            const gameObj = await GameService.getGame(uuid);
+            const gameObj: Game = await GameService.getGame(uuid);
 
             if (!gameObj) {
                 console.warn(`Game ID ${uuid} not found`);
@@ -44,7 +46,7 @@ const Game = ({ uuid }) => {
                 if (!cookies.session || cookies.session === 'undefined') {
                     session = await SessionService.createSession(
                         'Harry',
-                        game.id
+                        gameObj.id
                     );
                     setCookie('session', session.session_token, { path: '/' });
                 }
@@ -63,13 +65,16 @@ const Game = ({ uuid }) => {
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {
         navigate(`/`);
-        return;
+        return <></>;
     }
     if (!game) {
         return <div> Retrieving purpose... </div>;
     } else if (game.game_status === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;
     }
+
+    const opponentGameStates = game.state.filter(state => state.player.sessionToken !== cookies.session)
+    const opponentBoards = opponentGameStates.map(state => <OppponentBoard state={state} />)
 
     return (
         <main>
@@ -98,6 +103,21 @@ const Game = ({ uuid }) => {
                     </Box>
                 </Container>
             </Slide>
+            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                <Container component="main" maxWidth="sm">
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            gap: '8px',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {opponentBoards}
+                    </Box>
+                </Container>
+            </Slide>
         
             {config.feature_flags.synth && <SynthControl/>}
         </Box>
@@ -105,4 +125,4 @@ const Game = ({ uuid }) => {
     );
 };
 
-export default Game;
+export default GameComponent;

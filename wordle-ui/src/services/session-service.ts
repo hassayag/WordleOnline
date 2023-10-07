@@ -1,7 +1,7 @@
 import config from '@/config/config'
 
 export class SessionService {
-    static getSession(token) {
+    static getSession(token: string) {
         const request = new Request(config.api.url + '/session/' + token);
 
         return fetch(request, { credentials: 'include' }).then((response) =>
@@ -29,7 +29,7 @@ export class SessionService {
 
     // }
 
-    static deleteSession(token) {
+    static deleteSession(token: string) {
         const request = new Request(config.api.url + '/session/' + token);
 
         return fetch(request, {
