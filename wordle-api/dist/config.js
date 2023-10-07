@@ -17,6 +17,6 @@ export default {
     client: {
         host: process.env.CLIENT_HOST || 'http://localhost',
         port: process.env.CLIENT_PORT || 3000,
-    },
+    }
 };
 //# sourceMappingURL=config.js.map
