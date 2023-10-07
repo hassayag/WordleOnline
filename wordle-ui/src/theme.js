@@ -9,9 +9,9 @@ const theme = createTheme({
         allVariants: {
             color: 'white',
         },
-        black: {
+        body2: {
             fontFamily: 'Arial, Helvetica, sans-serif',
-            fontSize: 12,
+            fontSize: 14,
             color: 'black',
         },
         h4: {

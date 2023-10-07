@@ -88,9 +88,9 @@ const Navbar = () => {
 
                 return (
                     <ListItem key={key} disablePadding>
-                        <ListItemButton LinkComponent={Link} href={path}>
+                        <ListItemButton href={path}>
                             <ListItemIcon>{icon}</ListItemIcon>
-                            <ListItemText primary={label} />
+                            <ListItemText primary={label}/>
                         </ListItemButton>
                     </ListItem>
                 );
@@ -128,12 +128,14 @@ const Navbar = () => {
 
 const Home = () => {
     return (
+        <main>
         <Container component="main" maxWidth="sm">
             <Box
                 sx={{
                     width: 500,
                     height: 500,
                     marginTop: 8,
+                    marginLeft: '50%',
                     display: 'flex',
                     gap: '8px',
                     flexDirection: 'column',
@@ -145,6 +147,7 @@ const Home = () => {
                 </Typography>
             </Box>
         </Container>
+        </main>
     );
 };
 

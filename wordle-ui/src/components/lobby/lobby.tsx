@@ -6,29 +6,34 @@ const Lobby = ({ game, setGame }) => {
     const names = game.state.map((item) => item.player.name);
 
     return (
-        <>
+        <main>
             <Container component="main" maxWidth="sm">
                 <Box
                     sx={{
-                        position: 'absolute',
                         left: 100,
-                        width: 2000,
+                        width: 600,
                         marginTop: 8,
+                        marginLeft: 20,
                         display: 'flex',
-                        gap: '8px',
+                        gap: 10,
                         flexDirection: 'row',
                         alignItems: 'center',
+                        textAlign: 'center'
                     }}
                 >
                     <Box
                         sx={{
                             width: 500,
+                            height: 500,
                             display: 'flex',
                             gap: '8px',
                             flexDirection: 'column',
                             alignItems: 'center',
                         }}
                     >
+                        <Typography variant="h4" component="h1" gutterBottom>
+                            Players
+                        </Typography>
                         <Players names={names} />
                     </Box>
 
@@ -36,7 +41,6 @@ const Lobby = ({ game, setGame }) => {
                         sx={{
                             width: 500,
                             height: 500,
-                            marginTop: 8,
                             display: 'flex',
                             gap: '8px',
                             flexDirection: 'column',
@@ -48,8 +52,8 @@ const Lobby = ({ game, setGame }) => {
                         </Typography>
 
                         <Typography
-                            // variant="black"
                             component="body"
+                            variant="body2"
                             gutterBottom
                         >
                             Share this link to play with a friend - {game.uuid}
@@ -73,14 +77,14 @@ const Lobby = ({ game, setGame }) => {
                     </Box>
                 </Box>
             </Container>
-        </>
+        </main>
     );
 };
 
 const Players = ({ names }) => {
     return names.map((name) => {
         return (
-            <Typography component="body">
+            <Typography component="body" variant="body2">
                 {' '}
                 {name}{' '}
             </Typography>

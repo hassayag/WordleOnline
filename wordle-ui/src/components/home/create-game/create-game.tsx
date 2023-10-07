@@ -40,11 +40,13 @@ const CreateGame = ({ setGameIds }) => {
     }, [gameId]);
 
     return (
+        <main>
         <Container component="main" maxWidth="sm">
             <Box
                 sx={{
                     width: 500,
                     height: 500,
+                    marginLeft: '50%',
                     marginTop: 8,
                     display: 'flex',
                     gap: '8px',
@@ -69,6 +71,7 @@ const CreateGame = ({ setGameIds }) => {
                 </Button>
             </Box>
         </Container>
+        </main>
     );
 };
 

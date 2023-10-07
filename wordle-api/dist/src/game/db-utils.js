@@ -20,6 +20,7 @@ class GameDbUtils {
         let games;
         try {
             games = await psql().query('SELECT uuid from game');
+            console.log(games);
         }
         catch (err) {
             throw new Error(err.stack);
