@@ -13,24 +13,27 @@ class GameDbUtils {
             throw new Error(err.stack);
         }
     
+        if (!rawGame?.rows?.length) {
+            throw new Error(`Game with uuid ${uuid} not found`)
+        }
+        
         // get row and parse state to JSON
         const game = rawGame.rows[0];
         game.state = JSON.parse(game.state);
 
         return game as Game;
-    };
+    }
 
     static async getUuids() {
         let games;
         
         try {
             games = await psql().query('SELECT uuid from game');
-            console.log(games)
         } catch (err) {
             throw new Error(err.stack);
         }
         return { uuids: games.rows.map((game) => game.uuid) }    
-    }; 
+    }
     
     static async create(options: Omit<Game, 'id'>) {
         const {state, uuid, game_status, type} = options;

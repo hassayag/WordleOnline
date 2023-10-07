@@ -56,7 +56,6 @@ const CreateGame = ({ setGameIds }) => {
             >
                 <TextField
                     required={!name}
-                    error={!name}
                     label="Enter Name"
                     variant="outlined"
                     onChange={(event) => _handleInput(event)}

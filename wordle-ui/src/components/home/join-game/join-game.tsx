@@ -6,14 +6,14 @@ import { Box, Button, Container, TextField } from '@mui/material';
 import { GameService } from '@/services/game-service';
 import { SessionService } from '@/services/session-service';
 
-const JoinGame = ({ setGameIds }) => {
+const JoinGame = () => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState('');
     const [cookies, setCookie] = useCookies(['session']);
 
-    const initGame = async () => {
+    const joinGame = async () => {
         let session;
 
         if (!cookies.session || cookies.session === 'undefined') {
@@ -21,34 +21,50 @@ const JoinGame = ({ setGameIds }) => {
             setCookie('session', session.session_token, { path: '/' });
         }
 
-        GameService.joinGame()
+        GameService.joinGame(gameId, name);
     };
 
     return (
-        <Container component="main" maxWidth="sm">
-            <Box
-                sx={{
-                    width: 500,
-                    height: 500,
-                    marginTop: 8,
-                    display: 'flex',
-                    gap: '8px',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
-                <TextField
-                    id="outlined-basic"
-                    label="Enter Name"
-                    variant="outlined"
-                    onChange={(event) => setName(event.target.value)}
-                />
+        <main>
+            <Container component="main" maxWidth="sm">
+                <Box
+                    sx={{
+                        width: 500,
+                        height: 500,
+                        marginLeft: '50%',
+                        marginTop: 8,
+                        display: 'flex',
+                        gap: '8px',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <TextField
+                        id="outlined-basic"
+                        label="Enter Game Code"
+                        required={!gameId || !name}
+                        variant="outlined"
+                        onChange={(event) => setGameId(event.target.value)}
+                    />
 
-                <Button variant="contained" onClick={() => initGame()}>
-                    Join Game
-                </Button>
-            </Box>
-        </Container>
+                    <TextField
+                        id="outlined-basic"
+                        label="Enter Name"
+                        required={!gameId || !name}
+                        variant="outlined"
+                        onChange={(event) => setName(event.target.value)}
+                    />
+
+                    <Button
+                        variant="contained"
+                        disabled={!gameId || !name}
+                        onClick={() => joinGame()}
+                    >
+                        Join Game
+                    </Button>
+                </Box>
+            </Container>
+        </main>
     );
 };
 

@@ -7,7 +7,7 @@ const theme = createTheme({
         fontFamily: 'Arial, Helvetica, sans-serif',
         fontSize: 16,
         allVariants: {
-            color: 'white',
+            color: 'grey',
         },
         body2: {
             fontFamily: 'Arial, Helvetica, sans-serif',

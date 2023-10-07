@@ -9,7 +9,7 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static getGame(uuid) {
+    static getGame(uuid: string) {
         const request = new Request(config.api.url + '/game/' + uuid);
 
         return fetch(request, { credentials: 'include' })
@@ -17,7 +17,7 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static createGame(hostName) {
+    static createGame(hostName: string) {
         const request = new Request(config.api.url + '/game');
 
         const payload = {
@@ -35,7 +35,7 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static updateGame(uuid, options) {
+    static updateGame(uuid: string, options) {
         const request = new Request(config.api.url + '/game/' + uuid);
 
         const payload = Object.assign({ uuid }, options);
@@ -50,7 +50,20 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static joinGame() {
-        
+    static joinGame(uuid: string, playerName: string) {
+        const request = new Request(`${config.api.url}/game/${uuid}/join`);
+
+        const payload = {
+            name: playerName,
+        };
+
+        return fetch(request, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            credentials: 'include',
+        })
+            .then((response) => response.json())
+            .catch((err) => console.error(err.message));
     }
 }

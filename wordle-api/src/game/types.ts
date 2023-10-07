@@ -55,5 +55,6 @@ export interface UpdateGameReq extends Request {
 export interface JoinGameReq extends Request {
     body: {
         uuid: string;
+        name: string
     };
 }

@@ -18,6 +18,7 @@ import { GameService } from '@/services/game-service';
 import Game from '../game/game';
 import CreateGame from './create-game/create-game';
 import React from 'react';
+import JoinGame from './join-game/join-game';
 
 interface RouteItem {
     path: string,
@@ -42,7 +43,7 @@ const Navbar = () => {
             .then((response) => setGameIds(response.uuids))
             .catch((err) => console.error(err));
 
-        setDrawerLinks({
+        const initDrawerLinks: Record<string, DrawerItem> = {
             home: {
                 label: 'Home',
                 path: '/',
@@ -55,18 +56,24 @@ const Navbar = () => {
                 component: <CreateGame setGameIds={setGameIds} />,
                 icon: <AddIcon color="secondary" />,
             },
-        });
+            join_game: {
+                label: 'Join Game',
+                path: '/game/join',
+                component: <JoinGame />,
+                icon: <AddIcon color="secondary" />,
+            },
+        }
+        setDrawerLinks(initDrawerLinks);
 
-        setRoutes({
-            home: {
-                path: '/',
-                component: <Home />,
-            },
-            create_game: {
-                path: '/game/create',
-                component: <CreateGame setGameIds={setGameIds} />,
-            },
-        });
+        const initRoutes: Record<string, RouteItem> = {}
+         Object.entries(initDrawerLinks).forEach(([key, value]) => {
+            initRoutes[key] = {
+                path: value.path,
+                component: value.component
+            }
+        })
+        setRoutes(initRoutes)
+        
     }, []);
 
     useEffect(() => {
