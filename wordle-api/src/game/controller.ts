@@ -14,7 +14,7 @@ export const getGame = async (req, res, next: NextFunction) => {
     try {
         const game: Game = await db.get(req.params.uuid);
     
-        if (game.game_status !== GameStatus.Lobby) {
+        if (game.game_status !== 'lobby') {
             const playerState = game.state.find(
                 (item) => item.player.sessionToken === req.cookies.session
             );
@@ -40,7 +40,7 @@ export const createGame = async (req: CreateGameReq, res) => {
     const randWord = await randomWord();
 
     const uuid: string = v4(),
-        game_status: GameStatus = GameStatus.Lobby,
+        game_status: GameStatus = 'lobby',
         state: PlayerState[]  = [initialState(req.body.name, req.cookies.session, randWord)];
 
     const game = await db.create({uuid, game_status, type: req.body.type, state});
@@ -52,7 +52,7 @@ export const updateGame = async (req: UpdateGameReq, res) => {
     // assign the user's game state to the correct part of state object
     const game = await db.get(req.params.uuid);
 
-    if (game.game_status !== GameStatus.Lobby) {
+    if (game.game_status !== 'lobby') {
         const playerState = game.state.find(
             (item) => item.player.sessionToken === req.cookies.session
         );
@@ -78,7 +78,7 @@ export const joinGame = async (req: JoinGameReq, res, next: NextFunction) => {
     try {
         const game = await db.get(req.params.uuid);
     
-        if (game.game_status !== GameStatus.Lobby) {
+        if (game.game_status !== 'lobby') {
             res.status(400).send('Game has already started');
             return;
         }
@@ -91,7 +91,7 @@ export const joinGame = async (req: JoinGameReq, res, next: NextFunction) => {
     }
 }
 
-const initialState = (name: string, sessionToken: string, word: string) => {
+const initialState = (name: string, sessionToken: string, word: string): PlayerState => {
     return {
         player: newPlayer(name, sessionToken),
         goalWord: word,
@@ -104,32 +104,32 @@ const initialState = (name: string, sessionToken: string, word: string) => {
             5: [],
         },
         letterStates: {
-            a: LetterColour.White,
-            b: LetterColour.White,
-            c: LetterColour.White,
-            d: LetterColour.White,
-            e: LetterColour.White,
-            f: LetterColour.White,
-            g: LetterColour.White,
-            h: LetterColour.White,
-            i: LetterColour.White,
-            j: LetterColour.White,
-            k: LetterColour.White,
-            l: LetterColour.White,
-            m: LetterColour.White,
-            n: LetterColour.White,
-            o: LetterColour.White,
-            p: LetterColour.White,
-            q: LetterColour.White,
-            r: LetterColour.White,
-            s: LetterColour.White,
-            t: LetterColour.White,
-            u: LetterColour.White,
-            v: LetterColour.White,
-            w: LetterColour.White,
-            x: LetterColour.White,
-            y: LetterColour.White,
-            z: LetterColour.White,
+            a: 'white',
+            b: 'white',
+            c: 'white',
+            d: 'white',
+            e: 'white',
+            f: 'white',
+            g: 'white',
+            h: 'white',
+            i: 'white',
+            j: 'white',
+            k: 'white',
+            l: 'white',
+            m: 'white',
+            n: 'white',
+            o: 'white',
+            p: 'white',
+            q: 'white',
+            r: 'white',
+            s: 'white',
+            t: 'white',
+            u: 'white',
+            v: 'white',
+            w: 'white',
+            x: 'white',
+            y: 'white',
+            z: 'white',
         },
     }
 }

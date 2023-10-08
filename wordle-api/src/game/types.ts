@@ -25,18 +25,10 @@ export interface Letter {
     state: LetterColour;
 }
 
-export enum LetterColour {
-    White = 'white',
-    Grey = 'grey',
-    Yellow = 'yellow',
-    Green = 'green',
-}
+export type LetterColour = 'white' |'grey' |'yellow' |'green'
 
-export enum GameStatus {
-    Lobby = 'lobby',
-    InProgress = 'in_progress',
-    Done = 'done',
-}
+export type GameStatus = 'lobby' | 'in_progress' | 'done'
+
 
 // Request Interfaces
 export interface CreateGameReq extends Request {
