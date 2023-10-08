@@ -10,25 +10,20 @@ export const getUuids = async (req, res) => {
     res.send(await db.getUuids());
 };
 
-export const getGame = async (req, res, next: NextFunction) => {
-    try {
-        const game: Game = await db.get(req.params.uuid);
-    
-        if (game.game_status !== 'lobby') {
-            const playerState = game.state.find(
-                (item) => item.player.sessionToken === req.cookies.session
-            );
-            if (!playerState) {
-                res.status(404).send('Game not found');
-                return;
-            }
+export const getGame = async (req, res) => {
+    const game: Game = await db.get(req.params.uuid);
+
+    if (game.game_status !== 'lobby') {
+        const playerState = game.state.find(
+            (item) => item.player.sessionToken === req.cookies.session
+        );
+        if (!playerState) {
+            res.status(404).send('Game not found');
+            return;
         }
-    
-        res.send(game);
     }
-    catch (err) {
-        next(err)
-    }
+
+    res.send(game);
 };
 
 export const createGame = async (req: CreateGameReq, res) => {
@@ -51,7 +46,7 @@ export const createGame = async (req: CreateGameReq, res) => {
 export const updateGame = async (req: UpdateGameReq, res) => {
     // assign the user's game state to the correct part of state object
     const game = await db.get(req.params.uuid);
-
+    
     if (game.game_status !== 'lobby') {
         const playerState = game.state.find(
             (item) => item.player.sessionToken === req.cookies.session
@@ -61,16 +56,15 @@ export const updateGame = async (req: UpdateGameReq, res) => {
             return;
         }
     }
-
     if (req.body.state) {
         game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
     }
     if (req.body.game_status) {
         game.game_status = req.body.game_status;
     }
-
+    
     const newGame = await db.update(game);
-
+    
     res.send(newGame);
 };
 
