@@ -17,7 +17,7 @@ import { Game } from './types'
 const GameComponent = ({ uuid }: {uuid: string}) => {
     const navigate = useNavigate();
 
-    const [validGuesses, setValidGuesses] = useState(null);
+    const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
@@ -67,7 +67,7 @@ const GameComponent = ({ uuid }: {uuid: string}) => {
         navigate(`/`);
         return <></>;
     }
-    if (!game) {
+    if (!game || !validGuesses) {
         return <div> Retrieving purpose... </div>;
     } else if (game.game_status === 'lobby') {
         return <Lobby game={game} setGame={setGame} />;

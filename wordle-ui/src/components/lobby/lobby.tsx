@@ -64,11 +64,11 @@ const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | nu
                             variant="contained"
                             onClick={() => {
                                 GameService.updateGame(game.uuid, {
-                                    game_status: GameStatus.InProgress,
+                                    game_status: 'in_progress',
                                 });
                                 setGame({
                                     ...game,
-                                    game_status: GameStatus.InProgress
+                                    game_status: 'in_progress',
                                 })
                             }}
                         >

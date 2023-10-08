@@ -6,11 +6,7 @@ export interface Game {
     state: PlayerState[];
 }
 
-export enum GameStatus {
-    Lobby = 'lobby',
-    InProgress = 'in_progress',
-    Done = 'done',
-}
+export type GameStatus = 'lobby' | 'in_progress' | 'done'
 
 export interface PlayerState {
     player: Player;
@@ -27,11 +23,7 @@ export interface Player {
 export interface Letter {
     key: string;
     state: LetterColour;
+    isError?: boolean
 }
 
-export enum LetterColour {
-    White = 'white',
-    Grey = 'grey',
-    Yellow = 'yellow',
-    Green = 'green',
-}
+export type LetterColour = 'white' |'grey' |'yellow' |'green'

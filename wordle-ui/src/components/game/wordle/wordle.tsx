@@ -9,20 +9,30 @@ import config from '@/config/config'
 
 import './wordle.css';
 import { Box } from '@mui/system';
+import { Game, Letter, PlayerState } from '../types';
 
-export class Wordle extends React.Component {
-    constructor() {
-        super();
+interface State {
+    _letterStates: PlayerState['letterStates'],
+    _wordRows: PlayerState['board'],
+    _rowInd: number,
+    _gameIsWon: boolean | null,
+    _endModalOpen: boolean
+}
 
-        this.gameIsLoaded = false;
-        this.state = {};
+export class Wordle extends React.Component<{game: Game, validGuesses: string[]}, State> {
+    private gameIsLoaded = false;
+    private gameState: PlayerState;
+    private goalWord: string
+
+    constructor(props: {game: Game, validGuesses: string[]}) {
+        super(props);
+        
+        // TODO search for state based on session token
+        this.gameState = props.game.state[0];
+        this.goalWord = this.gameState.goalWord;
     }
 
     async componentDidMount() {
-        // store the state of each letter
-        this.gameState = this.props.game.state[0];
-        this.goalWord = this.gameState.goalWord;
-
         const initLetterStates = this.gameState.letterStates;
 
         // the letters in each line of the word grid
@@ -68,7 +78,7 @@ export class Wordle extends React.Component {
                             alignItems: 'center',
                         }}
                     >
-                        <Board wordRows={this.wordRows} />
+                        <Board state={this.gameState} />
                         <Keyboard
                             keyStates={this.letterStates}
                             onPress={this.onKeyPress}
@@ -146,7 +156,7 @@ export class Wordle extends React.Component {
         );
     }
 
-    onKeyPress = (key) => {
+    onKeyPress = (key: string) => {
         // disable input if game is over
         if (this.gameIsWon !== null) {
             return;
@@ -165,7 +175,7 @@ export class Wordle extends React.Component {
             this._triggerError(this.rowInd);
         } else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
             if (config.feature_flags.synth) {
-                synthService.startLoop(this.wordRows[this.rowInd].map(letter => letter.key))
+                synthService.startLoop(this.wordRows[this.rowInd].map((letter: Letter) => letter.key))
             }
             this._updateGameState();
         }
@@ -197,7 +207,7 @@ export class Wordle extends React.Component {
             const char = currentRowChars[i];
 
             // can't downgrade a green keyboard key
-            if (newLetterStates === 'green') {
+            if (newLetterStates[char.key] === 'green') {
                 continue;
             }
 
@@ -246,12 +256,12 @@ export class Wordle extends React.Component {
                 .map((char) => char.key)
                 .every((char, ind) => char === goalWordChars[ind])
         ) {
-            this.gameIsWon = 1;
+            this.gameIsWon = true;
             this.setEndModalOpen(true);
         }
         // check for loss
         else if (this.rowInd === 5) {
-            this.gameIsWon = 0;
+            this.gameIsWon = false;
             this.setEndModalOpen(true);
         }
         // increment row
@@ -259,9 +269,10 @@ export class Wordle extends React.Component {
             this.rowInd = this.rowInd + 1;
         }
 
-        const updateOptions = {
-            state: game.state[0],
+        const updateOptions: Partial<Game> = {
+            state: game.state,
         };
+
         if (this.gameIsWon !== null) {
             updateOptions.game_status = 'done';
         }
@@ -269,7 +280,7 @@ export class Wordle extends React.Component {
         GameService.updateGame(game.uuid, updateOptions);
     }
 
-    _triggerError(rowInd) {
+    _triggerError(rowInd: number) {
         const newRows = Object.assign({}, this.wordRows);
 
         newRows[rowInd].forEach((char) => (char.isError = true));
@@ -282,13 +293,13 @@ export class Wordle extends React.Component {
         }, 50);
     }
 
-    _parseRow(rowObj) {
+    _parseRow(rowObj: Letter[]) {
         const letters = Object.values(rowObj).map((obj) => obj.key);
 
         return letters.join('');
     }
 
-    _wordIsValid(word) {
+    _wordIsValid(word: string) {
         if (this.props.validGuesses.includes(word)) {
             return true;
         }
@@ -325,7 +336,7 @@ export class Wordle extends React.Component {
         this.setState(Object.assign(this.state, { _gameIsWon: val }));
     }
 
-    setEndModalOpen(val) {
+    setEndModalOpen(val: boolean) {
         this.setState(Object.assign(this.state, { _endModalOpen: val }));
     }
 }
