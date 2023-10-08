@@ -31,14 +31,18 @@ const OppponentBoard = ({state}: { state: PlayerState }) => {
     }
     
     const renderSquare = (letter: Letter) => {
-        return <Square colour={letter.state} />;
+        return <Square letter={letter} />;
     }
 
     return <div className="word-grid">{renderGrid()}</div>;
 }
 
-const Square = ({colour}: { colour: LetterColour }) => {
-    let className = `square ${colour}`;
+const Square = ({letter}: { letter: Letter | undefined }) => {
+    if (!letter) {
+        letter = { key: '', state: 'white', isError: false };
+    }
+
+    let className = `square ${letter.state}`;
 
     return (
         <Paper elevation={1} className={className}>

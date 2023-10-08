@@ -36,7 +36,11 @@ const Board = ({state}: { state: PlayerState }) => {
     return <div className="word-grid">{renderGrid()}</div>;
 }
 
-const Square = ({letter}: { letter: Letter }) => {
+const Square = ({letter}: { letter: Letter|undefined }) => {
+    if (!letter) {
+        letter = { key: '', state: 'white', isError: false };
+    }
+
     let className = `square ${letter.state}`;
 
     if (letter.isError) {

@@ -1,7 +1,7 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { GameService } from '@/services/game-service';
 import React from 'react';
-import { Game, GameStatus } from '../game/types';
+import { Game } from '../game/types';
 
 const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | null>}) => {
     const names = game.state.map((item) => item.player.name);
