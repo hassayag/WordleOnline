@@ -20,8 +20,8 @@ const JoinGame = () => {
             session = await SessionService.createSession(name);
             setCookie('session', session.session_token, { path: '/' });
         }
-
-        GameService.joinGame(gameId, name);
+        
+        await GameService.joinGame(gameId, name);
         navigate(`/game/${gameId}`)
     };
 

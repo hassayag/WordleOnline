@@ -1,137 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
 import {
     Box,
     Container,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Drawer,
     Typography,
 } from '@mui/material';
-import { Home as HomeIcon, Add as AddIcon, People as PeopleIcon } from '@mui/icons-material';
 
 import './home.css';
-import { GameService } from '@/services/game-service';
-import Game from '../game/game';
-import CreateGame from '../create-game/create-game';
-import React from 'react';
-import JoinGame from '../join-game/join-game';
-
-interface RouteItem {
-    path: string,
-    component: React.JSX.Element
-}
-
-interface DrawerItem {
-    label: string;
-    path: string;
-    component: React.JSX.Element
-    icon: any
-}
-
-const Navbar = () => {
-    const [gameUuids, setGameUuids] = useState<string[]>([]);
-    const [routes, setRoutes] = useState<Record<string, RouteItem>>({});
-    const [navItems, setNavItems] = useState<any[]>([]);
-    const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>({});
-
-    useEffect(() => {
-        GameService.getGames()
-            .then((response) => setGameUuids(response.uuids))
-            .catch((err) => console.error(err));
-
-        const initDrawerLinks: Record<string, DrawerItem> = {
-            home: {
-                label: 'Home',
-                path: '/',
-                component: <Home />,
-                icon: <HomeIcon color="primary" />,
-            },
-            create_game: {
-                label: 'Create Game',
-                path: '/game/create',
-                component: <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />,
-                icon: <AddIcon color="secondary" />,
-            },
-            join_game: {
-                label: 'Join Game',
-                path: '/game/join',
-                component: <JoinGame />,
-                icon: <PeopleIcon color="secondary" />,
-            },
-        }
-        setDrawerLinks(initDrawerLinks);
-
-        const initRoutes: Record<string, RouteItem> = {}
-         Object.entries(initDrawerLinks).forEach(([key, value]) => {
-            initRoutes[key] = {
-                path: value.path,
-                component: value.component
-            }
-        })
-        setRoutes(initRoutes)
-        
-    }, []);
-
-    useEffect(() => {
-        // add all gameId routes to links object
-        const gameRoutes: Record<string, RouteItem> = {};
-
-        gameUuids.forEach((id) => {
-            gameRoutes[`game_${id}`] = {
-                path: `/game/${id}`,
-                component: <Game uuid={id} />,
-            };
-        });
-
-        setRoutes((routes) => Object.assign(routes, gameRoutes));
-
-        setNavItems(
-            Object.keys(drawerLinks).map((key) => {
-                const { path, label, icon } = drawerLinks[key];
-
-                return (
-                    <ListItem key={key} disablePadding>
-                        <ListItemButton href={path}>
-                            <ListItemIcon>{icon}</ListItemIcon>
-                            <ListItemText primary={label}/>
-                        </ListItemButton>
-                    </ListItem>
-                );
-            }) as any
-        );
-    }, [drawerLinks, gameUuids]);
-
-    if (!routes) {
-        return <></>
-    }
-
-    return (
-        <>
-            <Routes>
-                {Object.values(routes).map((item) => (
-                    <Route path={item.path} element={item.component} />
-                ))}
-            </Routes>
-
-            <Drawer
-                variant="permanent"
-                anchor="left"
-                PaperProps={{
-                    elevation: 24,
-                    sx: {
-                        backgroundColor: '#eeeeee',
-                    },
-                }}
-            >
-                <List>{navItems}</List>
-            </Drawer>
-        </>
-    );
-};
 
 const Home = () => {
     return (
@@ -158,4 +31,4 @@ const Home = () => {
     );
 };
 
-export default Navbar;
+export default Home;

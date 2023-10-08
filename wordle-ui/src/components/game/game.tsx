@@ -74,7 +74,7 @@ const GameComponent = ({ uuid }: {uuid: string}) => {
     }
 
     const opponentGameStates = game.state.filter(state => state.player.sessionToken !== cookies.session)
-    const opponentBoards = opponentGameStates.map(state => <OppponentBoard state={state} />)
+    const opponentBoards = opponentGameStates.map((state, index) => <OppponentBoard key={index} state={state} />)
 
     return (
         <main>
@@ -99,7 +99,7 @@ const GameComponent = ({ uuid }: {uuid: string}) => {
                             alignItems: 'center',
                         }}
                     >
-                        <Wordle validGuesses={validGuesses} game={game} />
+                        <Wordle validGuesses={validGuesses} game={game}/>
                     </Box>
                 </Container>
             </Slide>

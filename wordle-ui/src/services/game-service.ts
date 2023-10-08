@@ -1,8 +1,8 @@
-import { Game } from '@/components/game/types';
+import { Game, GameStatus, PlayerState } from '@/components/game/types';
 import config from '@/config/config'
 
 export class GameService {
-    static getGames() {
+    static getGames(): Promise<{uuids: string[]}> {
         const request = new Request(config.api.url + '/game/uuids');
 
         return fetch(request, { credentials: 'include' })
@@ -36,11 +36,10 @@ export class GameService {
             .catch((err) => console.error(err.message));
     }
 
-    static updateGame(uuid: string, options: Partial<Game>) {
+    static updateGame(uuid: string, status: GameStatus, playerState?: PlayerState) {
         const request = new Request(config.api.url + '/game/' + uuid);
-
-        const payload = Object.assign({ uuid }, options);
-
+        
+        const payload = {uuid, game_status: status, player_state: playerState};
         return fetch(request, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -65,6 +64,5 @@ export class GameService {
             credentials: 'include',
         })
             .then((response) => response.json())
-            .catch((err) => console.error(err.message));
     }
 }

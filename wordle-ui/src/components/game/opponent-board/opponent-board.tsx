@@ -1,7 +1,7 @@
 import React from 'react';
 import { Paper } from '@mui/material';
 import '../board/board.scss';
-import { Letter, LetterColour, PlayerState } from '../types';
+import { Letter, PlayerState } from '../types';
 
 const OppponentBoard = ({state}: { state: PlayerState }) => {
     

@@ -14,10 +14,8 @@ export const getGame = async (req, res) => {
     const game: Game = await db.get(req.params.uuid);
 
     if (game.game_status !== 'lobby') {
-        const playerState = game.state.find(
-            (item) => item.player.sessionToken === req.cookies.session
-        );
-        if (!playerState) {
+        const playerState = findStateIndex(game, req.cookies.session)
+        if (playerState === -1) {
             res.status(404).send('Game not found');
             return;
         }
@@ -47,42 +45,39 @@ export const updateGame = async (req: UpdateGameReq, res) => {
     // assign the user's game state to the correct part of state object
     const game = await db.get(req.params.uuid);
     
-    if (game.game_status !== 'lobby') {
-        const playerState = game.state.find(
-            (item) => item.player.sessionToken === req.cookies.session
-        );
-        if (!playerState) {
-            res.status(404).send('Game not found');
-            return;
-        }
+    const playerStateIndex = findStateIndex(game, req.cookies.session)
+    if (playerStateIndex === -1 && game.game_status !== 'lobby') {
+        res.status(404).send('Game not found');
+        return;
     }
-    if (req.body.state) {
-        game.state[0] = req.body.state; // TODO: ACTUALLY ASSIGN TO CORRECT USER
+    if (req.body.player_state) {
+        game.state[playerStateIndex] = req.body.player_state;
     }
     if (req.body.game_status) {
         game.game_status = req.body.game_status;
     }
-    
+
     const newGame = await db.update(game);
     
     res.send(newGame);
 };
 
-export const joinGame = async (req: JoinGameReq, res, next: NextFunction) => {
-    try {
-        const game = await db.get(req.params.uuid);
-    
-        if (game.game_status !== 'lobby') {
-            res.status(400).send('Game has already started');
-            return;
-        }
-        const newPlayerState = initialState(req.body.name, req.cookies.session, game.state[0].goalWord)
-        const updatedGame: Game = Object.assign(game, { state: [...game.state, newPlayerState]})
-        await db.update(updatedGame)
+export const joinGame = async (req: JoinGameReq, res) => {
+    const game = await db.get(req.params.uuid);
+
+    const playerStateIndex = findStateIndex(game, req.cookies.session)
+    if (playerStateIndex !== -1) {
+        return
     }
-    catch (err) {
-        next(err)
+
+    if (game.game_status !== 'lobby') {
+        res.status(400).send('Game has already started');
+        return;
     }
+
+    const newPlayerState = initialState(req.body.name, req.cookies.session, game.state[0].goalWord)
+    const updatedGame: Game = Object.assign(game, { state: [...game.state, newPlayerState]})
+    await db.update(updatedGame)
 }
 
 const initialState = (name: string, sessionToken: string, word: string): PlayerState => {
@@ -126,6 +121,12 @@ const initialState = (name: string, sessionToken: string, word: string): PlayerS
             z: 'white',
         },
     }
+}
+
+const findStateIndex = (game: Game, sessionToken: string) => {
+    return game.state.findIndex(
+        (item) => item.player.sessionToken === sessionToken
+    );
 }
 
 const newPlayer = (name, sessionToken) => {

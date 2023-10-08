@@ -9,7 +9,7 @@ import theme from './theme';
 
 import './index.scss';
 
-import Navbar from './components/home/home';
+import MyRouter from './components/navigation/router';
 
 const rootElem = document.getElementById('root')
 if (rootElem) {
@@ -18,9 +18,7 @@ if (rootElem) {
         <CookiesProvider>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <BrowserRouter>
-                    <Navbar />
-                </BrowserRouter>
+                    <MyRouter />
             </ThemeProvider>
         </CookiesProvider>
     );

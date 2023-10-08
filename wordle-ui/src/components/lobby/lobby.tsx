@@ -63,9 +63,7 @@ const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | nu
                         <Button
                             variant="contained"
                             onClick={() => {
-                                GameService.updateGame(game.uuid, {
-                                    game_status: 'in_progress',
-                                });
+                                GameService.updateGame(game.uuid, 'in_progress');
                                 setGame({
                                     ...game,
                                     game_status: 'in_progress',
@@ -81,15 +79,19 @@ const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | nu
     );
 };
 
-const Players = ({ names }: any) => {
-    return names.map((name: string) => {
+const Players = ({ names }: { names: string[] }) => {
+    const players = names.map((name: string, index) => {
         return (
-            <Typography component="body" variant="body2">
+            <Typography key={index} component="body" variant="body2">
                 {' '}
                 {name}{' '}
             </Typography>
         );
     });
+
+    return (<>
+        players
+    </>)
 };
 
 export default Lobby;

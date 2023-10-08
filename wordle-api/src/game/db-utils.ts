@@ -52,7 +52,7 @@ class GameDbUtils {
 
     static async update(options: Game) {
         const {state, uuid, game_status} = options;
-        
+
         try {
             await psql().query(
                 'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',

@@ -39,7 +39,7 @@ export interface CreateGameReq extends Request {
 }
 export interface UpdateGameReq extends Request {
     body: {
-        state: PlayerState;
+        player_state: PlayerState;
         game_status: GameStatus;
     };
 }

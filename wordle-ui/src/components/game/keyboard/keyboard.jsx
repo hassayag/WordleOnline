@@ -49,6 +49,7 @@ class Keyboard extends React.Component {
 
             row.push(
                 <Key
+                    key={j}
                     inputLetter={letter}
                     onPress={this.props.onPress}
                     keyState={this.props.keyStates[letter]}
@@ -91,8 +92,8 @@ const Key = ({ inputLetter, onPress, keyState }) => {
     }
 
     return (
-        <Paper elevation={1}>
-            <button key={inputLetter} className={`key ${keyState}`} onClick={pressKey}>
+        <Paper key={inputLetter} elevation={1}>
+            <button className={`key ${keyState}`} onClick={pressKey}>
                 {inputLetter.toUpperCase()}
             </button>
         </Paper>

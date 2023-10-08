@@ -32,7 +32,7 @@ const initApp = () => {
 
     // Define an error-handling middleware function
     app.use((err, req: Request, res: Response, next: NextFunction) => {
-        console.error(`${new Date().toISOString()} [api] ${err}`);
+        console.error(`${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`);
     
         if (err?.status) {
             res.status(err.status).json({ message: err.message });

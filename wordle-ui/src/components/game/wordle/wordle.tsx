@@ -27,7 +27,7 @@ export class Wordle extends React.Component<{game: Game, validGuesses: string[]}
     constructor(props: {game: Game, validGuesses: string[]}) {
         super(props);
         
-        // TODO search for state based on session token
+        // TODO hit endpoint to get player state
         this.gameState = props.game.state[0];
         this.goalWord = this.gameState.goalWord;
     }
@@ -269,15 +269,11 @@ export class Wordle extends React.Component<{game: Game, validGuesses: string[]}
             this.rowInd = this.rowInd + 1;
         }
 
-        const updateOptions: Partial<Game> = {
-            state: game.state,
-        };
-
         if (this.gameIsWon !== null) {
-            updateOptions.game_status = 'done';
+            game.game_status = 'done';
         }
-
-        GameService.updateGame(game.uuid, updateOptions);
+        console.log(game)
+        GameService.updateGame(game.uuid, game.game_status, game.state[0]);
     }
 
     _triggerError(rowInd: number) {
