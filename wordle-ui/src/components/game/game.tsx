@@ -32,12 +32,9 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 console.warn(`Words not found`);
             }
 
-            const gameObj: Game = await GameService.getGame(uuid);
-
-            if (!gameObj) {
-                console.warn(`Game ID ${uuid} not found`);
-                setPlayerIsValid(false);
-            } else {
+            try {
+                const gameObj: Game = await GameService.getGame(uuid);
+    
                 setGame(gameObj);
                 setPlayerIsValid(true);
 
@@ -57,6 +54,10 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 // if (session?.session_token) {
                 //     setCookie('session', session.session_token, { path: '/' });
                 // }
+            }
+            catch (err) {
+                setPlayerIsValid(false);
+                navigate(`/game/join?uuid=${uuid}`)
             }
         }
         fetchData();

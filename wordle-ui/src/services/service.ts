@@ -14,7 +14,7 @@ export default abstract class Service {
         }
 
         const response = await fetch(request);
-        return response.json();
+        return this.catchResponseError(response)
     }
 
     protected async post<T>(url: string, payload: any): Promise<T> {
@@ -29,17 +29,7 @@ export default abstract class Service {
             credentials: 'include',
         });
 
-        const json = await response.json();
-
-        if (!response.ok) {
-            const error = {
-                status: response.status,
-                message: json.message,
-            };
-            throw error;
-        }
-
-        return json;
+        return this.catchResponseError(response)
     }
 
     protected async patch<T>(url: string, payload: any): Promise<T> {
@@ -54,7 +44,7 @@ export default abstract class Service {
             credentials: 'include',
         });
 
-        return response.json();
+        return this.catchResponseError(response)
     }
 
     protected async delete<T = void>(url: string): Promise<T> {
@@ -68,6 +58,20 @@ export default abstract class Service {
             credentials: 'include',
         });
 
-        return response.json();
+        return this.catchResponseError(response)
+    }
+
+    private async catchResponseError(response: Response) {
+        const json = await response.json();
+        
+        if (!response.ok) {
+            const error = {
+                status: response.status,
+                message: json.message,
+            };
+            throw error;
+        }
+
+        return json;
     }
 }

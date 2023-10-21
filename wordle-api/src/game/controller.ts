@@ -20,11 +20,9 @@ export const getUuids = async (req, res) => {
 export const getGame = async (req, res) => {
     const game: Game = await db.get(req.params.uuid);
 
-    if (game.game_status !== 'lobby') {
-        const playerState = findStateIndex(game, req.cookies.session);
-        if (playerState === -1) {
-            throw new NotFoundError('Game not found');
-        }
+    const playerStateIndex = findStateIndex(game, req.cookies.session);
+    if (playerStateIndex === -1) {
+        throw new NotFoundError('Game not found');
     }
 
     res.send(game);
