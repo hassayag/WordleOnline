@@ -42,7 +42,7 @@ export default abstract class Service {
             throw error
         }
 
-        return response.json()
+        return json
     }
 
     protected async patch<T>(url: string, payload: any): Promise<T> {
@@ -55,6 +55,21 @@ export default abstract class Service {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
+            credentials: 'include',
+        })
+
+        return response.json();
+    }
+
+    protected async delete<T=void>(url: string): Promise<T> {
+        const request = new Request(
+            config.api.url + this.baseUrl + url,
+            {credentials: 'include'}
+        );
+
+        const response = await fetch(request, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
         })
 

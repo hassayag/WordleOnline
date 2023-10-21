@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField } from '@mui/material';
 
 import GameService from '@/services/game-service';
-import { SessionService } from '@/services/session-service';
+import SessionService from '@/services/session-service';
 
 const CreateGame = ({ gameUuids, setGameUuids }: {gameUuids: string[], setGameUuids: React.Dispatch<string[]>}) => {
     const navigate = useNavigate();

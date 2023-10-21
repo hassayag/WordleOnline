@@ -1,41 +1,32 @@
-import config from '@/config/config'
+import Service from './service';
 
-export class SessionService {
-    static getSession(token: string) {
-        const request = new Request(config.api.url + '/session/' + token);
+interface Session {
+    id: number,
+    name: string,
+    session_token: string
+    game_id: number
+    expires_at: string
+}
 
-        return fetch(request, { credentials: 'include' }).then((response) =>
-            response.json()
-        );
+class SessionService extends Service {
+    baseUrl = '/session/';
+    
+    public async getSession(token: string) {
+        return this.get<Session>(token, false)
     }
 
-    static createSession(name: string, gameId?: number) {
-        const request = new Request(config.api.url + '/session');
-
+    public async createSession(name: string, gameId?: number) {
         const payload = {
             name,
             gameId
         };
-
-        return fetch(request, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            credentials: 'include',
-        }).then((response) => response.json());
+        return this.post<Session>('', payload)
     }
 
-    // static updateSession() {
-
-    // }
-
-    static deleteSession(token: string) {
-        const request = new Request(config.api.url + '/session/' + token);
-
-        return fetch(request, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-        }).then((response) => response.json());
+    public async deleteSession(token: string) {
+        return this.delete(token)
     }
 }
+
+const service = new SessionService()
+export default service

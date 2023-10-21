@@ -1,7 +1,7 @@
 import Service from './service';
 
 class WordService extends Service {
-    baseUrl = '/words/'
+    protected baseUrl = '/words/'
 
     public async getGoalWord() {
         return this.get<string>('goal-word', false)

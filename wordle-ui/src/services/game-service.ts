@@ -2,7 +2,7 @@ import { Game, GameStatus, PlayerState } from '@/components/game/types';
 import Service from './service';
 
 class GameService extends Service{
-    baseUrl = '/game/'
+    protected baseUrl = '/game/'
 
     public async getGames() {
         return this.get<{uuids: string[]}>('uuids')
