@@ -83,14 +83,13 @@ const Players = ({ names }: { names: string[] }) => {
     const players = names.map((name: string, index) => {
         return (
             <Typography key={index} component="body" variant="body2">
-                {' '}
-                {name}{' '}
+                {name}
             </Typography>
         );
     });
 
     return (<>
-        players
+        {players}
     </>)
 };
 

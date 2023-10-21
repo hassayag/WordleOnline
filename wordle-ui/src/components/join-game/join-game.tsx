@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { Box, Button, Container, TextField } from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import { GameService } from '@/services/game-service';
 import { SessionService } from '@/services/session-service';
@@ -12,6 +12,7 @@ const JoinGame = () => {
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState('');
     const [cookies, setCookie] = useCookies(['session']);
+    const [joinError, setJoinError] = useState<string>('')
 
     const joinGame = async () => {
         let session;
@@ -21,10 +22,11 @@ const JoinGame = () => {
             setCookie('session', session.session_token, { path: '/' });
         }
         
-        await GameService.joinGame(gameId, name);
-        navigate(`/game/${gameId}`)
+        GameService.joinGame(gameId, name)
+            .then((response) => console.log('___ ', response))
+            .catch((err) => console.log('----', err))
     };
-
+    console.log('-----', joinError)
     return (
         <main>
             <Container component="main" maxWidth="sm">
@@ -63,6 +65,13 @@ const JoinGame = () => {
                     >
                         Join Game
                     </Button>
+                    <Typography
+                        component='body'
+                        variant='body2'
+                        color='error'
+                    >
+                        {'aaa'}
+                    </Typography>
                 </Box>
             </Container>
         </main>

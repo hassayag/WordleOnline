@@ -1,19 +1,16 @@
-import config from '@/config/config'
+import Service from './service';
 
-export class WordService {
-    static getGoalWord() {
-        const request = new Request(config.api.url + '/words/goal-word');
+class WordService extends Service {
+    baseUrl = '/words/'
 
-        return fetch(request)
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+    public async getGoalWord() {
+        return this.get<string>('goal-word')
     }
 
-    static getValidGuesses() {
-        const request = new Request(config.api.url + '/words/valid-guesses');
-
-        return fetch(request)
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+    public async getValidGuesses() {
+        return this.get<string[]>('valid-guesses');
     }
 }
+
+const service = new WordService()
+export default service

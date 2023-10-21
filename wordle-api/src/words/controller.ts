@@ -8,7 +8,7 @@ export const getValidGuesses = async (req, res) => {
         solutions = await readFile('./db/word-data/valid_solutions.csv');
     }
 
-    res.send({ words: [...guesses, ...solutions] });
+    res.send([...guesses, ...solutions]);
 };
 
 export const getGoalWord = async (req, res) => {

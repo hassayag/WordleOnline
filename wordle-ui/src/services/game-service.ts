@@ -63,6 +63,7 @@ export class GameService {
             body: JSON.stringify(payload),
             credentials: 'include',
         })
-            .then((response) => response.json())
+        .then(response => response.json())
+        .catch(err => err)
     }
 }
