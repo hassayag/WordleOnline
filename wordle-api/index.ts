@@ -1,7 +1,9 @@
-import cors from 'cors';
-import express, { Request, Response, NextFunction } from 'express';
-import 'express-async-errors';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import WebSocket from 'ws';
+import { v4 as uuidv4 } from 'uuid';
+import express, { NextFunction, Request, Response } from 'express';
+import 'express-async-errors';
 import Config from './config';
 import game from './src/game/routes';
 import session from './src/session/routes';
@@ -9,15 +11,6 @@ import words from './src/words/routes';
 
 const initApp = () => {
     const app = express();
-
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        console.info(
-            `${new Date().toISOString()} [api] Received request "${
-                req.method
-            } ${req.url}"`
-        );
-        next();
-    });
 
     app.use(
         cors({
@@ -52,4 +45,18 @@ const initApp = () => {
     });
 };
 
+const initWsServer = () => {
+    const wss = new WebSocket.Server({ port: Config.websocket.port });
+    const clients = new Map();
+    wss.on('connection', (ws) => {
+        const id = uuidv4();
+        const color = Math.floor(Math.random() * 360);
+        const metadata = { id, color };
+    
+        clients.set(ws, metadata);
+    })
+    console.log(`Websocket Server listening on port ${Config.websocket.port}`)
+}
+
 initApp();
+initWsServer();
