@@ -1,20 +1,15 @@
 import { Game } from "./types";
 import psql from '../utils/sql';
+import { NotFoundError } from '../error';
 
 class GameDbUtils {
-    static async get(uuid: string) {
-        let rawGame;
-    
-        try {
-            rawGame = await psql().query('SELECT * FROM game WHERE uuid = $1', [
-                uuid,
-            ]);
-        } catch (err) {
-            throw new Error(err.stack);
-        }
+    static async get(uuid: string) {    
+        const rawGame = await psql().query('SELECT * FROM game WHERE uuid = $1', [
+            uuid,
+        ]);
     
         if (!rawGame?.rows?.length) {
-            throw new Error(`Game with uuid ${uuid} not found`)
+            throw new NotFoundError(`Game not found`)
         }
         
         // get row and parse state to JSON
@@ -24,28 +19,18 @@ class GameDbUtils {
         return game as Game;
     }
 
-    static async getUuids() {
-        let games;
-        
-        try {
-            games = await psql().query('SELECT uuid from game');
-        } catch (err) {
-            throw new Error(err.stack);
-        }
+    static async getUuids() {        
+        const games = await psql().query('SELECT uuid from game');
         return { uuids: games.rows.map((game) => game.uuid) }    
     }
     
     static async create(options: Omit<Game, 'id'>) {
         const {state, uuid, game_status, type} = options;
         
-        try {
-            await psql().query(
-                'INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)',
-                [uuid, game_status, type, JSON.stringify(state)]
-            );
-        } catch (err) {
-            throw new Error(err.stack);
-        }    
+        await psql().query(
+            'INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)',
+            [uuid, game_status, type, JSON.stringify(state)]
+        );
     
         return await this.get(uuid);
     }
@@ -53,14 +38,10 @@ class GameDbUtils {
     static async update(options: Game) {
         const {state, uuid, game_status} = options;
 
-        try {
-            await psql().query(
-                'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',
-                [JSON.stringify(state), uuid, game_status]
-            );
-        } catch (err) {
-            throw new Error(err.stack);
-        }
+        await psql().query(
+            'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',
+            [JSON.stringify(state), uuid, game_status]
+        );
     
         return await this.get(uuid);
     }

@@ -33,9 +33,9 @@ const initApp = () => {
     // Define an error-handling middleware function
     app.use((err, req: Request, res: Response, next: NextFunction) => {
         console.error(`${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`);
-    
-        if (err?.status) {
-            res.status(err.status).json({ message: err.message });
+
+        if (err?.statusCode) {
+            res.status(err.statusCode).json({ message: err.message });
         } else {
             res.status(500).json({ message: 'Internal Server Error' });
         }

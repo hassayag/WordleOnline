@@ -33,14 +33,10 @@ export const createSession = async (req, res) => {
         return;
     }
 
-    try {
-        await psql().query(
-            'INSERT INTO session (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)',
-            [name, sessionToken, gameId || null, expiresAt.toISOString()]
-        );
-    } catch (err) {
-        throw new Error(err.stack);
-    }
+    await psql().query(
+        'INSERT INTO session (name, session_token, game_id, expires_at) values ($1, $2, $3, $4)',
+        [name, sessionToken, gameId || null, expiresAt.toISOString()]
+    );
 
     const session = await querySession(sessionToken);
 
@@ -54,28 +50,18 @@ export const createSession = async (req, res) => {
 export const deleteSession = async (req, res) => {
     const { sessionToken } = req.body;
 
-    try {
-        await psql().query('DELETE FROM session WHERE session_token = $1', [
-            sessionToken,
-        ]);
-    } catch (err) {
-        throw new Error(err.stack);
-    }
+    await psql().query('DELETE FROM session WHERE session_token = $1', [
+        sessionToken,
+    ]);
 
     res.send();
 };
 
 async function querySession(token): Promise<Session> {
-    let sessions;
-
-    try {
-        sessions = await psql().query(
-            'SELECT * from session where session_token = $1 and expires_at > $2',
-            [token, new Date().toISOString()]
-        );
-    } catch (err) {
-        throw new Error(err.stack);
-    }
+    const sessions = await psql().query(
+        'SELECT * from session where session_token = $1 and expires_at > $2',
+        [token, new Date().toISOString()]
+    );
 
     return sessions?.rows?.[0];
 }

@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import { randomWord } from '../utils/words-util';
 import db from './db-utils';
 import { CreateGameReq, Game, GameStatus, JoinGameReq, PlayerState, UpdateGameReq } from './types';
+import { BadRequestError, NotFoundError } from '../error';
 
 // get uuids of all games
 export const getUuids = async (req, res) => {
@@ -15,8 +16,7 @@ export const getGame = async (req, res) => {
     if (game.game_status !== 'lobby') {
         const playerState = findStateIndex(game, req.cookies.session)
         if (playerState === -1) {
-            res.status(404).send('Game not found');
-            return;
+            throw new NotFoundError('Game not found')
         }
     }
 
@@ -25,8 +25,7 @@ export const getGame = async (req, res) => {
 
 export const createGame = async (req: CreateGameReq, res) => {
     if (!req.cookies?.session) {
-        res.status(400).send('Session token not found');
-        return;
+        throw new BadRequestError('Session token not found')
     }
     
     const randWord = await randomWord();
@@ -46,8 +45,7 @@ export const updateGame = async (req: UpdateGameReq, res) => {
     
     const playerStateIndex = findStateIndex(game, req.cookies.session)
     if (playerStateIndex === -1 && game.game_status !== 'lobby') {
-        res.status(404).send('Game not found');
-        return;
+        throw new BadRequestError('Game not found')
     }
     if (req.body.player_state) {
         game.state[playerStateIndex] = req.body.player_state;
@@ -79,8 +77,7 @@ export const joinGame = async (req: JoinGameReq, res) => {
         res.send(updatedGame)
     }
     else {
-        res.status(400).send({message: 'Game has already started'});
-        return;
+        throw new BadRequestError('Game has already started');
     }
 }
 
