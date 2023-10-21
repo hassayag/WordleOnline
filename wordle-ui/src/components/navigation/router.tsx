@@ -1,15 +1,15 @@
 import GameService from '@/services/game-service';
-import { Home } from '@mui/icons-material';
-import { useState, useMemo } from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import CreateGame from '../create-game/create-game';
-import Game from '../game/game';
-import JoinGame from '../join-game/join-game';
 import {
-    Home as HomeIcon,
     Add as AddIcon,
+    Home as HomeIcon,
     People as PeopleIcon,
 } from '@mui/icons-material';
+import { useMemo, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CreateGame from '../create-game/create-game';
+import Game from '../game/game';
+import Home from '../home/home';
+import JoinGame from '../join-game/join-game';
 import Navbar from './navbar';
 
 interface RouteItem {
