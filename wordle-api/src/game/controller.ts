@@ -66,18 +66,23 @@ export const joinGame = async (req: JoinGameReq, res) => {
     const game = await db.get(req.params.uuid);
 
     const playerStateIndex = findStateIndex(game, req.cookies.session)
+
+    // player is already in the game, just let them in
     if (playerStateIndex !== -1) {
-        return
+        res.send(game)
     }
 
-    if (game.game_status !== 'lobby') {
+    // if still in lobby state, add player to game
+    if (game.game_status === 'lobby') {
+        const newPlayerState = initialState(req.body.name, req.cookies.session, game.state[0].goalWord)
+        const updateOptions: Game = Object.assign(game, { state: [...game.state, newPlayerState]})
+        const updatedGame = await db.update(updateOptions)
+        res.send(updatedGame)
+    }
+    else {
         res.status(400).send('Game has already started');
         return;
     }
-
-    const newPlayerState = initialState(req.body.name, req.cookies.session, game.state[0].goalWord)
-    const updatedGame: Game = Object.assign(game, { state: [...game.state, newPlayerState]})
-    await db.update(updatedGame)
 }
 
 const initialState = (name: string, sessionToken: string, word: string): PlayerState => {
