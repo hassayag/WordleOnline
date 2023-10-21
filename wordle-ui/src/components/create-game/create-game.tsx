@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { Box, Button, Container, TextField } from '@mui/material';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
@@ -18,6 +18,7 @@ const CreateGame = ({
     const [name, setName] = useState<string>('');
     const [gameUuid, setGameUuid] = useState<string>('');
     const [cookies, setCookie] = useCookies(['session']);
+    const [createError, setCreateError] = useState<string>('');
 
     const _initGame = async () => {
         let session;
@@ -29,7 +30,7 @@ const CreateGame = ({
 
         GameService.createGame(name)
             .then((response) => setGameUuid(response.uuid))
-            .catch((err) => console.error(err));
+            .catch((err) => setCreateError(err?.message));
     };
 
     const _handleInput = (event: React.ChangeEvent<any>) => {
@@ -74,6 +75,9 @@ const CreateGame = ({
                     >
                         Create Game
                     </Button>
+                    <Typography component="body" variant="body2" color="error">
+                        {createError}
+                    </Typography>
                 </Box>
             </Container>
         </main>

@@ -4,7 +4,7 @@ import {
     Home as HomeIcon,
     People as PeopleIcon,
 } from '@mui/icons-material';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CreateGame from '../create-game/create-game';
 import Game from '../game/game';
@@ -29,49 +29,53 @@ const MyRouter = () => {
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>(
         {}
     );
-
-    const componentMap: Record<string, React.JSX.Element> = {
+    const [componentMap, setComponentMap] = useState<Record<string, React.JSX.Element>>({
         home: <Home />,
         create_game: (
             <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />
         ),
         join_game: <JoinGame />,
-    };
+    })
 
-    useMemo(() => {
-        GameService.getGames().then((response) => {
+    useEffect(() => {
+        GameService.getGames()
+        .then((response) => {
             setGameUuids(response.uuids);
-            const initDrawerLinks: Record<string, DrawerItem> = {
-                home: {
-                    label: 'Home',
-                    path: '/',
-                    icon: <HomeIcon color="primary" />,
-                },
-                create_game: {
-                    label: 'Create Game',
-                    path: '/game/create',
-                    icon: <AddIcon color="secondary" />,
-                },
-                join_game: {
-                    label: 'Join Game',
-                    path: '/game/join',
-                    icon: <PeopleIcon color="secondary" />,
-                },
+        })
+        .catch(err => console.error(err))
+    }, [])
+
+    useEffect(() => {
+        const initDrawerLinks: Record<string, DrawerItem> = {
+            home: {
+                label: 'Home',
+                path: '/',
+                icon: <HomeIcon color="primary" />,
+            },
+            create_game: {
+                label: 'Create Game',
+                path: '/game/create',
+                icon: <AddIcon color="secondary" />,
+            },
+            join_game: {
+                label: 'Join Game',
+                path: '/game/join',
+                icon: <PeopleIcon color="secondary" />,
+            },
+        };
+        setDrawerLinks(initDrawerLinks);
+
+        const initRoutes: Record<string, RouteItem> = {};
+        Object.entries(initDrawerLinks).forEach(([key, value]) => {
+            initRoutes[key] = {
+                path: value.path,
+                component: componentMap[key],
             };
-            setDrawerLinks(initDrawerLinks);
-
-            const initRoutes: Record<string, RouteItem> = {};
-            Object.entries(initDrawerLinks).forEach(([key, value]) => {
-                initRoutes[key] = {
-                    path: value.path,
-                    component: componentMap[key],
-                };
-            });
-            setRoutes(initRoutes);
         });
-    }, []);
+        setRoutes(initRoutes);
+    }, [componentMap]);
 
-    useMemo(() => {
+    useEffect(() => {
         // add all gameId routes to links object
         const gameRoutes: Record<string, RouteItem> = {};
 
@@ -83,6 +87,14 @@ const MyRouter = () => {
         });
 
         setRoutes(Object.assign(routes, gameRoutes));
+
+        setComponentMap({
+            home: <Home />,
+            create_game: (
+                <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />
+            ),
+            join_game: <JoinGame />,
+        })
     }, [gameUuids, routes]);
 
     if (!routes) {
