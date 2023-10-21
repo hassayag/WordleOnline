@@ -13,11 +13,11 @@ export default {
         password: process.env.POSTGRES_PASS,
     },
     server: {
-        host: process.env.SERVER_HOST || 'http://localhost',
-        port: process.env.SERVER_PORT || 8081,
+        host: process.env.SERVER_HOST || 'http://localhost:8080',
+        port: process.env.SERVER_PORT || 8080,
     },
     client: {
-        host: process.env.CLIENT_HOST || 'http://localhost',
+        host: process.env.CLIENT_HOST || 'http://localhost:3000',
         port: process.env.CLIENT_PORT || 3000,
     },
 };

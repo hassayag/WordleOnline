@@ -6,11 +6,11 @@ export default abstract class Service {
     protected async get<T>(url: string, useCreds = true): Promise<T> {
         let request: Request;
         if (useCreds) {
-            request = new Request(config.api.url + this.baseUrl + url, {
+            request = new Request(config.api.host + this.baseUrl + url, {
                 credentials: 'include',
             });
         } else {
-            request = new Request(config.api.url + this.baseUrl + url);
+            request = new Request(config.api.host + this.baseUrl + url);
         }
 
         const response = await fetch(request);
@@ -18,7 +18,7 @@ export default abstract class Service {
     }
 
     protected async post<T>(url: string, payload: any): Promise<T> {
-        const request = new Request(config.api.url + this.baseUrl + url, {
+        const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 
@@ -33,7 +33,7 @@ export default abstract class Service {
     }
 
     protected async patch<T>(url: string, payload: any): Promise<T> {
-        const request = new Request(config.api.url + this.baseUrl + url, {
+        const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 
@@ -48,7 +48,7 @@ export default abstract class Service {
     }
 
     protected async delete<T = void>(url: string): Promise<T> {
-        const request = new Request(config.api.url + this.baseUrl + url, {
+        const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 

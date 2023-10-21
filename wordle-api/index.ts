@@ -21,7 +21,7 @@ const initApp = () => {
 
     app.use(
         cors({
-            origin: Config.client.host + ':' + Config.client.port,
+            origin: Config.client.host,
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             preflightContinue: false,
             optionsSuccessStatus: 204,

@@ -22,16 +22,16 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [cookies, setCookie] = useCookies(['session']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
 
+
+    useEffect(() => {
+        // Get a random goal word
+        WordService.getValidGuesses()
+            .then(response => setValidGuesses(response))
+            .catch(err => console.error(err))
+    }, [])
+
     useEffect(() => {
         async function fetchData() {
-            // Get a random goal word
-            const words = await WordService.getValidGuesses();
-            setValidGuesses(words);
-
-            if (!words) {
-                console.warn(`Words not found`);
-            }
-
             try {
                 const gameObj: Game = await GameService.getGame(uuid);
     
@@ -61,7 +61,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
             }
         }
         fetchData();
-    }, [uuid, cookies?.session, game?.id, setCookie]);
+    }, [cookies.session, navigate, setCookie, uuid]);
 
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {

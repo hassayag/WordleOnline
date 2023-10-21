@@ -1,11 +1,10 @@
-const host = process.env.REACT_APP_API_HOST || 'http://localhost';
-const port = process.env.REACT_APP_API_PORT || '8081';
+const host = process.env.REACT_APP_API_HOST || 'http://localhost:8080';
+const port = process.env.REACT_APP_API_PORT || '8080';
 
 const config = {
     api: {
         host,
         port,
-        url: `${host}:${port}`,
     },
     feature_flags: {
         synth: process.env.FEATURE_FLAG_SYNTH || false,
