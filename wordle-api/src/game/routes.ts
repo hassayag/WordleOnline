@@ -1,5 +1,11 @@
 import express from 'express';
-import { getUuids, getGame, createGame, updateGame, joinGame } from './controller';
+import {
+    getUuids,
+    getGame,
+    createGame,
+    updateGame,
+    joinGame,
+} from './controller';
 const router = express.Router();
 
 import bodyParser from 'body-parser';

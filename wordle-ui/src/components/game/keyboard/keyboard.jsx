@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Paper } from '@mui/material';
 
 import './keyboard.scss';
-import synthService from '@/services/synth-service'
-import config from '@/config/config'
+import synthService from '@/services/synth-service';
+import config from '@/config/config';
 
 class Keyboard extends React.Component {
     letters = [
@@ -17,9 +17,9 @@ class Keyboard extends React.Component {
             this.props.onPress(letter);
 
             if (config.feature_flags.synth) {
-                synthService.triggerSound(letter)
+                synthService.triggerSound(letter);
             }
-        }
+        };
 
         document.body.addEventListener('keydown', (event) =>
             pressKey(event.key)
@@ -87,9 +87,9 @@ const Key = ({ inputLetter, onPress, keyState }) => {
     const pressKey = () => {
         onPress(inputLetter);
         if (config.feature_flags.synth) {
-            synthService.triggerSound(inputLetter)
+            synthService.triggerSound(inputLetter);
         }
-    }
+    };
 
     return (
         <Paper key={inputLetter} elevation={1}>
@@ -98,6 +98,6 @@ const Key = ({ inputLetter, onPress, keyState }) => {
             </button>
         </Paper>
     );
-}
+};
 
 export { Keyboard };

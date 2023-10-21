@@ -25,10 +25,9 @@ export interface Letter {
     state: LetterColour;
 }
 
-export type LetterColour = 'white' |'grey' |'yellow' |'green'
+export type LetterColour = 'white' | 'grey' | 'yellow' | 'green';
 
-export type GameStatus = 'lobby' | 'in_progress' | 'done'
-
+export type GameStatus = 'lobby' | 'in_progress' | 'done';
 
 // Request Interfaces
 export interface CreateGameReq extends Request {
@@ -47,6 +46,6 @@ export interface UpdateGameReq extends Request {
 export interface JoinGameReq extends Request {
     body: {
         uuid: string;
-        name: string
+        name: string;
     };
 }

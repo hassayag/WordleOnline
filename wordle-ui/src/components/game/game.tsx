@@ -9,12 +9,12 @@ import WordService from '@/services/word-service';
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
-import config from '@/config/config'
+import config from '@/config/config';
 import './game.scss';
 import OppponentBoard from './opponent-board/opponent-board';
-import { Game } from './types'
+import { Game } from './types';
 
-const GameComponent = ({ uuid }: {uuid: string}) => {
+const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
 
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
@@ -73,54 +73,59 @@ const GameComponent = ({ uuid }: {uuid: string}) => {
         return <Lobby game={game} setGame={setGame} />;
     }
 
-    const opponentGameStates = game.state.filter(state => state.player.sessionToken !== cookies.session)
-    const opponentBoards = opponentGameStates.map((state, index) => <OppponentBoard key={index} state={state} />)
+    const opponentGameStates = game.state.filter(
+        (state) => state.player.sessionToken !== cookies.session
+    );
+    const opponentBoards = opponentGameStates.map((state, index) => (
+        <OppponentBoard key={index} state={state} />
+    ));
 
     return (
         <main>
+            <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    gap: '8px',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 30,
+                    marginTop: 10,
+                }}
+            >
+                <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                    <Container component="main" maxWidth="sm">
+                        <Box
+                            sx={{
+                                marginTop: 8,
+                                display: 'flex',
+                                gap: '8px',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Wordle validGuesses={validGuesses} game={game} />
+                        </Box>
+                    </Container>
+                </Slide>
+                <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                    <Container component="main" maxWidth="sm">
+                        <Box
+                            sx={{
+                                marginTop: 8,
+                                display: 'flex',
+                                gap: '8px',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            {opponentBoards}
+                        </Box>
+                    </Container>
+                </Slide>
 
-        <Box sx={{
-                width: '100%',
-                display: 'flex',
-                gap: '8px',
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginLeft: 30,
-                marginTop: 10
-        }}>
-            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                <Container component="main" maxWidth="sm">
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            gap: '8px',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Wordle validGuesses={validGuesses} game={game}/>
-                    </Box>
-                </Container>
-            </Slide>
-            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                <Container component="main" maxWidth="sm">
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            gap: '8px',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        {opponentBoards}
-                    </Box>
-                </Container>
-            </Slide>
-        
-            {config.feature_flags.synth && <SynthControl/>}
-        </Box>
+                {config.feature_flags.synth && <SynthControl />}
+            </Box>
         </main>
     );
 };

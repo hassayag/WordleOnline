@@ -6,7 +6,13 @@ import { Box, Button, Container, TextField } from '@mui/material';
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
 
-const CreateGame = ({ gameUuids, setGameUuids }: {gameUuids: string[], setGameUuids: React.Dispatch<string[]>}) => {
+const CreateGame = ({
+    gameUuids,
+    setGameUuids,
+}: {
+    gameUuids: string[];
+    setGameUuids: React.Dispatch<string[]>;
+}) => {
     const navigate = useNavigate();
 
     const [name, setName] = useState<string>('');
@@ -41,35 +47,35 @@ const CreateGame = ({ gameUuids, setGameUuids }: {gameUuids: string[], setGameUu
 
     return (
         <main>
-        <Container component="main" maxWidth="sm">
-            <Box
-                sx={{
-                    width: 500,
-                    height: 500,
-                    marginLeft: '50%',
-                    marginTop: 8,
-                    display: 'flex',
-                    gap: '8px',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
-                <TextField
-                    required={!name}
-                    label="Enter Name"
-                    variant="outlined"
-                    onChange={(event) => _handleInput(event)}
-                />
-
-                <Button
-                    disabled={!name}
-                    variant="contained"
-                    onClick={() => _initGame()}
+            <Container component="main" maxWidth="sm">
+                <Box
+                    sx={{
+                        width: 500,
+                        height: 500,
+                        marginLeft: '50%',
+                        marginTop: 8,
+                        display: 'flex',
+                        gap: '8px',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
                 >
-                    Create Game
-                </Button>
-            </Box>
-        </Container>
+                    <TextField
+                        required={!name}
+                        label="Enter Name"
+                        variant="outlined"
+                        onChange={(event) => _handleInput(event)}
+                    />
+
+                    <Button
+                        disabled={!name}
+                        variant="contained"
+                        onClick={() => _initGame()}
+                    >
+                        Create Game
+                    </Button>
+                </Box>
+            </Container>
         </main>
     );
 };

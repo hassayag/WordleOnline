@@ -2,11 +2,11 @@ import { v4 } from 'uuid';
 import psql from '../utils/sql';
 
 interface Session {
-    id: number,
-    name: string,
-    session_token: string
-    game_id: number
-    expires_at: string
+    id: number;
+    name: string;
+    session_token: string;
+    game_id: number;
+    expires_at: string;
 }
 
 export const getSession = async (req, res) => {
@@ -29,7 +29,7 @@ export const createSession = async (req, res) => {
         expiresAt = new Date(Date.now() + MILISECONDS_IN_A_DAY);
 
     if (!name) {
-        res.status(400).send({message: "'name' is required"});
+        res.status(400).send({ message: "'name' is required" });
         return;
     }
 

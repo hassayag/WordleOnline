@@ -12,7 +12,7 @@ const JoinGame = () => {
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState('');
     const [cookies, setCookie] = useCookies(['session']);
-    const [joinError, setJoinError] = useState<string>('')
+    const [joinError, setJoinError] = useState<string>('');
 
     const joinGame = async () => {
         let session;
@@ -21,10 +21,10 @@ const JoinGame = () => {
             session = await SessionService.createSession(name);
             setCookie('session', session.session_token, { path: '/' });
         }
-        
+
         GameService.joinGame(gameId, name)
             .then(() => navigate(`/game/${gameId}`))
-            .catch((err: any) => setJoinError(err?.message))
+            .catch((err: any) => setJoinError(err?.message));
     };
 
     return (
@@ -65,11 +65,7 @@ const JoinGame = () => {
                     >
                         Join Game
                     </Button>
-                    <Typography
-                        component='body'
-                        variant='body2'
-                        color='error'
-                    >
+                    <Typography component="body" variant="body2" color="error">
                         {joinError}
                     </Typography>
                 </Box>

@@ -29,20 +29,18 @@ const MyRouter = () => {
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>(
         {}
     );
-    
+
     const componentMap: Record<string, React.JSX.Element> = {
         home: <Home />,
-        create_game:
-                <CreateGame
-                    gameUuids={gameUuids}
-                    setGameUuids={setGameUuids}
-                />,
+        create_game: (
+            <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />
+        ),
         join_game: <JoinGame />,
-    }
+    };
 
     useMemo(() => {
-        GameService.getGames().then(response => {
-            setGameUuids(response.uuids)
+        GameService.getGames().then((response) => {
+            setGameUuids(response.uuids);
             const initDrawerLinks: Record<string, DrawerItem> = {
                 home: {
                     label: 'Home',
@@ -61,7 +59,7 @@ const MyRouter = () => {
                 },
             };
             setDrawerLinks(initDrawerLinks);
-    
+
             const initRoutes: Record<string, RouteItem> = {};
             Object.entries(initDrawerLinks).forEach(([key, value]) => {
                 initRoutes[key] = {
@@ -70,7 +68,7 @@ const MyRouter = () => {
                 };
             });
             setRoutes(initRoutes);
-        })
+        });
     }, []);
 
     useMemo(() => {
@@ -96,11 +94,14 @@ const MyRouter = () => {
             <BrowserRouter>
                 <Routes>
                     {Object.entries(routes).map(([key, item]) => (
-                        <Route key={key} path={item.path} element={item.component} />
+                        <Route
+                            key={key}
+                            path={item.path}
+                            element={item.component}
+                        />
                     ))}
                 </Routes>
             </BrowserRouter>
-
         </>
     );
 };

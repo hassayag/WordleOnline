@@ -6,7 +6,7 @@ export interface Game {
     state: PlayerState[];
 }
 
-export type GameStatus = 'lobby' | 'in_progress' | 'done'
+export type GameStatus = 'lobby' | 'in_progress' | 'done';
 
 export interface PlayerState {
     player: Player;
@@ -23,7 +23,7 @@ export interface Player {
 export interface Letter {
     key: string;
     state: LetterColour;
-    isError?: boolean
+    isError?: boolean;
 }
 
-export type LetterColour = 'white' |'grey' |'yellow' |'green'
+export type LetterColour = 'white' | 'grey' | 'yellow' | 'green';

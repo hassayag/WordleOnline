@@ -1,11 +1,11 @@
 import { Game, GameStatus, PlayerState } from '@/components/game/types';
 import Service from './service';
 
-class GameService extends Service{
-    protected baseUrl = '/game/'
+class GameService extends Service {
+    protected baseUrl = '/game/';
 
     public async getGames() {
-        return this.get<{uuids: string[]}>('uuids')
+        return this.get<{ uuids: string[] }>('uuids');
     }
 
     public async getGame(uuid: string) {
@@ -18,21 +18,29 @@ class GameService extends Service{
             type: 'standard',
         };
 
-        return this.post<Game>('', payload)
+        return this.post<Game>('', payload);
     }
 
-    public async updateGame(uuid: string, status: GameStatus, playerState?: PlayerState) {
-        const payload = {uuid, game_status: status, player_state: playerState};
-        return this.patch<Game>(uuid, payload)
+    public async updateGame(
+        uuid: string,
+        status: GameStatus,
+        playerState?: PlayerState
+    ) {
+        const payload = {
+            uuid,
+            game_status: status,
+            player_state: playerState,
+        };
+        return this.patch<Game>(uuid, payload);
     }
 
     public async joinGame(uuid: string, playerName: string) {
         const payload = {
             name: playerName,
         };
-        return this.post<Game>(`${uuid}/join`, payload)
+        return this.post<Game>(`${uuid}/join`, payload);
     }
 }
 
-const service = new GameService()
-export default service
+const service = new GameService();
+export default service;

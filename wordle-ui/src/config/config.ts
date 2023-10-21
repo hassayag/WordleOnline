@@ -8,8 +8,8 @@ const config = {
         url: `${host}:${port}`,
     },
     feature_flags: {
-        synth: process.env.FEATURE_FLAG_SYNTH || false
-    }
+        synth: process.env.FEATURE_FLAG_SYNTH || false,
+    },
 };
 
 export default config;

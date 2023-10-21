@@ -3,7 +3,13 @@ import GameService from '@/services/game-service';
 import React from 'react';
 import { Game } from '../game/types';
 
-const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | null>}) => {
+const Lobby = ({
+    game,
+    setGame,
+}: {
+    game: Game;
+    setGame: React.Dispatch<Game | null>;
+}) => {
     const names = game.state.map((item) => item.player.name);
 
     return (
@@ -19,7 +25,7 @@ const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | nu
                         gap: 10,
                         flexDirection: 'row',
                         alignItems: 'center',
-                        textAlign: 'center'
+                        textAlign: 'center',
                     }}
                 >
                     <Box
@@ -63,11 +69,14 @@ const Lobby = ({ game, setGame }: {game: Game, setGame: React.Dispatch<Game | nu
                         <Button
                             variant="contained"
                             onClick={() => {
-                                GameService.updateGame(game.uuid, 'in_progress');
+                                GameService.updateGame(
+                                    game.uuid,
+                                    'in_progress'
+                                );
                                 setGame({
                                     ...game,
                                     game_status: 'in_progress',
-                                })
+                                });
                             }}
                         >
                             Start Game
@@ -88,9 +97,7 @@ const Players = ({ names }: { names: string[] }) => {
         );
     });
 
-    return (<>
-        {players}
-    </>)
+    return <>{players}</>;
 };
 
 export default Lobby;

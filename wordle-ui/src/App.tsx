@@ -11,14 +11,14 @@ import './index.scss';
 
 import MyRouter from './components/navigation/router';
 
-const rootElem = document.getElementById('root')
+const rootElem = document.getElementById('root');
 if (rootElem) {
     const root = ReactDOM.createRoot(rootElem);
     root.render(
         <CookiesProvider>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                    <MyRouter />
+                <MyRouter />
             </ThemeProvider>
         </CookiesProvider>
     );

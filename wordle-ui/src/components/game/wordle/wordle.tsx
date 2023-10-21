@@ -5,28 +5,31 @@ import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import GameService from '@/services/game-service';
 import synthService from '@/services/synth-service';
-import config from '@/config/config'
+import config from '@/config/config';
 
 import './wordle.css';
 import { Box } from '@mui/system';
 import { Game, Letter, PlayerState } from '../types';
 
 interface State {
-    _letterStates: PlayerState['letterStates'],
-    _wordRows: PlayerState['board'],
-    _rowInd: number,
-    _gameIsWon: boolean | null,
-    _endModalOpen: boolean
+    _letterStates: PlayerState['letterStates'];
+    _wordRows: PlayerState['board'];
+    _rowInd: number;
+    _gameIsWon: boolean | null;
+    _endModalOpen: boolean;
 }
 
-export class Wordle extends React.Component<{game: Game, validGuesses: string[]}, State> {
+export class Wordle extends React.Component<
+    { game: Game; validGuesses: string[] },
+    State
+> {
     private gameIsLoaded = false;
     private gameState: PlayerState;
-    private goalWord: string
+    private goalWord: string;
 
-    constructor(props: {game: Game, validGuesses: string[]}) {
+    constructor(props: { game: Game; validGuesses: string[] }) {
         super(props);
-        
+
         // TODO hit endpoint to get player state
         this.gameState = props.game.state[0];
         this.goalWord = this.gameState.goalWord;
@@ -175,7 +178,11 @@ export class Wordle extends React.Component<{game: Game, validGuesses: string[]}
             this._triggerError(this.rowInd);
         } else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
             if (config.feature_flags.synth) {
-                synthService.startLoop(this.wordRows[this.rowInd].map((letter: Letter) => letter.key))
+                synthService.startLoop(
+                    this.wordRows[this.rowInd].map(
+                        (letter: Letter) => letter.key
+                    )
+                );
             }
             this._updateGameState();
         }

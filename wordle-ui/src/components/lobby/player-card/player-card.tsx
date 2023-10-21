@@ -1,5 +1,3 @@
-const PlayerCard = () => {
+const PlayerCard = () => {};
 
-}
-
-export default PlayerCard
+export default PlayerCard;

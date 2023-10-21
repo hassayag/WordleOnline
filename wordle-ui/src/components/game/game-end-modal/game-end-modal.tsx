@@ -1,7 +1,15 @@
 import React from 'react';
 import './game-end-modal.css';
 
-const GameEndModal = ({ isWon, goalWord, closeModal }: { isWon: boolean, goalWord: string, closeModal: () => void }) => {
+const GameEndModal = ({
+    isWon,
+    goalWord,
+    closeModal,
+}: {
+    isWon: boolean;
+    goalWord: string;
+    closeModal: () => void;
+}) => {
     return (
         <>
             <div className="modal">

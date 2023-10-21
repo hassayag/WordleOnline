@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
-const Board = ({state}: { state: PlayerState }) => {
+const Board = ({ state }: { state: PlayerState }) => {
     const renderGrid = () => {
         return (
             <div>
@@ -15,7 +15,7 @@ const Board = ({state}: { state: PlayerState }) => {
                 <div>{renderRow(5)}</div>
             </div>
         );
-    }
+    };
 
     const renderRow = (i: number) => {
         return (
@@ -27,16 +27,16 @@ const Board = ({state}: { state: PlayerState }) => {
                 {renderSquare(state.board[i][4])}
             </div>
         );
-    }
+    };
 
     const renderSquare = (letter: Letter) => {
         return <Square letter={letter} />;
-    }
+    };
 
     return <div className="word-grid">{renderGrid()}</div>;
-}
+};
 
-const Square = ({letter}: { letter: Letter|undefined }) => {
+const Square = ({ letter }: { letter: Letter | undefined }) => {
     if (!letter) {
         letter = { key: '', state: 'white', isError: false };
     }
@@ -52,5 +52,5 @@ const Square = ({letter}: { letter: Letter|undefined }) => {
             {letter.key.toUpperCase()}
         </Paper>
     );
-}
+};
 export { Board };

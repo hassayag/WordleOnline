@@ -4,34 +4,56 @@ class SynthService {
     private synth: Tone.Synth;
 
     private letters = [
-        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-        'z', 'x', 'c', 'v', 'b', 'n', 'm'
+        'q',
+        'w',
+        'e',
+        'r',
+        't',
+        'y',
+        'u',
+        'i',
+        'o',
+        'p',
+        'a',
+        's',
+        'd',
+        'f',
+        'g',
+        'h',
+        'j',
+        'k',
+        'l',
+        'z',
+        'x',
+        'c',
+        'v',
+        'b',
+        'n',
+        'm',
     ];
     private scales = {
         majorPent: ['C', 'D', 'E', 'G', 'A'],
-        minorPent: ['C', 'Eb', 'F', 'G', 'Bb' ] 
-    }
-    private loops: Loop[] = []
+        minorPent: ['C', 'Eb', 'F', 'G', 'Bb'],
+    };
+    private loops: Loop[] = [];
 
     constructor() {
-        Tone.start()
+        Tone.start();
         this.synth = new Tone.Synth().toDestination();
-
     }
 
     startLoop(letters: string[]) {
-        const notes = letters.map(letter => this.getPitch(letter))
-        console.log({letters, notes})
-        
-        const loop = new Loop(notes as any)
-        loop.start()
+        const notes = letters.map((letter) => this.getPitch(letter));
+        console.log({ letters, notes });
+
+        const loop = new Loop(notes as any);
+        loop.start();
 
         this.loops.push(loop);
     }
 
     stopLoops() {
-        this.loops.forEach(loop => loop.stop())
+        this.loops.forEach((loop) => loop.stop());
     }
 
     triggerSound(letter: string) {
@@ -40,47 +62,45 @@ class SynthService {
             return;
         }
 
-        const now = Tone.now() 
-        this.synth.triggerAttackRelease(pitch, 0.5, now + 0.1)
+        const now = Tone.now();
+        this.synth.triggerAttackRelease(pitch, 0.5, now + 0.1);
     }
 
-
     getPitch(letter: string) {
-        const index = this.letters.findIndex(l => l === letter)
+        const index = this.letters.findIndex((l) => l === letter);
         if (index === -1) {
             return;
         }
 
         const quotient = Math.floor(index / this.scales.minorPent.length),
-            remainder = index % this.scales.minorPent.length
+            remainder = index % this.scales.minorPent.length;
 
-            
         const register = quotient + 2,
             pitch = this.scales.minorPent[remainder];
 
-        return `${pitch}${register}`
+        return `${pitch}${register}`;
     }
 
     setEnvelope(envelope: any) {
-        console.log('updating envelopes for ', this.loops.length)
-        this.loops.forEach(loop => loop.synth.set({envelope}))
+        console.log('updating envelopes for ', this.loops.length);
+        this.loops.forEach((loop) => loop.synth.set({ envelope }));
     }
 }
 
 class Loop {
     public synth: Tone.Synth;
-    private notes: string[]
-    private transport: typeof Tone.Transport
+    private notes: string[];
+    private transport: typeof Tone.Transport;
 
     constructor(notes: string[]) {
         const envelope = {
             attack: 0,
             decay: 0.2,
             sustain: 1,
-            release: 0.05
+            release: 0.05,
         };
 
-        this.synth = new Tone.Synth({envelope}).toDestination();
+        this.synth = new Tone.Synth({ envelope }).toDestination();
         this.notes = notes;
         this.transport = Tone.Transport;
 
@@ -89,11 +109,15 @@ class Loop {
 
     buildLoop() {
         this.transport.scheduleRepeat((time) => {
-            for (let i=0; i<this.notes.length; i++) {
-                const length = Math.random() / 5
-                this.synth.triggerAttackRelease(this.notes[i], length, time + 0.2 * i)
+            for (let i = 0; i < this.notes.length; i++) {
+                const length = Math.random() / 5;
+                this.synth.triggerAttackRelease(
+                    this.notes[i],
+                    length,
+                    time + 0.2 * i
+                );
             }
-        }, "1n");
+        }, '1n');
     }
 
     start() {

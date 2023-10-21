@@ -8,7 +8,11 @@ import {
 } from '@mui/material';
 import { DrawerItem } from './router';
 
-const Navbar = ({ drawerLinks }: { drawerLinks: Record<string, DrawerItem> }) => {
+const Navbar = ({
+    drawerLinks,
+}: {
+    drawerLinks: Record<string, DrawerItem>;
+}) => {
     const navItems = Object.keys(drawerLinks).map((key) => {
         const { path, label, icon } = drawerLinks[key];
 

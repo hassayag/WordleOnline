@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, {Request, Response, NextFunction} from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import cookieParser from 'cookie-parser';
 import Config from './config';
@@ -9,11 +9,15 @@ import words from './src/words/routes';
 
 const initApp = () => {
     const app = express();
-    
+
     app.use((req: Request, res: Response, next: NextFunction) => {
-        console.info(`${new Date().toISOString()} [api] Received request "${req.method} ${req.url}"`)
-        next()
-    })
+        console.info(
+            `${new Date().toISOString()} [api] Received request "${
+                req.method
+            } ${req.url}"`
+        );
+        next();
+    });
 
     app.use(
         cors({
@@ -25,21 +29,23 @@ const initApp = () => {
         })
     );
     app.use(cookieParser());
-    
+
     app.use('/game', game);
     app.use('/session', session);
     app.use('/words', words);
 
     // Define an error-handling middleware function
     app.use((err, req: Request, res: Response, next: NextFunction) => {
-        console.error(`${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`);
+        console.error(
+            `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
+        );
 
         if (err?.statusCode) {
             res.status(err.statusCode).json({ message: err.message });
         } else {
             res.status(500).json({ message: 'Internal Server Error' });
         }
-    })
+    });
 
     app.listen(Config.server.port, () => {
         console.log(`Wordle API listening on port ${Config.server.port}`);
