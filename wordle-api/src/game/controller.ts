@@ -81,6 +81,7 @@ export const joinGame = async (req: JoinGameReq, res) => {
     // player is already in the game, just let them in
     if (playerStateIndex !== -1) {
         res.send(game);
+        return
     }
 
     // if still in lobby state, add player to game
