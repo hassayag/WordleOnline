@@ -32,7 +32,6 @@ const CreateGame = ({ gameUuids, setGameUuids }: {gameUuids: string[], setGameUu
 
     useEffect(() => {
         if (gameUuid) {
-            console.log({gameUuids, gameUuid})
             // update game ids so Home component can rerender with the new game route
             setGameUuids([...gameUuids, gameUuid]);
 

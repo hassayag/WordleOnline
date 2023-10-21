@@ -32,7 +32,17 @@ export default abstract class Service {
             credentials: 'include',
         })
 
-        return response.json();
+        const json = await response.json();
+
+        if (!response.ok) {
+            const error = {
+                status: response.status, 
+                message: json.message 
+            }
+            throw error
+        }
+
+        return response.json()
     }
 
     protected async patch<T>(url: string, payload: any): Promise<T> {

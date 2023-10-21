@@ -79,7 +79,7 @@ export const joinGame = async (req: JoinGameReq, res) => {
         res.send(updatedGame)
     }
     else {
-        res.status(400).send('Game has already started');
+        res.status(400).send({message: 'Game has already started'});
         return;
     }
 }

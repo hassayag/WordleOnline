@@ -272,7 +272,7 @@ export class Wordle extends React.Component<{game: Game, validGuesses: string[]}
         if (this.gameIsWon !== null) {
             game.game_status = 'done';
         }
-        console.log(game)
+
         GameService.updateGame(game.uuid, game.game_status, game.state[0]);
     }
 

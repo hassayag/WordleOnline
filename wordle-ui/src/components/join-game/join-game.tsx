@@ -23,10 +23,10 @@ const JoinGame = () => {
         }
         
         GameService.joinGame(gameId, name)
-            .then((response) => console.log('___ ', response))
-            .catch((err) => console.log('----', err))
+            .then(() => navigate(`/game/${gameId}`))
+            .catch((err: any) => setJoinError(err?.message))
     };
-    console.log('-----', joinError)
+
     return (
         <main>
             <Container component="main" maxWidth="sm">
@@ -70,7 +70,7 @@ const JoinGame = () => {
                         variant='body2'
                         color='error'
                     >
-                        {'aaa'}
+                        {joinError}
                     </Typography>
                 </Box>
             </Container>
