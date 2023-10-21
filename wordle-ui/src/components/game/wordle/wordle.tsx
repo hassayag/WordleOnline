@@ -3,7 +3,7 @@ import { ArrayUtils } from '@/utils/array';
 import { Button, Modal, Paper, Typography } from '@mui/material';
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
-import { GameService } from '@/services/game-service';
+import GameService from '@/services/game-service';
 import synthService from '@/services/synth-service';
 import config from '@/config/config'
 

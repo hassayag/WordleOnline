@@ -1,5 +1,5 @@
 import { Box, Button, Container, Typography } from '@mui/material';
-import { GameService } from '@/services/game-service';
+import GameService from '@/services/game-service';
 import React from 'react';
 import { Game } from '../game/types';
 

@@ -1,6 +1,6 @@
-import { GameService } from '@/services/game-service';
+import GameService from '@/services/game-service';
 import { Home } from '@mui/icons-material';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import CreateGame from '../create-game/create-game';
 import Game from '../game/game';

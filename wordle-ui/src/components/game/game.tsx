@@ -6,7 +6,7 @@ import { Box, Container, Slide } from '@mui/material';
 import { Wordle } from './wordle/wordle';
 import Lobby from '../lobby/lobby';
 import WordService from '@/services/word-service';
-import { GameService } from '@/services/game-service';
+import GameService from '@/services/game-service';
 import { SessionService } from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config'

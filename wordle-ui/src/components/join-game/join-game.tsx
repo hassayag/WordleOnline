@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
-import { GameService } from '@/services/game-service';
+import GameService from '@/services/game-service';
 import { SessionService } from '@/services/session-service';
 
 const JoinGame = () => {

@@ -2,8 +2,7 @@ import { v4 } from 'uuid';
 
 import { randomWord } from '../utils/words-util';
 import db from './db-utils';
-import { CreateGameReq, Game, GameStatus, JoinGameReq, LetterColour, PlayerState, UpdateGameReq } from './types';
-import { NextFunction } from 'express';
+import { CreateGameReq, Game, GameStatus, JoinGameReq, PlayerState, UpdateGameReq } from './types';
 
 // get uuids of all games
 export const getUuids = async (req, res) => {

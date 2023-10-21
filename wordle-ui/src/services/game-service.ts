@@ -1,69 +1,38 @@
 import { Game, GameStatus, PlayerState } from '@/components/game/types';
-import config from '@/config/config'
+import Service from './service';
 
-export class GameService {
-    static getGames(): Promise<{uuids: string[]}> {
-        const request = new Request(config.api.url + '/game/uuids');
+class GameService extends Service{
+    baseUrl = '/game/'
 
-        return fetch(request, { credentials: 'include' })
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+    public async getGames() {
+        return this.get<{uuids: string[]}>('uuids')
     }
 
-    static getGame(uuid: string) {
-        const request = new Request(config.api.url + '/game/' + uuid);
-
-        return fetch(request, { credentials: 'include' })
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+    public async getGame(uuid: string) {
+        return this.get<Game>(uuid);
     }
 
-    static createGame(hostName: string) {
-        const request = new Request(config.api.url + '/game');
-
+    public async createGame(hostName: string) {
         const payload = {
             name: hostName,
             type: 'standard',
         };
 
-        return fetch(request, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            credentials: 'include',
-        })
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+        return this.post<Game>('', payload)
     }
 
-    static updateGame(uuid: string, status: GameStatus, playerState?: PlayerState) {
-        const request = new Request(config.api.url + '/game/' + uuid);
-        
+    public async updateGame(uuid: string, status: GameStatus, playerState?: PlayerState) {
         const payload = {uuid, game_status: status, player_state: playerState};
-        return fetch(request, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            credentials: 'include',
-        })
-            .then((response) => response.json())
-            .catch((err) => console.error(err.message));
+        return this.patch<Game>(uuid, payload)
     }
 
-    static joinGame(uuid: string, playerName: string) {
-        const request = new Request(`${config.api.url}/game/${uuid}/join`);
-
+    public async joinGame(uuid: string, playerName: string) {
         const payload = {
             name: playerName,
         };
-
-        return fetch(request, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            credentials: 'include',
-        })
-        .then(response => response.json())
-        .catch(err => err)
+        return this.post<Game>(`${uuid}/join`, payload)
     }
 }
+
+const service = new GameService()
+export default service

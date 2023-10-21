@@ -4,11 +4,11 @@ class WordService extends Service {
     baseUrl = '/words/'
 
     public async getGoalWord() {
-        return this.get<string>('goal-word')
+        return this.get<string>('goal-word', false)
     }
 
     public async getValidGuesses() {
-        return this.get<string[]>('valid-guesses');
+        return this.get<string[]>('valid-guesses', false);
     }
 }
 
