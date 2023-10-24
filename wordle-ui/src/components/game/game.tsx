@@ -13,7 +13,18 @@ import config from '@/config/config';
 import './game.scss';
 import OppponentBoard from './opponent-board/opponent-board';
 import { Game } from './types';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
+
+// using readyState enum
+const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
+    [ReadyState.CLOSED]: 'error',
+    [ReadyState.CLOSING]: 'secondary',
+    [ReadyState.CONNECTING]: 'secondary',
+    [ReadyState.OPEN]: 'primary',
+    [ReadyState.UNINSTANTIATED]: 'error', 
+
+}
 
 const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
@@ -28,8 +39,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         WordService.getValidGuesses()
             .then((response) => setValidGuesses(response))
             .catch((err) => console.error(err));
-
-        sendMessage('Hello its a me')
     }, []);
 
     useEffect(() => {
@@ -49,13 +58,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                     );
                     setCookie('session', session.session_token, { path: '/' });
                 }
-                // else {
-                //     session = await SessionService.getSession(cookies.session);
-                // }
-
-                // if (session?.session_token) {
-                //     setCookie('session', session.session_token, { path: '/' });
-                // }
             } catch (err) {
                 setPlayerIsValid(false);
                 navigate(`/game/join?uuid=${uuid}`);
@@ -69,10 +71,23 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         navigate(`/`);
         return <></>;
     }
+
+    const connectionIcon = (<SignalWifiStatusbar4BarIcon
+        sx={{
+            position: 'absolute',
+            right: 5,
+            top: 5
+        }}
+        color={connectionColorMap[readyState]}
+    />)
+
     if (!game || !validGuesses) {
         return <div> Retrieving purpose... </div>;
     } else if (game.game_status === 'lobby') {
-        return <Lobby game={game} setGame={setGame} />;
+        return (<>
+        {connectionIcon}
+        <Lobby game={game} setGame={setGame} />;
+        </>)
     }
 
     const opponentGameStates = game.state.filter(
@@ -95,6 +110,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                     marginTop: 10,
                 }}
             >
+                {connectionIcon}
                 <Slide direction="up" in={true} mountOnEnter unmountOnExit>
                     <Container component="main" maxWidth="sm">
                         <Box
