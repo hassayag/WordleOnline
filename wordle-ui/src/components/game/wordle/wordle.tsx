@@ -10,6 +10,7 @@ import config from '@/config/config';
 import './wordle.css';
 import { Box } from '@mui/system';
 import { Game, Letter, PlayerState } from '../types';
+import GameEndModal from '../game-end-modal/game-end-modal';
 
 interface State {
     _letterStates: PlayerState['letterStates'];
@@ -88,73 +89,12 @@ export class Wordle extends React.Component<
                         />
                     </Box>
                 </Paper>
-
-                <Modal
-                    open={this.endModalOpen}
-                    onClose={() => this.setEndModalOpen(false)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 400,
-                            bgcolor: 'gray',
-                            border: '2px',
-                            boxShadow: 24,
-                            p: 3,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '12px',
-                            outline: 0,
-                        }}
-                    >
-                        <Typography id="modal-modal-title">
-                            {this.gameIsWon
-                                ? 'You have won!'
-                                : `You have lost :(      The word was "${this.goalWord}"`}
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            {/* Play again? */}
-                        </Typography>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                gap: 2,
-                            }}
-                        >
-                            <Button
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: 4,
-                                    left: 4,
-                                }}
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => this.setEndModalOpen(false)}
-                            >
-                                Close
-                            </Button>
-                            <Button
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: 4,
-                                    right: 4,
-                                }}
-                                variant="contained"
-                                color="primary"
-                                onClick={() => this.setEndModalOpen(false)}
-                            >
-                                Play Again
-                            </Button>
-                        </Box>
-                    </Box>
-                </Modal>
+                <GameEndModal
+                    isWon={this.gameIsWon!!}
+                    isOpen={this.endModalOpen}
+                    goalWord={this.goalWord}
+                    closeModal={() => this.setEndModalOpen(false)}
+                />
             </>
         );
     }
