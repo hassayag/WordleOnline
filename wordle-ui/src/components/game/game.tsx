@@ -13,28 +13,30 @@ import config from '@/config/config';
 import './game.scss';
 import OppponentBoard from './opponent-board/opponent-board';
 import { Game } from './types';
+import useWebSocket from 'react-use-websocket';
 
 const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
-
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-
+    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8081');
 
     useEffect(() => {
         // Get a random goal word
         WordService.getValidGuesses()
-            .then(response => setValidGuesses(response))
-            .catch(err => console.error(err))
-    }, [])
+            .then((response) => setValidGuesses(response))
+            .catch((err) => console.error(err));
+
+        sendMessage('Hello its a me')
+    }, []);
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const gameObj: Game = await GameService.getGame(uuid);
-    
+
                 setGame(gameObj);
                 setPlayerIsValid(true);
 
@@ -54,14 +56,13 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 // if (session?.session_token) {
                 //     setCookie('session', session.session_token, { path: '/' });
                 // }
-            }
-            catch (err) {
+            } catch (err) {
                 setPlayerIsValid(false);
-                navigate(`/game/join?uuid=${uuid}`)
+                navigate(`/game/join?uuid=${uuid}`);
             }
         }
         fetchData();
-    }, [cookies.session, navigate, setCookie, uuid]);
+    }, [cookies, navigate, setCookie, uuid]);
 
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {

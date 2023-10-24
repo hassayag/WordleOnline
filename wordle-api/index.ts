@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
+import http from 'http';
 import { v4 as uuidv4 } from 'uuid';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
@@ -49,11 +50,16 @@ const initWsServer = () => {
     const wss = new WebSocket.Server({ port: Config.websocket.port });
     const clients = new Map();
     wss.on('connection', (ws) => {
-        const id = uuidv4();
-        const color = Math.floor(Math.random() * 360);
-        const metadata = { id, color };
-    
-        clients.set(ws, metadata);
+        console.log(`[wss] Connection from ${ws.url}`)
+        //on message from client
+        ws.on("message", data => {
+            console.log(`Client has sent us: ${data}`)
+        });
+     
+        // handling what to do when clients disconnects from server
+        ws.on("close", () => {
+            console.log("the client has connected");
+        });
     })
     console.log(`Websocket Server listening on port ${Config.websocket.port}`)
 }

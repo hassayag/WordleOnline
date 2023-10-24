@@ -64,18 +64,27 @@ const MyRouter = () => {
             },
         };
         setDrawerLinks(initDrawerLinks);
-    }, []);
 
-    useEffect(() => {
         const initRoutes: Record<string, RouteItem> = {};
-        Object.entries(drawerLinks).forEach(([key, value]) => {
+        Object.entries(initDrawerLinks).forEach(([key, value]) => {
             initRoutes[key] = {
                 path: value.path,
                 component: componentMap[key],
             };
         });
         setRoutes(initRoutes);
-    }, [componentMap, drawerLinks])
+    }, []);
+
+    // useEffect(() => {
+    //     const initRoutes: Record<string, RouteItem> = {};
+    //     Object.entries(drawerLinks).forEach(([key, value]) => {
+    //         initRoutes[key] = {
+    //             path: value.path,
+    //             component: componentMap[key],
+    //         };
+    //     });
+    //     setRoutes(initRoutes);
+    // }, [componentMap, drawerLinks])
 
     useEffect(() => {
         // add all gameId routes to links object
@@ -88,7 +97,7 @@ const MyRouter = () => {
             };
         });
 
-        setRoutes(routes => Object.assign(routes,gameRoutes));
+        setRoutes(routes => Object.assign(routes, gameRoutes));
 
         setComponentMap({
             home: <Home />,
