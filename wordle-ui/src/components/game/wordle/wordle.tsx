@@ -153,11 +153,6 @@ export class Wordle extends React.Component<
         for (let i = 0; i < currentRowChars.length; i++) {
             const char = currentRowChars[i];
 
-            // can't downgrade a green keyboard key
-            if (newLetterStates[char.key] === 'green') {
-                continue;
-            }
-
             // find index of user's input character in the goal word
             const matchedInds = ArrayUtils.findAllInds(goalWordChars, char.key);
 
@@ -182,7 +177,6 @@ export class Wordle extends React.Component<
                     newLetterStates[char.key] = 'yellow';
                 }
             }
-
             row.push(char);
         }
 
