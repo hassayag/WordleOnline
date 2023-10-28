@@ -1,27 +1,48 @@
 import WebSocket from 'ws';
 import Config from '../../config'
+import { Game } from '../api/game/types';
+import { Room } from './room';
 
 export const initWsServer = () => {
     const wss = new WebSocket.Server({ port: Config.websocket.port });
 
-    // map of session token and their respective socket
-    const clients = new Map<string, WebSocket>();
-
+    const rooms = new Map<Game['uuid'], Room>()
     wss.on('connection', (socket, request) => {
-        // cookie looks like "session=abcd-1234-efgh-5678"
-        const sessionToken = request.headers.cookie.replace('session=', '')
-        clients.set(sessionToken, socket)
-        
-        socket.on("message", data => {
-            socket.send(`I got your message :) - ${data}`)
-        });
+        const {game: gameUuid, session: sessionToken} = getCookieAttributes(request.headers.cookie)
 
+        let room = rooms.get(gameUuid)
+        if (!room) {
+            room = new Room(gameUuid)
+            rooms.set(gameUuid, room)
+        }
+
+        room.addPlayer(sessionToken, socket)
+        
         socket.on("close", () => {
-            clients.delete(sessionToken)
-
+            room.removePlayer(sessionToken)
         });
-        
     })
 
     console.info(`Websocket Server listening on port ${Config.websocket.port}`)
+}
+
+/** 
+ * Convert cookie string into an object
+ * cookie looks like "session=abcd-1234-efgh-5678 game=abcd-1234-efgh-5678;"  
+ */
+const getCookieAttributes = (cookieString: string): Record<'game' | 'session', string> => {
+    const tokens = cookieString.split(' ')
+
+    const output = {
+        game: '',
+        session: ''
+    }
+
+    tokens.forEach(token => {
+        const [key, value] = token.split('=')
+        value.replace(';', '')
+        output[key] = value.replace(';', '')
+    })
+
+    return output
 }

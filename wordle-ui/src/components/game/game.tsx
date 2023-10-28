@@ -30,7 +30,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const [cookies, setCookie] = useCookies(['session']);
+    const [cookies, setCookie] = useCookies(['session', 'game']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     const { sendMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
         onOpen: () =>  sendMessage("Hello Server!"),
@@ -51,6 +51,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
 
                 setGame(gameObj);
                 setPlayerIsValid(true);
+                setCookie('game', gameObj.uuid, { path: '/' })
 
                 let session;
 
