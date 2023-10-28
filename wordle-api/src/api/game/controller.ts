@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-import { randomWord } from '../utils/words-util';
+import { randomWord } from '../words/utils';
 import db from './db-utils';
 import {
     CreateGameReq,
@@ -10,7 +10,7 @@ import {
     PlayerState,
     UpdateGameReq,
 } from './types';
-import { BadRequestError, NotFoundError } from '../error';
+import { BadRequestError, NotFoundError } from '../../error';
 import { findStateIndex, initialState, formatReturnedGame } from './utils';
 
 // get uuids of all games
@@ -63,7 +63,6 @@ export const updateGame = async (req: UpdateGameReq, res) => {
         throw new BadRequestError('Game not found');
     }
     if (req.body.player_state) {
-        console.log(playerStateIndex, req.body.player_state)
         game.state[playerStateIndex] = req.body.player_state;
     }
     if (req.body.game_status) {

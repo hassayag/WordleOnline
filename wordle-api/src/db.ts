@@ -1,9 +1,9 @@
 import pg from 'pg';
-import Config from '../../config';
+import Config from '../config';
 
 let client;
 
-const psql = () => {
+const db = () => {
     if (client) {
         return client;
     }
@@ -14,11 +14,11 @@ const psql = () => {
         if (err) {
             console.error('Error connecting to PostgreSQL', err.stack);
         } else {
-            console.log('Connected to PostgreSQL');
+            console.info('Connected to PostgreSQL');
         }
     });
 
     return client;
 };
 
-export default psql;
+export default db;

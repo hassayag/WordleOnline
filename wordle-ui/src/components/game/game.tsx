@@ -34,7 +34,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     const { sendMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
         onOpen: () =>  sendMessage("Hello Server!"),
-        onMessage: (data) => console.log('I got a message! ', data)
+        onMessage: (data) => console.debug('I got a message! ', data)
     });
 
     useEffect(() => {

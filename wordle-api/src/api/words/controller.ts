@@ -1,4 +1,4 @@
-import { randomWord, readFile } from '../utils/words-util';
+import { randomWord, readFile } from './utils';
 
 let guesses, solutions;
 
