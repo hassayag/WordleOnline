@@ -5,10 +5,10 @@ import { Game } from '../game/types';
 
 const Lobby = ({
     game,
-    setGame,
+    startGame,
 }: {
     game: Game;
-    setGame: React.Dispatch<Game | null>;
+    startGame: () => void;
 }) => {
     const names = [game.myState, ...game.otherStates].map((item) => item.player.name);
 
@@ -73,10 +73,7 @@ const Lobby = ({
                                     game.uuid,
                                     'in_progress'
                                 );
-                                setGame({
-                                    ...game,
-                                    game_status: 'in_progress',
-                                });
+                                startGame()
                             }}
                         >
                             Start Game

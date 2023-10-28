@@ -17,10 +17,6 @@ export const initWsServer = () => {
         }
 
         room.addPlayer(sessionToken, socket)
-        
-        socket.on("close", () => {
-            room.removePlayer(sessionToken)
-        });
     })
 
     console.info(`Websocket Server listening on port ${Config.websocket.port}`)

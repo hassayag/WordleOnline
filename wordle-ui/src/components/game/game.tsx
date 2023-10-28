@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Box, Container, Slide } from '@mui/material';
@@ -26,16 +26,38 @@ const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> 
 
 }
 
+interface SocketResponse {
+    event: 'start_game' | 'send_word',
+    data?: string
+} 
+
 const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session', 'game']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
-        onOpen: () =>  sendMessage("Hello Server!"),
-        onMessage: (data) => console.debug('I got a message! ', data)
+    const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
+        onMessage: (msg) => handleMessage(msg)
     });
+
+    const handleMessage = useCallback(async (msg: MessageEvent) => {
+        const response = msg.data as SocketResponse
+        if (response.event === 'start_game') {
+            setGame({
+                ...game,
+                game_status: 'in_progress',
+            } as Game);
+        }
+    }, [game])
+
+    const startGame = useCallback(() => {
+        sendJsonMessage({event: 'start_game'})
+        setGame({
+            ...game,
+            game_status: 'in_progress',
+        } as Game);
+    }, [game, sendJsonMessage])
 
     useEffect(() => {
         // Get a random goal word
@@ -90,7 +112,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     } else if (game.game_status === 'lobby') {
         return (<>
         {connectionIcon}
-        <Lobby game={game} setGame={setGame} />;
+        <Lobby game={game} startGame={startGame} />;
         </>)
     }
 
