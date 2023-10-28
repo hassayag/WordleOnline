@@ -10,7 +10,7 @@ const Lobby = ({
     game: Game;
     setGame: React.Dispatch<Game | null>;
 }) => {
-    const names = game.state.map((item) => item.player.name);
+    const names = [game.myState, ...game.otherStates].map((item) => item.player.name);
 
     return (
         <main>

@@ -11,6 +11,7 @@ import {
     UpdateGameReq,
 } from './types';
 import { BadRequestError, NotFoundError } from '../error';
+import { findStateIndex, initialState, formatReturnedGame } from './utils';
 
 // get uuids of all games
 export const getUuids = async (req, res) => {
@@ -25,7 +26,8 @@ export const getGame = async (req, res) => {
         throw new NotFoundError('Game not found');
     }
 
-    res.send(game);
+    const returnedGame = formatReturnedGame(game, req.cookies.session)
+    res.send(returnedGame);
 };
 
 export const createGame = async (req: CreateGameReq, res) => {
@@ -48,7 +50,8 @@ export const createGame = async (req: CreateGameReq, res) => {
         state,
     });
 
-    res.send(game);
+    const returnedGame = formatReturnedGame(game, req.cookies.session)
+    res.send(returnedGame);
 };
 
 export const updateGame = async (req: UpdateGameReq, res) => {
@@ -60,6 +63,7 @@ export const updateGame = async (req: UpdateGameReq, res) => {
         throw new BadRequestError('Game not found');
     }
     if (req.body.player_state) {
+        console.log(playerStateIndex, req.body.player_state)
         game.state[playerStateIndex] = req.body.player_state;
     }
     if (req.body.game_status) {
@@ -68,7 +72,8 @@ export const updateGame = async (req: UpdateGameReq, res) => {
 
     const newGame = await db.update(game);
 
-    res.send(newGame);
+    const returnedGame = formatReturnedGame(newGame, req.cookies.session)
+    res.send(returnedGame);
 };
 
 export const joinGame = async (req: JoinGameReq, res) => {
@@ -78,7 +83,8 @@ export const joinGame = async (req: JoinGameReq, res) => {
 
     // player is already in the game, just let them in
     if (playerStateIndex !== -1) {
-        res.send(game);
+        const returnedGame = formatReturnedGame(game, req.cookies.session)
+        res.send(returnedGame);
         return
     }
 
@@ -97,64 +103,4 @@ export const joinGame = async (req: JoinGameReq, res) => {
     } else {
         throw new BadRequestError('Game has already started');
     }
-};
-
-const initialState = (
-    name: string,
-    sessionToken: string,
-    word: string
-): PlayerState => {
-    return {
-        player: newPlayer(name, sessionToken),
-        goalWord: word,
-        board: {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-        },
-        letterStates: {
-            a: 'white',
-            b: 'white',
-            c: 'white',
-            d: 'white',
-            e: 'white',
-            f: 'white',
-            g: 'white',
-            h: 'white',
-            i: 'white',
-            j: 'white',
-            k: 'white',
-            l: 'white',
-            m: 'white',
-            n: 'white',
-            o: 'white',
-            p: 'white',
-            q: 'white',
-            r: 'white',
-            s: 'white',
-            t: 'white',
-            u: 'white',
-            v: 'white',
-            w: 'white',
-            x: 'white',
-            y: 'white',
-            z: 'white',
-        },
-    };
-};
-
-const findStateIndex = (game: Game, sessionToken: string) => {
-    return game.state.findIndex(
-        (item) => item.player.sessionToken === sessionToken
-    );
-};
-
-const newPlayer = (name, sessionToken) => {
-    return {
-        name,
-        sessionToken,
-    };
 };

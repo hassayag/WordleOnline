@@ -32,7 +32,10 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://localhost:8081');
+    const { sendMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
+        onOpen: () =>  sendMessage("Hello Server!"),
+        onMessage: (data) => console.log('I got a message! ', data)
+    });
 
     useEffect(() => {
         // Get a random goal word
@@ -44,7 +47,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const gameObj: Game = await GameService.getGame(uuid);
+                const gameObj = await GameService.getGame(uuid);
 
                 setGame(gameObj);
                 setPlayerIsValid(true);
@@ -90,10 +93,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         </>)
     }
 
-    const opponentGameStates = game.state.filter(
-        (state) => state.player.sessionToken !== cookies.session
-    );
-    const opponentBoards = opponentGameStates.map((state, index) => (
+    const opponentBoards = game.otherStates.map((state, index) => (
         <OppponentBoard key={index} state={state} />
     ));
 

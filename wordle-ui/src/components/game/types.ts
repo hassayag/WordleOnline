@@ -3,7 +3,8 @@ export interface Game {
     uuid: string;
     game_status: GameStatus;
     type: 'standard' | string;
-    state: PlayerState[];
+    myState: PlayerState;
+    otherStates: PlayerState[]
 }
 
 export type GameStatus = 'lobby' | 'in_progress' | 'done';

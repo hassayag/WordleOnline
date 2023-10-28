@@ -32,7 +32,7 @@ export class Wordle extends React.Component<
         super(props);
 
         // TODO hit endpoint to get player state
-        this.gameState = props.game.state[0];
+        this.gameState = props.game.myState;
         this.goalWord = this.gameState.goalWord;
     }
 
@@ -188,8 +188,8 @@ export class Wordle extends React.Component<
 
         // send request to update db
         const game = Object.assign({}, this.props.game);
-        game.state[0].board = this.wordRows;
-        game.state[0].letterStates = this.letterStates;
+        game.myState.board = this.wordRows;
+        game.myState.letterStates = this.letterStates;
 
         // check for win
         if (
@@ -214,7 +214,7 @@ export class Wordle extends React.Component<
             game.game_status = 'done';
         }
 
-        GameService.updateGame(game.uuid, game.game_status, game.state[0]);
+        GameService.updateGame(game.uuid, game.game_status, game.myState);
     }
 
     _triggerError(rowInd: number) {
