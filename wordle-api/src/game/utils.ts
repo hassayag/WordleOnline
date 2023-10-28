@@ -12,6 +12,9 @@ export function formatReturnedGame(game: Game, sessionToken: string): ReturnedGa
     const myState = state[myStateIndex]
     const otherStates = state.filter((value, index) => index !== myStateIndex)
 
+    // cleanse session tokens from other states as it is sensitive information
+    otherStates.forEach(state => state.player.sessionToken = 'nice-try-mate')
+
     return {
         ...gameWithoutState,
         myState,
