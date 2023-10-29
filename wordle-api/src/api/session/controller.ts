@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import psql from '../../db';
+import psql from '../../db/db';
 
 interface Session {
     id: number;

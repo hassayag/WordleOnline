@@ -6,7 +6,7 @@ let words;
 
 export const randomWord = async () => {
     if (!words) {
-        words = await readFile('./db/word-data/valid_solutions.csv');
+        words = await readFile('./data/word-data/valid_solutions.csv');
     }
 
     const randIndex = Math.floor(Math.random() * words.length);

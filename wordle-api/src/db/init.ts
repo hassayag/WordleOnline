@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import psql from '../src/db';
+import psql from './db';
 
 const create = async () => {
-    const filePath = path.resolve('./db/create.sql');
+    const filePath = path.resolve('../../data/create.sql');
     const createFile = fs.readFileSync(filePath).toString();
     console.info('Creating DB');
     try {

@@ -1,5 +1,5 @@
 import { Game } from './types';
-import db from '../../db';
+import db from '../../db/db';
 import { NotFoundError } from '../../error';
 
 class GameDbUtils {

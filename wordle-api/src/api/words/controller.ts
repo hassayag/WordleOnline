@@ -4,8 +4,8 @@ let guesses, solutions;
 
 export const getValidGuesses = async (req, res) => {
     if (!guesses || !solutions) {
-        guesses = await readFile('./db/word-data/valid_guesses.csv');
-        solutions = await readFile('./db/word-data/valid_solutions.csv');
+        guesses = await readFile('./data/word-data/valid_guesses.csv');
+        solutions = await readFile('./data/word-data/valid_solutions.csv');
     }
 
     res.send([...guesses, ...solutions]);

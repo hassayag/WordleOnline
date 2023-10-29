@@ -9,7 +9,7 @@
         "start": "npm run build && ts-node index.ts",
         "start.dev": "npm run build && nodemon index.ts",
         "start.prod": "node ./build/index.js",
-        "init:db": "ts-node-esm db/init.ts",
+        "init:db": "node build/src/db/init.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {

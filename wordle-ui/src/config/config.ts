@@ -9,7 +9,7 @@ const config = {
     feature_flags: {
         synth: process.env.FEATURE_FLAG_SYNTH || false,
     },
-    socketUrl: 'wss://localhost:8081/'
+    socketUrl: process.env.SOCKET_HOST || 'wss://localhost:8081/'
 };
 
 export default config;
