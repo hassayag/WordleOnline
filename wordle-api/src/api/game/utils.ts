@@ -30,6 +30,7 @@ export function initialState(
 ): PlayerState {
     return {
         player: newPlayer(name, sessionToken),
+        isWon: null,
         goalWord: word,
         board: {
             0: [],

@@ -95,6 +95,7 @@ export class WordService {
         let gameIsWon=null
         // check for win
         if (
+            currentRowChars.length &&
             currentRowChars
                 .map((char) => char.key)
                 .every((char, ind) => char === goalWordChars[ind])
@@ -119,6 +120,7 @@ export class WordService {
                     board: newWordRows,
                     letterStates: newLetterStates,
                     player: playerState.player,
+                    isWon: gameIsWon
                 },
                 game_status: game.game_status,
             },

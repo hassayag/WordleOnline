@@ -10,6 +10,8 @@ export interface Game {
 
 export interface PlayerState {
     player: Player;
+    // null indicates the game has not ended
+    isWon: boolean | null;
     goalWord: string;
     board: { [key: number]: Letter[] };
     letterStates: { [key: string]: LetterColour };

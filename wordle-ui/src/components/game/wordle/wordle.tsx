@@ -19,7 +19,6 @@ interface Props {
 }
 
 const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {   
-    const [ gameIsWon, setGameIsWon ] = useState<boolean | null>(null);
     const [ rowInd, setRowInd ] = useState<number>(0);
     const [ endModalOpen, setEndModalOpen ] = useState<boolean>(false);
 
@@ -36,28 +35,21 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
     }, [])
 
     const updateGameState = useCallback(() => {
-        const currentRowChars = game.myState.board[rowInd];
-        const goalWordChars = game.myState.goalWord.split('')
-
-        // check for win
-        if (
-            currentRowChars.length && 
-            currentRowChars
-                .map((char) => char.key)
-                .every((char, ind) => char === goalWordChars[ind])
-        ) {
-            setGameIsWon(true);
-            setEndModalOpen(true);
+        if (game.myState.isWon !== null) {
+            return;
         }
-        // check for loss
-        else if (rowInd === 5) {
-            setGameIsWon(false);
-            setEndModalOpen(true);
-        }
-        else if (rowInd <5) {
+        
+        if (rowInd <5) {
             setRowInd(rowInd+1)
         }
-    }, [game.myState.board, game.myState.goalWord, rowInd])
+
+    }, [game.myState.isWon, rowInd])
+
+    useEffect(() => {
+        if (game.game_status === 'done') {
+            setEndModalOpen(true);
+        }
+    },[game.game_status])
 
     const triggerError = useCallback((rowInd: number) => {
         const newRows = Object.assign({}, game.myState.board);
@@ -82,7 +74,7 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
 
     const onKeyPress = useCallback((key: string) => {
         // disable input if game is over
-        if (gameIsWon !== null) {
+        if (game.myState.isWon !== null) {
             return;
         }
 
@@ -125,7 +117,7 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
         }
 
         setGame({...game, myState: { ...game.myState, board: newWordRows}});
-    }, [game, gameIsWon, rowInd, sendGuess, setGame, triggerError, updateGameState, wordIsValid]);
+    }, [game, rowInd, sendGuess, setGame, triggerError, updateGameState, wordIsValid]);
 
 
     if (!game) {
@@ -154,7 +146,7 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
                 </Box>
             </Paper>
             <GameEndModal
-                isWon={gameIsWon!!}
+                isWon={game.myState.isWon!!}
                 isOpen={endModalOpen}
                 goalWord={game.myState.goalWord}
                 closeModal={() => setEndModalOpen(false)}

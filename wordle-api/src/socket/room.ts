@@ -30,7 +30,7 @@ export class Room {
 
         socket.on('message', (msg) => {
             const response = this.handleMessage(msg, sessionToken);
-            socket.send(JSON.stringify(response))
+            // socket.send(JSON.stringify(response))
         });
 
         socket.on('close', () => {
@@ -51,7 +51,6 @@ export class Room {
 
     private handleMessage(msg: WebSocket.RawData, sessionToken: string) {
         const { event, data } = JSON.parse(msg.toString());
-        console.debug(data)
         if (!this.eventIsValid(event)) {
             console.warn(
                 `[room:${this.roomId}] Received invalid event ${event}`
@@ -78,6 +77,15 @@ export class Room {
 
     private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {
         await WordService.postGuess(this.gameUuid, guess, sessionToken)
+
+        const response: SocketResponse = {
+            event: 'send_word'
+        }
+
+        // tell all the clients that the game has started
+        this.clients.forEach(client => {
+            client.send(JSON.stringify(response))
+        })
     }
 
     private async handleStartGame(sessionToken: string) {
@@ -86,7 +94,6 @@ export class Room {
             game_status: 'in_progress',
             player_state: null
         }, sessionToken)
-        // this.game.game_status = 'in_progress'
 
         const response: SocketResponse = {
             event: 'start_game'
@@ -96,8 +103,6 @@ export class Room {
         this.clients.forEach(client => {
             client.send(JSON.stringify(response))
         })
-
-        return;
     }
 
     private eventIsValid(event): event is Event {

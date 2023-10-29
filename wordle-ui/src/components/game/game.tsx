@@ -42,7 +42,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     });
 
     const refresh = useCallback(async () => {
-        console.debug('REFRESHING')
         const gameObj = await GameService.getGame(uuid);
         setGame(gameObj);
     }, [uuid])
