@@ -8,6 +8,7 @@
         "build": "tsc",
         "start": "npm run build && ts-node index.ts",
         "start.dev": "npm run build && nodemon index.ts",
+        "start.prod": "node ./build/index.js",
         "init:db": "ts-node-esm db/init.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

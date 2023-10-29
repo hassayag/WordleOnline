@@ -1,6 +1,7 @@
 {
     "exclude": ["node_modules", "dist", "scripts"],
     "compilerOptions": {
+        "module": "CommonJS",
         "esModuleInterop": true,
         "target": "ES2019",
         "moduleResolution": "node",
