@@ -7,7 +7,7 @@ config();
 export default {
     sql: {
         host: process.env.POSTGRES_HOST || 'localhost',
-        database: 'wordle-online',
+        database: process.env.POSTGRES_DATABASE || 'postgres',
         port: process.env.POSTGRES_PORT || 5432,
         user: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASS,
