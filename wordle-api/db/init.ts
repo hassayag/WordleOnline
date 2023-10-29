@@ -1,17 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import psql from '../src/utils/sql';
+import psql from '../src/db';
 
 const create = async () => {
     const filePath = path.resolve('./db/create.sql');
     const createFile = fs.readFileSync(filePath).toString();
-    console.log('Creating DB');
+    console.info('Creating DB');
     try {
         await psql().query(createFile);
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
-    console.log('Done');
+    console.info('Done');
 };
 
 create();

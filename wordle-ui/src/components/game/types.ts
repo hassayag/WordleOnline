@@ -3,13 +3,15 @@ export interface Game {
     uuid: string;
     game_status: GameStatus;
     type: 'standard' | string;
-    state: PlayerState[];
+    myState: PlayerState;
+    otherStates: PlayerState[]
 }
 
 export type GameStatus = 'lobby' | 'in_progress' | 'done';
 
 export interface PlayerState {
     player: Player;
+    isWon: boolean | null;
     goalWord: string;
     board: { [key: number]: Letter[] };
     letterStates: { [key: string]: LetterColour };

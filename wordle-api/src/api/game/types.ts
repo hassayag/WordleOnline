@@ -10,6 +10,8 @@ export interface Game {
 
 export interface PlayerState {
     player: Player;
+    // null indicates the game has not ended
+    isWon: boolean | null;
     goalWord: string;
     board: { [key: number]: Letter[] };
     letterStates: { [key: string]: LetterColour };
@@ -38,8 +40,9 @@ export interface CreateGameReq extends Request {
 }
 export interface UpdateGameReq extends Request {
     body: {
-        player_state: PlayerState;
+        player_state: PlayerState|null;
         game_status: GameStatus;
+        uuid: string;
     };
 }
 

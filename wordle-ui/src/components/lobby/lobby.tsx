@@ -1,16 +1,15 @@
-import { Box, Button, Container, Typography } from '@mui/material';
-import GameService from '@/services/game-service';
 import React from 'react';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { Game } from '../game/types';
 
 const Lobby = ({
     game,
-    setGame,
+    startGame,
 }: {
     game: Game;
-    setGame: React.Dispatch<Game | null>;
+    startGame: () => void;
 }) => {
-    const names = game.state.map((item) => item.player.name);
+    const names = [game.myState, ...game.otherStates].map((item) => item.player.name);
 
     return (
         <main>
@@ -68,16 +67,7 @@ const Lobby = ({
 
                         <Button
                             variant="contained"
-                            onClick={() => {
-                                GameService.updateGame(
-                                    game.uuid,
-                                    'in_progress'
-                                );
-                                setGame({
-                                    ...game,
-                                    game_status: 'in_progress',
-                                });
-                            }}
+                            onClick={startGame}
                         >
                             Start Game
                         </Button>

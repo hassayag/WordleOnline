@@ -1,10 +1,10 @@
 import { Game } from './types';
-import psql from '../utils/sql';
-import { NotFoundError } from '../error';
+import db from '../../db';
+import { NotFoundError } from '../../error';
 
 class GameDbUtils {
     static async get(uuid: string) {
-        const rawGame = await psql().query(
+        const rawGame = await db().query(
             'SELECT * FROM game WHERE uuid = $1',
             [uuid]
         );
@@ -21,14 +21,14 @@ class GameDbUtils {
     }
 
     static async getUuids() {
-        const games = await psql().query('SELECT uuid from game');
+        const games = await db().query('SELECT uuid from game');
         return { uuids: games.rows.map((game) => game.uuid) };
     }
 
     static async create(options: Omit<Game, 'id'>) {
         const { state, uuid, game_status, type } = options;
 
-        await psql().query(
+        await db().query(
             'INSERT INTO game (uuid, game_status, type, state) values ($1, $2, $3, $4)',
             [uuid, game_status, type, JSON.stringify(state)]
         );
@@ -39,7 +39,7 @@ class GameDbUtils {
     static async update(options: Game) {
         const { state, uuid, game_status } = options;
 
-        await psql().query(
+        await db().query(
             'UPDATE game SET state = $1, game_status = $3 WHERE uuid = $2',
             [JSON.stringify(state), uuid, game_status]
         );

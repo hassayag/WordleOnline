@@ -14,7 +14,7 @@ const JoinGame = () => {
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState(queryUuid || '');
-    const [cookies, setCookie] = useCookies(['session']);
+    const [cookies, setCookie] = useCookies(['session', 'game']);
     const [joinError, setJoinError] = useState<string>('');
 
     const joinGame = async () => {
@@ -26,7 +26,10 @@ const JoinGame = () => {
         }
 
         GameService.joinGame(gameId, name)
-            .then(() => navigate(`/game/${gameId}`))
+            .then(() => {
+                setCookie('game', gameId, { path: '/' })
+                navigate(`/game/${gameId}`)
+            })
             .catch((err: any) => setJoinError(err?.message));
     };
 

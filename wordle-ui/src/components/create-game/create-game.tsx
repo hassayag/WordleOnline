@@ -17,7 +17,7 @@ const CreateGame = ({
 
     const [name, setName] = useState<string>('');
     const [gameUuid, setGameUuid] = useState<string>('');
-    const [cookies, setCookie] = useCookies(['session']);
+    const [cookies, setCookie] = useCookies(['session', 'game']);
     const [createError, setCreateError] = useState<string>('');
 
     const _initGame = async () => {
@@ -29,7 +29,10 @@ const CreateGame = ({
         }
 
         GameService.createGame(name)
-            .then((response) => setGameUuid(response.uuid))
+            .then((response) => {
+                setGameUuid(response.uuid)
+                setCookie('game', response.uuid, { path: '/' })
+            })
             .catch((err) => setCreateError(err?.message));
     };
 
