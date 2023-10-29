@@ -40,5 +40,6 @@ export const initApp = () => {
 
     app.listen(Config.server.port, () => {
         console.info(`Wordle API listening on port ${Config.server.port}`);
+        console.info(`CORS will only accept requests from ${Config.client.host}`);
     });
 }
