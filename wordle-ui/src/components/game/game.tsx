@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Box, Container, Slide } from '@mui/material';
 
-import { Wordle } from './wordle/wordle';
+import Wordle from './wordle/wordle';
 import Lobby from '../lobby/lobby';
 import WordService from '@/services/word-service';
 import GameService from '@/services/game-service';
@@ -151,7 +151,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                                 alignItems: 'center',
                             }}
                         >
-                            <Wordle validGuesses={validGuesses} game={game} sendGuess={sendGuess} />
+                            <Wordle validGuesses={validGuesses} game={game} setGame={setGame} sendGuess={sendGuess} />
                         </Box>
                     </Container>
                 </Slide>

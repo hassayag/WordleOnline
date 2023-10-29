@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Paper } from '@mui/material';
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
@@ -7,222 +7,161 @@ import config from '@/config/config';
 
 import './wordle.css';
 import { Box } from '@mui/system';
-import { Game, Letter, PlayerState } from '../types';
+import { Game, Letter } from '../types';
 import GameEndModal from '../game-end-modal/game-end-modal';
+import { parseRow } from './utils';
 
-interface State {
-    _letterStates: PlayerState['letterStates'];
-    _wordRows: PlayerState['board'];
-    _rowInd: number;
-    _gameIsWon: boolean | null;
-    _endModalOpen: boolean;
+interface Props {
+    game: Game,
+    setGame: React.Dispatch<Game>,
+    validGuesses: string[], 
+    sendGuess: (guess: {row:number, word: Letter[]}) => void
 }
 
-export class Wordle extends React.Component<
-    { game: Game; validGuesses: string[], sendGuess: (guess: {row:number, word: Letter[]}) => void },
-    State
-> {
-    private gameIsLoaded = false;
-    private gameState: PlayerState;
-    private goalWord: string;
+const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {   
+    const [ gameIsWon, setGameIsWon ] = useState<boolean | null>(null);
+    const [ rowInd, setRowInd ] = useState<number>(0);
+    const [ endModalOpen, setEndModalOpen ] = useState<boolean>(false);
 
-    constructor(props: { game: Game; validGuesses: string[], sendGuess:  (guess: {row:number, word: Letter[]}) => void }) {
-        super(props);
+    // INIT
+    useEffect(() =>{
+        const board = game.myState.board;
 
-        // TODO hit endpoint to get player state
-        this.gameState = props.game.myState;
-        this.goalWord = this.gameState.goalWord;
-    }
-
-    async componentDidMount() {
-        const initLetterStates = this.gameState.letterStates;
-
-        // the letters in each line of the word grid
-        const initWordRows = this.gameState.board;
-
-        // row index
-        let initRowInd = 0;
-
-        for (let i = 0; i < Object.keys(initWordRows).length; i++) {
-            if (initWordRows[i].length === 0) {
-                initRowInd = i;
+        for (let i = 0; i < Object.keys(board).length; i++) {
+            if (board[i].length === 0) {
+                setRowInd(i);
                 break;
             }
         }
+    }, [])
 
-        // init state
-        this.setState({
-            _letterStates: initLetterStates,
-            _wordRows: initWordRows,
-            _rowInd: initRowInd,
-            _gameIsWon: null,
-            _endModalOpen: false || this.props.game.game_status === 'done',
-        });
+    const updateGameState = useCallback(() => {
+        const currentRowChars = game.myState.board[rowInd];
+        const goalWordChars = game.myState.goalWord.split('')
 
-        this.gameIsLoaded = true;
-    }
-    render() {
-        if (!this.gameIsLoaded) {
-            return <div> Retrieving purpose... </div>;
+        // check for win
+        if (
+            currentRowChars.length && 
+            currentRowChars
+                .map((char) => char.key)
+                .every((char, ind) => char === goalWordChars[ind])
+        ) {
+            setGameIsWon(true);
+            setEndModalOpen(true);
+        }
+        // check for loss
+        else if (rowInd === 5) {
+            setGameIsWon(false);
+            setEndModalOpen(true);
+        }
+        else if (rowInd <5) {
+            setRowInd(rowInd+1)
+        }
+    }, [game.myState.board, game.myState.goalWord, rowInd])
+
+    const triggerError = useCallback((rowInd: number) => {
+        const newRows = Object.assign({}, game.myState.board);
+
+        newRows[rowInd].forEach((char) => (char.isError = true));
+        setGame({...game, myState: { ...game.myState, board: newRows}});
+
+        // wait for animation to finish and reset the error state
+        setTimeout(() => {
+            newRows[rowInd].forEach((char) => (char.isError = false));
+            setGame({...game, myState: { ...game.myState, board: newRows}});
+        }, 50);
+    }, [game, setGame])
+
+    const wordIsValid = useCallback((word: string) => {
+        if (validGuesses.includes(word)) {
+            return true;
         }
 
-        return (
-            <>
-                <Paper elevation={10}>
-                    <Box
-                        sx={{
-                            width: 600,
-                            marginTop: 8,
-                            marginBottom: 8,
-                            display: 'flex',
-                            gap: '80px',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Board state={this.gameState} />
-                        <Keyboard
-                            keyStates={this.letterStates}
-                            onPress={this.onKeyPress}
-                        />
-                    </Box>
-                </Paper>
-                <GameEndModal
-                    isWon={this.gameIsWon!!}
-                    isOpen={this.endModalOpen}
-                    goalWord={this.goalWord}
-                    closeModal={() => this.setEndModalOpen(false)}
-                />
-            </>
-        );
-    }
+        return false;
+    }, [validGuesses])
 
-    onKeyPress = (key: string) => {
+    const onKeyPress = useCallback((key: string) => {
         // disable input if game is over
-        if (this.gameIsWon !== null) {
+        if (gameIsWon !== null) {
             return;
         }
 
         // create copy and update specific row
-        const newWordRows = Object.assign({}, this.wordRows);
+        const newWordRows = Object.assign({}, game.myState.board);
 
         if (key === 'Backspace') {
-            newWordRows[this.rowInd].pop();
+            newWordRows[rowInd].pop();
         } else if (
             key === 'Enter' &&
-            this.wordRows[this.rowInd].length <= 5 &&
-            !this._wordIsValid(this._parseRow(newWordRows[this.rowInd]))
+            game.myState.board[rowInd].length <= 5 &&
+            !wordIsValid(parseRow(newWordRows[rowInd]))
         ) {
-            this._triggerError(this.rowInd);
-        } else if (key === 'Enter' && this.wordRows[this.rowInd].length === 5) {
+            triggerError(rowInd);
+        } else if (key === 'Enter' && game.myState.board[rowInd].length === 5) {
             if (config.feature_flags.synth) {
                 synthService.startLoop(
-                    this.wordRows[this.rowInd].map(
+                    game.myState.board[rowInd].map(
                         (letter: Letter) => letter.key
                     )
                 );
             }
-            const guess = this.wordRows[this.rowInd];
-            this.props.sendGuess({row: this.rowInd, word: guess})
+            const guess = game.myState.board[rowInd];
+            sendGuess({row: rowInd, word: guess})
+
+            setTimeout(() => updateGameState(), 50)
         }
 
         // word length of 5
-        if (this.wordRows[this.rowInd].length >= 5) {
+        if (game.myState.board[rowInd].length >= 5) {
             return;
         }
 
         // check if input is a letter
         if (/^[a-zA-Z]$/.test(key)) {
-            newWordRows[this.rowInd].push({
+            newWordRows[rowInd].push({
                 key: key.toLowerCase(),
                 state: 'white',
             });
         }
 
-        this.wordRows = newWordRows;
-    };
+        setGame({...game, myState: { ...game.myState, board: newWordRows}});
+    }, [game, gameIsWon, rowInd, sendGuess, setGame, triggerError, updateGameState, wordIsValid]);
 
-    _updateGameState() {
-        const currentRowChars = this.wordRows[this.rowInd];
-        const goalWordChars = this.goalWord.split('')
 
-        // check for win
-        if (
-            currentRowChars
-                .map((char) => char.key)
-                .every((char, ind) => char === goalWordChars[ind])
-        ) {
-            this.gameIsWon = true;
-            this.setEndModalOpen(true);
-        }
-        // check for loss
-        else if (this.rowInd === 5) {
-            this.gameIsWon = false;
-            this.setEndModalOpen(true);
-        }
-        // increment row
-        else if (this.rowInd < 5) {
-            this.rowInd = this.rowInd + 1;
-        }
+    if (!game) {
+        return <div> Retrieving purpose... </div>;
     }
 
-    _triggerError(rowInd: number) {
-        const newRows = Object.assign({}, this.wordRows);
+    return (
+        <>
+            <Paper elevation={10}>
+                <Box
+                    sx={{
+                        width: 600,
+                        marginTop: 8,
+                        marginBottom: 8,
+                        display: 'flex',
+                        gap: '80px',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Board state={game.myState} />
+                    <Keyboard
+                        keyStates={game.myState.letterStates}
+                        onPress={onKeyPress}
+                    />
+                </Box>
+            </Paper>
+            <GameEndModal
+                isWon={gameIsWon!!}
+                isOpen={endModalOpen}
+                goalWord={game.myState.goalWord}
+                closeModal={() => setEndModalOpen(false)}
+            />
+        </>
+    );
 
-        newRows[rowInd].forEach((char) => (char.isError = true));
-        this.wordRows = newRows;
-
-        // wait for animation to finish and reset the error state
-        setTimeout(() => {
-            newRows[rowInd].forEach((char) => (char.isError = false));
-            this.wordRows = newRows;
-        }, 50);
-    }
-
-    _parseRow(rowObj: Letter[]) {
-        const letters = Object.values(rowObj).map((obj) => obj.key);
-
-        return letters.join('');
-    }
-
-    _wordIsValid(word: string) {
-        if (this.props.validGuesses.includes(word)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    get letterStates() {
-        return this.state._letterStates;
-    }
-    get wordRows() {
-        return this.state._wordRows;
-    }
-    get rowInd() {
-        return this.state._rowInd;
-    }
-    get gameIsWon() {
-        return this.state._gameIsWon;
-    }
-    get endModalOpen() {
-        return this.state._endModalOpen;
-    }
-
-    set letterStates(val) {
-        this.setState(Object.assign(this.state, { _letterStates: val }));
-    }
-    set wordRows(val) {
-        this.setState(Object.assign(this.state, { _wordRows: val }));
-    }
-    set rowInd(val) {
-        this.setState(Object.assign(this.state, { _rowInd: val }));
-    }
-    set gameIsWon(val) {
-        this.setState(Object.assign(this.state, { _gameIsWon: val }));
-    }
-
-    setEndModalOpen(val: boolean) {
-        this.setState(Object.assign(this.state, { _endModalOpen: val }));
-    }
 }
+
+export default Wordle
