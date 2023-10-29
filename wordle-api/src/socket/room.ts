@@ -1,5 +1,6 @@
-import { Game } from '../api/game/types';
+import { Game, Letter } from '../api/game/types';
 import WebSocket from 'ws';
+import { WordService } from '../services/game';
 
 const EVENT_LIST = ['test', 'send_word', 'start_game'] as const;
 type Event = (typeof EVENT_LIST)[number];
@@ -28,8 +29,7 @@ export class Room {
         );
 
         socket.on('message', (msg) => {
-            console.debug(`${this.roomId} received msg - `, msg.toString());
-            const response = this.handleMessage(msg);
+            const response = this.handleMessage(msg, sessionToken);
             socket.send(JSON.stringify(response))
         });
 
@@ -49,9 +49,9 @@ export class Room {
         this.clients.delete(sessionToken);
     }
 
-    private handleMessage(msg: WebSocket.RawData) {
+    private handleMessage(msg: WebSocket.RawData, sessionToken: string) {
         const { event, data } = JSON.parse(msg.toString());
-
+        console.debug(data)
         if (!this.eventIsValid(event)) {
             console.warn(
                 `[room:${this.roomId}] Received invalid event ${event}`
@@ -66,23 +66,26 @@ export class Room {
         let responseData;
         switch (event) {
             case 'send_word':
-                responseData = this.handleSendWord(data);
+                responseData = this.handleSendWord(data, sessionToken);
                 break;
             case 'start_game':
-                responseData = this.handleStartGame();
+                responseData = this.handleStartGame(sessionToken);
                 break;
         }
 
         return {event, data: responseData}
     }
 
-    private handleSendWord(word: string) {
-        // update game state with the word
-        
-        return this.game
+    private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {
+        await WordService.postGuess(this.gameUuid, guess, sessionToken)
     }
 
-    private handleStartGame() {
+    private async handleStartGame(sessionToken: string) {
+        await WordService.updateGame({
+            uuid: this.gameUuid,
+            game_status: 'in_progress',
+            player_state: null
+        }, sessionToken)
         // this.game.game_status = 'in_progress'
 
         const response: SocketResponse = {

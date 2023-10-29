@@ -10,8 +10,9 @@ import {
     PlayerState,
     UpdateGameReq,
 } from './types';
-import { BadRequestError, NotFoundError } from '../../error';
+import { BadRequestError } from '../../error';
 import { findStateIndex, initialState, formatReturnedGame } from './utils';
+import { WordService } from '../../services/game';
 
 // get uuids of all games
 export const getUuids = async (req, res) => {
@@ -19,12 +20,7 @@ export const getUuids = async (req, res) => {
 };
 
 export const getGame = async (req, res) => {
-    const game: Game = await db.get(req.params.uuid);
-
-    const playerStateIndex = findStateIndex(game, req.cookies.session);
-    if (playerStateIndex === -1) {
-        throw new NotFoundError('Game not found');
-    }
+    const game = await WordService.getGame(req.params.uuid, req.cookies.session)
 
     const returnedGame = formatReturnedGame(game, req.cookies.session)
     res.send(returnedGame);
@@ -55,21 +51,7 @@ export const createGame = async (req: CreateGameReq, res) => {
 };
 
 export const updateGame = async (req: UpdateGameReq, res) => {
-    // assign the user's game state to the correct part of state object
-    const game = await db.get(req.params.uuid);
-
-    const playerStateIndex = findStateIndex(game, req.cookies.session);
-    if (playerStateIndex === -1 && game.game_status !== 'lobby') {
-        throw new BadRequestError('Game not found');
-    }
-    if (req.body.player_state) {
-        game.state[playerStateIndex] = req.body.player_state;
-    }
-    if (req.body.game_status) {
-        game.game_status = req.body.game_status;
-    }
-
-    const newGame = await db.update(game);
+    const newGame = await WordService.updateGame(req.body, req.cookies.session)
 
     const returnedGame = formatReturnedGame(newGame, req.cookies.session)
     res.send(returnedGame);

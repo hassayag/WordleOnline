@@ -1,9 +1,7 @@
 import React from 'react';
-import { ArrayUtils } from '@/utils/array';
-import { Button, Modal, Paper, Typography } from '@mui/material';
+import { Paper } from '@mui/material';
 import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
-import GameService from '@/services/game-service';
 import synthService from '@/services/synth-service';
 import config from '@/config/config';
 
@@ -21,14 +19,14 @@ interface State {
 }
 
 export class Wordle extends React.Component<
-    { game: Game; validGuesses: string[] },
+    { game: Game; validGuesses: string[], sendGuess: (guess: {row:number, word: Letter[]}) => void },
     State
 > {
     private gameIsLoaded = false;
     private gameState: PlayerState;
     private goalWord: string;
 
-    constructor(props: { game: Game; validGuesses: string[] }) {
+    constructor(props: { game: Game; validGuesses: string[], sendGuess:  (guess: {row:number, word: Letter[]}) => void }) {
         super(props);
 
         // TODO hit endpoint to get player state
@@ -124,7 +122,8 @@ export class Wordle extends React.Component<
                     )
                 );
             }
-            this._updateGameState();
+            const guess = this.wordRows[this.rowInd];
+            this.props.sendGuess({row: this.rowInd, word: guess})
         }
 
         // word length of 5
@@ -144,52 +143,8 @@ export class Wordle extends React.Component<
     };
 
     _updateGameState() {
-        const newLetterStates = Object.assign({}, this.letterStates),
-            newWordRows = Object.assign({}, this.wordRows),
-            row = [],
-            currentRowChars = this.wordRows[this.rowInd],
-            goalWordChars = this.goalWord.split('');
-
-        for (let i = 0; i < currentRowChars.length; i++) {
-            const char = currentRowChars[i];
-
-            // find index of user's input character in the goal word
-            const matchedInds = ArrayUtils.findAllInds(goalWordChars, char.key);
-
-            // index == current index, perfect match
-            if (matchedInds.includes(i)) {
-                char.state = 'green';
-                newLetterStates[char.key] = 'green';
-            }
-            // match not found, grey out key
-            else if (matchedInds.length === 0) {
-                char.state = 'grey';
-                if (newLetterStates[char.key] === 'white') {
-                    // can't downgrade key state from green/yellow
-                    newLetterStates[char.key] = 'grey';
-                }
-            }
-            // if neither, it must be a partial match, so set as yellow
-            else {
-                char.state = 'yellow';
-                if (newLetterStates[char.key] !== 'green') {
-                    // can't downgrade key state green
-                    newLetterStates[char.key] = 'yellow';
-                }
-            }
-            row.push(char);
-        }
-
-        newWordRows[this.rowInd] = row;
-
-        // update state
-        this.wordRows = newWordRows;
-        this.letterStates = newLetterStates;
-
-        // send request to update db
-        const game = Object.assign({}, this.props.game);
-        game.myState.board = this.wordRows;
-        game.myState.letterStates = this.letterStates;
+        const currentRowChars = this.wordRows[this.rowInd];
+        const goalWordChars = this.goalWord.split('')
 
         // check for win
         if (
@@ -209,12 +164,6 @@ export class Wordle extends React.Component<
         else if (this.rowInd < 5) {
             this.rowInd = this.rowInd + 1;
         }
-
-        if (this.gameIsWon !== null) {
-            game.game_status = 'done';
-        }
-
-        GameService.updateGame(game.uuid, game.game_status, game.myState);
     }
 
     _triggerError(rowInd: number) {

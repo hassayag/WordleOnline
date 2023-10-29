@@ -12,7 +12,7 @@ import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config';
 import './game.scss';
 import OppponentBoard from './opponent-board/opponent-board';
-import { Game } from './types';
+import { Game, Letter } from './types';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 
@@ -37,27 +37,33 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [game, setGame] = useState<Game | null>(null);
     const [cookies, setCookie] = useCookies(['session', 'game']);
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081/?session=123', {
+    const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081', {
         onMessage: (msg) => handleMessage(msg)
     });
 
-    const handleMessage = useCallback(async (msg: MessageEvent) => {
-        const response = msg.data as SocketResponse
-        if (response.event === 'start_game') {
-            setGame({
-                ...game,
-                game_status: 'in_progress',
-            } as Game);
-        }
-    }, [game])
+    const refresh = useCallback(async () => {
+        console.debug('REFRESHING')
+        const gameObj = await GameService.getGame(uuid);
+        setGame(gameObj);
+    }, [uuid])
 
-    const startGame = useCallback(() => {
+    const sendGuess = useCallback((guess: {row: number, word: Letter[]}) => {
+        sendJsonMessage({event: 'send_word', data: guess})
+    },[sendJsonMessage])
+
+    const handleMessage = useCallback(async (msg: MessageEvent) => {
+        const response = JSON.parse(msg.data) as SocketResponse
+        if (response.event === 'start_game') {
+            await refresh()
+        }
+        else if (response.event === 'send_word') {
+            await refresh()
+        }
+    }, [refresh])
+
+    const startGame = useCallback(async () => {
         sendJsonMessage({event: 'start_game'})
-        setGame({
-            ...game,
-            game_status: 'in_progress',
-        } as Game);
-    }, [game, sendJsonMessage])
+    }, [sendJsonMessage])
 
     useEffect(() => {
         // Get a random goal word
@@ -145,7 +151,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                                 alignItems: 'center',
                             }}
                         >
-                            <Wordle validGuesses={validGuesses} game={game} />
+                            <Wordle validGuesses={validGuesses} game={game} sendGuess={sendGuess} />
                         </Box>
                     </Container>
                 </Slide>

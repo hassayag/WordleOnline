@@ -7,10 +7,6 @@
         "sourceMap": true,
         "outDir": "build",
         "resolveJsonModule": true,
-        "paths": {
-            "@/*": ["./src/*"]
-        }
     },
     "lib": ["ES2019"],
-    "include": ["src"]
 }

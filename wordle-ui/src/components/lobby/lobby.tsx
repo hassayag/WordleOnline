@@ -1,6 +1,5 @@
-import { Box, Button, Container, Typography } from '@mui/material';
-import GameService from '@/services/game-service';
 import React from 'react';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { Game } from '../game/types';
 
 const Lobby = ({
@@ -68,13 +67,7 @@ const Lobby = ({
 
                         <Button
                             variant="contained"
-                            onClick={() => {
-                                GameService.updateGame(
-                                    game.uuid,
-                                    'in_progress'
-                                );
-                                startGame()
-                            }}
+                            onClick={startGame}
                         >
                             Start Game
                         </Button>
