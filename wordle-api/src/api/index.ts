@@ -11,13 +11,7 @@ export const initApp = () => {
     const app = express();
 
     app.use(
-        cors({
-            origin: Config.client.host,
-            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-            preflightContinue: false,
-            optionsSuccessStatus: 204,
-            credentials: true,
-        })
+        cors()
     );
     app.use(cookieParser());
 
