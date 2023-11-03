@@ -11,6 +11,7 @@ export default {
         port: process.env.POSTGRES_PORT || 5432,
         user: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASS,
+        ssl: true
     },
     server: {
         host: process.env.SERVER_HOST || 'http://localhost:8080',
