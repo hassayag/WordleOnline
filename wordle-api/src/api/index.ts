@@ -12,7 +12,7 @@ export const initApp = () => {
 
     app.use(
         cors({
-            origin: '*',
+            origin: Config.client.host,
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             preflightContinue: false,
             optionsSuccessStatus: 204,
