@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { Box, Container, Slide } from '@mui/material';
 
 import Wordle from './wordle/wordle';
@@ -15,6 +14,7 @@ import OppponentBoard from './opponent-board/opponent-board';
 import { Game, Letter } from './types';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
+import { useGameCookies } from '@/hooks/useGameCookies';
 
 // using readyState enum
 const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
@@ -35,7 +35,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const [cookies, setCookie] = useCookies(['session', 'game']);
+    const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081', {
         onMessage: (msg) => handleMessage(msg)
@@ -78,16 +78,16 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
 
                 setGame(gameObj);
                 setPlayerIsValid(true);
-                setCookie('game', gameObj.uuid, { path: '/' })
+                setGameCookie(gameObj.uuid)
 
                 let session;
 
-                if (!cookies.session || cookies.session === 'undefined') {
+                if (!sessionCookie || sessionCookie === 'undefined') {
                     session = await SessionService.createSession(
                         'Harry',
                         gameObj.id
                     );
-                    setCookie('session', session.session_token, { path: '/' });
+                    setSessionCookie(session.session_token);
                 }
             } catch (err) {
                 setPlayerIsValid(false);
@@ -95,7 +95,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
             }
         }
         fetchData();
-    }, [cookies, navigate, setCookie, uuid]);
+    }, [navigate, sessionCookie, uuid]);
 
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {

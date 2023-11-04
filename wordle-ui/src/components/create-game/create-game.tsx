@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
+import { useGameCookies } from '@/hooks/useGameCookies';
 
 const CreateGame = ({
     gameUuids,
@@ -17,21 +17,21 @@ const CreateGame = ({
 
     const [name, setName] = useState<string>('');
     const [gameUuid, setGameUuid] = useState<string>('');
-    const [cookies, setCookie] = useCookies(['session', 'game']);
+    const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [createError, setCreateError] = useState<string>('');
 
     const _initGame = async () => {
         let session;
 
-        if (!cookies.session || cookies.session === 'undefined') {
+        if (!sessionCookie|| sessionCookie === 'undefined') {
             session = await SessionService.createSession(name);
-            setCookie('session', session.session_token, { path: '/' });
+            setSessionCookie(session.session_token);
         }
 
         GameService.createGame(name)
             .then((response) => {
                 setGameUuid(response.uuid)
-                setCookie('game', response.uuid, { path: '/' })
+                setGameCookie(response.uuid)
             })
             .catch((err) => setCreateError(err?.message));
     };

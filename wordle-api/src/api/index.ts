@@ -30,13 +30,22 @@ export const initApp = () => {
 
     // Define an error-handling middleware function
     app.use((err, req: Request, res: Response, next: NextFunction) => {
-        console.error(
-            `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
-        );
-
         if (err?.statusCode) {
+            if (err.statusCode >= 500) {
+                console.error(
+                    `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
+                );        
+            }
+            else {
+                console.info(
+                    `${new Date().toISOString()} [api] ${err?.message}`
+                );        
+            }
             res.status(err.statusCode).json({ message: err.message });
         } else {
+            console.error(
+                `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
+            );    
             res.status(500).json({ message: 'Internal Server Error' });
         }
     });
