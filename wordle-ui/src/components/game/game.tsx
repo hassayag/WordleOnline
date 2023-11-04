@@ -37,7 +37,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [game, setGame] = useState<Game | null>(null);
     const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081', {
+    const { sendJsonMessage, readyState } = useWebSocket(config.socketUrl, {
         onMessage: (msg) => handleMessage(msg)
     });
 
