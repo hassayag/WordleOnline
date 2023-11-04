@@ -1,15 +1,21 @@
-import config from '@/config/config';
 import { useCookies } from "react-cookie";
 
 export const useGameCookies = () => {
     const [cookies, setCookie] = useCookies(['session', 'game']);
 
+    const cookieConfig =  { 
+        path: '/', 
+        secure: true, 
+        domain: '',
+        sameSite: 'none' as any
+    }
+
     const setSessionCookie = (token: string) => {
-        setCookie('session', token, { path: '/', secure: true, domain: config.api.host});
+        setCookie('session', token, cookieConfig);
     }
 
     const setGameCookie = (token: string) => {
-        setCookie('game', token, { path: '/', secure: true, domain: config.api.host });
+        setCookie('game', token, cookieConfig);
     }
 
     return {
