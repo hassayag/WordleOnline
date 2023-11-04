@@ -28,7 +28,7 @@ export const createSession = async (req, res) => {
         expiresAt = new Date(Date.now() + MILISECONDS_IN_A_DAY);
 
     await psql().query(
-        'INSERT INTO session (session_token, game_uuid, expires_at) values ($1, $2, $3, $4)',
+        'INSERT INTO session (session_token, game_uuid, expires_at) values ($1, $2, $3)',
         [ sessionToken, gameId || null, expiresAt.toISOString()]
     );
 
