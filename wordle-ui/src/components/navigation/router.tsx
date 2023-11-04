@@ -11,6 +11,7 @@ import Game from '../game/game';
 import Home from '../home/home';
 import JoinGame from '../join-game/join-game';
 import Navbar from './navbar';
+import { useGameCookies } from '@/hooks/useGameCookies';
 
 interface RouteItem {
     path: string;
@@ -37,8 +38,10 @@ const MyRouter = () => {
         join_game: <JoinGame />,
     })
 
+    const {sessionCookie} = useGameCookies()
+
     useEffect(() => {
-        GameService.getGames()
+        GameService.getGames(sessionCookie)
         .then((response) => {
             setGameUuids(response.uuids);
         })

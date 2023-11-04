@@ -4,8 +4,8 @@ import Service from './service';
 class GameService extends Service {
     protected baseUrl = '/game/';
 
-    public async getGames() {
-        return this.get<{ uuids: string[] }>('uuids');
+    public async getGames(sessionToken?: string) {
+        return this.get<{ uuids: string[] }>('uuids', true, sessionToken);
     }
 
     public async getGame(uuid: string) {
