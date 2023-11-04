@@ -11,10 +11,10 @@ import SessionService from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config';
 import './game.scss';
-import OppponentBoard from './opponent-board/opponent-board';
 import { Game, Letter } from './types';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
+import { PlayerInfo } from './player-info/player-info';
 
 // using readyState enum
 const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
@@ -122,7 +122,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     }
 
     const opponentBoards = game.otherStates.map((state, index) => (
-        <OppponentBoard key={index} state={state} />
+        <PlayerInfo key={index} playerState={state} isOpponent={true} />
     ));
 
     return (

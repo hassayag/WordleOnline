@@ -1,4 +1,4 @@
-const host = process.env.REACT_APP_API_HOST || 'http://localhost:8080';
+const host = process.env.REACT_APP_API_HOST || 'https://localhost:8080';
 const port = process.env.REACT_APP_API_PORT || '8080';
 
 const config = {

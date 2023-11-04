@@ -1,9 +1,9 @@
 import React from 'react';
 import { Paper } from '@mui/material';
-import '../board/board.scss';
 import { Letter, PlayerState } from '../types';
+import './board.scss';
 
-const OppponentBoard = ({ state }: { state: PlayerState }) => {
+const OpponentBoard = ({ playerState }: { playerState: PlayerState }) => {
     const renderGrid = () => {
         return (
             <div>
@@ -20,11 +20,11 @@ const OppponentBoard = ({ state }: { state: PlayerState }) => {
     const renderRow = (i: number) => {
         return (
             <div>
-                {renderSquare(state.board[i][0])}
-                {renderSquare(state.board[i][1])}
-                {renderSquare(state.board[i][2])}
-                {renderSquare(state.board[i][3])}
-                {renderSquare(state.board[i][4])}
+                {renderSquare(playerState.board[i][0])}
+                {renderSquare(playerState.board[i][1])}
+                {renderSquare(playerState.board[i][2])}
+                {renderSquare(playerState.board[i][3])}
+                {renderSquare(playerState.board[i][4])}
             </div>
         );
     };
@@ -45,4 +45,4 @@ const Square = ({ letter }: { letter: Letter | undefined }) => {
 
     return <Paper elevation={1} className={className}></Paper>;
 };
-export default OppponentBoard;
+export default OpponentBoard;

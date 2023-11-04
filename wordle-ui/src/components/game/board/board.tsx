@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
-const Board = ({ state }: { state: PlayerState }) => {
+const Board = ({ playerState }: { playerState: PlayerState }) => {
     const renderGrid = () => {
         return (
             <div>
@@ -20,11 +20,11 @@ const Board = ({ state }: { state: PlayerState }) => {
     const renderRow = (i: number) => {
         return (
             <div>
-                {renderSquare(state.board[i][0])}
-                {renderSquare(state.board[i][1])}
-                {renderSquare(state.board[i][2])}
-                {renderSquare(state.board[i][3])}
-                {renderSquare(state.board[i][4])}
+                {renderSquare(playerState.board[i][0])}
+                {renderSquare(playerState.board[i][1])}
+                {renderSquare(playerState.board[i][2])}
+                {renderSquare(playerState.board[i][3])}
+                {renderSquare(playerState.board[i][4])}
             </div>
         );
     };

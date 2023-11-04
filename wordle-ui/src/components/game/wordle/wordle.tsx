@@ -5,11 +5,11 @@ import { Keyboard } from '../keyboard/keyboard';
 import synthService from '@/services/synth-service';
 import config from '@/config/config';
 
-import './wordle.css';
 import { Box } from '@mui/system';
 import { Game, Letter } from '../types';
 import GameEndModal from '../game-end-modal/game-end-modal';
 import { parseRow } from './utils';
+import { PlayerInfo } from '../player-info/player-info';
 
 interface Props {
     game: Game,
@@ -138,7 +138,7 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Board state={game.myState} />
+                    <PlayerInfo playerState={game.myState} isOpponent={false} />
                     <Keyboard
                         keyStates={game.myState.letterStates}
                         onPress={onKeyPress}
