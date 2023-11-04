@@ -15,12 +15,10 @@ const sqlConfig = {
     }
 }
 
-console.log(sqlConfig)
-
 export default {
     sql: sqlConfig,
     server: {
-        host: process.env.SERVER_HOST || 'http://localhost:8080',
+        host: process.env.SERVER_HOST || 'https://localhost:8080',
         port: process.env.SERVER_PORT || 8080,
     },
     client: {
