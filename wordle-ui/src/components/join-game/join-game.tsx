@@ -21,7 +21,7 @@ const JoinGame = () => {
         let session;
 
         if (!sessionCookie || sessionCookie === 'undefined') {
-            session = await SessionService.createSession(name);
+            session = await SessionService.createSession(gameId);
             setSessionCookie(session.session_token);
         }
 

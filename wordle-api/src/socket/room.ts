@@ -1,6 +1,6 @@
 import { Game, Letter } from '../api/game/types';
 import WebSocket from 'ws';
-import { WordService } from '../services/game';
+import { GameService } from '../services/game';
 
 const EVENT_LIST = ['test', 'send_word', 'start_game'] as const;
 type Event = (typeof EVENT_LIST)[number];
@@ -76,7 +76,7 @@ export class Room {
     }
 
     private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {
-        await WordService.postGuess(this.gameUuid, guess, sessionToken)
+        await GameService.postGuess(this.gameUuid, guess, sessionToken)
 
         const response: SocketResponse = {
             event: 'send_word'
@@ -89,7 +89,7 @@ export class Room {
     }
 
     private async handleStartGame(sessionToken: string) {
-        await WordService.updateGame({
+        await GameService.updateGame({
             uuid: this.gameUuid,
             game_status: 'in_progress',
             player_state: null

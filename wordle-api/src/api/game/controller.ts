@@ -12,7 +12,7 @@ import {
 } from './types';
 import { BadRequestError } from '../../error';
 import { findStateIndex, initialState, formatReturnedGame } from './utils';
-import { WordService } from '../../services/game';
+import { GameService } from '../../services/game';
 
 // get uuids of all games
 export const getUuids = async (req: Request, res: Response) => {
@@ -22,7 +22,7 @@ export const getUuids = async (req: Request, res: Response) => {
 export const getGame = async (req, res) => {
     const session = req.headers.authorization.replace('Bearer ', '')
 
-    const game = await WordService.getGame(req.params.uuid, session)
+    const game = await GameService.getGame(req.params.uuid, session)
 
     const returnedGame = formatReturnedGame(game, session)
     res.send(returnedGame);
@@ -57,7 +57,7 @@ export const createGame = async (req: CreateGameReq, res) => {
 export const updateGame = async (req: UpdateGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '')
 
-    const newGame = await WordService.updateGame(req.body, session)
+    const newGame = await GameService.updateGame(req.body, session)
 
     const returnedGame = formatReturnedGame(newGame, session)
     res.send(returnedGame);

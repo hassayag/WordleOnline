@@ -4,7 +4,7 @@ import { BadRequestError, NotFoundError } from '../error';
 import { Game, Letter, UpdateGameReq } from '../api/game/types';
 import { findAllInds } from '../utils/array-utils';
 
-export class WordService {
+export class GameService {
     static async getGame(uuid: string, sessionToken: string) {
         const game: Game = await db.get(uuid);
 
@@ -112,7 +112,7 @@ export class WordService {
         }
 
         // send request to update db
-        await WordService.updateGame(
+        await GameService.updateGame(
             {
                 uuid: game.uuid,
                 player_state: {
