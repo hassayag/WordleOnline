@@ -7,7 +7,8 @@ export const useGameCookies = () => {
         path: '/', 
         secure: true, 
         domain: '',
-        sameSite: 'none' as any
+        sameSite: 'none' as any,
+        httpOnly: true
     }
 
     const setSessionCookie = (token: string) => {
