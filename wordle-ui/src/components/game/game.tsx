@@ -35,10 +35,10 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
+    const {gameCookie, sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendJsonMessage, readyState } = useWebSocket(config.socketUrl, {
-        onMessage: (msg) => handleMessage(msg)
+    const { sendJsonMessage, readyState } = useWebSocket(config.socketUrl+`/?session=${sessionCookie}&game=${gameCookie}`, {
+        onMessage: (msg) => handleMessage(msg),
     });
 
     const refresh = useCallback(async () => {
@@ -83,10 +83,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 let session;
 
                 if (!sessionCookie || sessionCookie === 'undefined') {
-                    session = await SessionService.createSession(
-                        'Harry',
-                        gameObj.id
-                    );
+                    session = await SessionService.createSession(gameObj.uuid);
                     setSessionCookie(session.session_token);
                 }
             } catch (err) {

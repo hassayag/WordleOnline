@@ -8,8 +8,7 @@ export const initWsServer = () => {
 
     const rooms = new Map<Game['uuid'], Room>()
     wss.on('connection', (socket, request) => {
-        const {game: gameUuid, session: sessionToken} = getCookieAttributes(request.headers.cookie)
-
+        const {game: gameUuid, session: sessionToken} = getQueryAttrs(request.url)
         let room = rooms.get(gameUuid)
         if (!room) {
             room = new Room(gameUuid)
@@ -26,18 +25,18 @@ export const initWsServer = () => {
  * Convert cookie string into an object
  * cookie looks like "session=abcd-1234-efgh-5678 game=abcd-1234-efgh-5678;"  
  */
-const getCookieAttributes = (cookieString: string): Record<'game' | 'session', string> => {
-    const tokens = cookieString.split(' ')
-
+const getQueryAttrs = (queryString: string): Record<'game'|'session', string> => {
+    const noPrefix = queryString.replace('/?', '')
+    const tokens = noPrefix.split('&')
+    
     const output = {
-        game: '',
-        session: ''
+        game:'',
+        session:''
     }
 
     tokens.forEach(token => {
         const [key, value] = token.split('=')
-        value.replace(';', '')
-        output[key] = value.replace(';', '')
+        output[key] = value
     })
 
     return output
