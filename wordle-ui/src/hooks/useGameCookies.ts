@@ -6,8 +6,6 @@ export const useGameCookies = () => {
     const cookieConfig =  { 
         path: '/', 
         secure: true, 
-        domain: '',
-        sameSite: 'none' as any,
         httpOnly: true
     }
 
