@@ -25,7 +25,7 @@ export class Room {
 
     addPlayer(sessionToken: string, socket: WebSocket) {
         console.info(
-            `Added player ${sessionToken.slice(0, 4)} to game ${this.roomId}`
+            `${new Date().toISOString()} Added player ${sessionToken.slice(0, 4)} to game ${this.roomId}`
         );
 
         socket.on('message', (msg) => {
@@ -42,7 +42,7 @@ export class Room {
 
     private removePlayer(sessionToken: string) {
         console.info(
-            `Removed player ${sessionToken.slice(0, 4)} from game ${
+            `${new Date().toISOString()} Removed player ${sessionToken.slice(0, 4)} from game ${
                 this.roomId
             }`
         );
@@ -53,13 +53,13 @@ export class Room {
         const { event, data } = JSON.parse(msg.toString());
         if (!this.eventIsValid(event)) {
             console.warn(
-                `[room:${this.roomId}] Received invalid event ${event}`
+                `${new Date().toISOString()} [room:${this.roomId}] Received invalid event ${event}`
             );
             return;
         }
 
         console.debug(
-            `[room:${this.roomId}] Received event ${event} with data ${data}`
+            `${new Date().toISOString()} [room:${this.roomId}] Received event ${event} with data ${data}`
         );
 
         let responseData;

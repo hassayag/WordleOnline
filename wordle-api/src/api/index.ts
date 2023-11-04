@@ -24,6 +24,11 @@ export const initApp = () => {
     );
     app.use(cookieParser());
 
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        console.info(`${new Date().toISOString()} [api] Received request: ${req.method} ${req.url}`)
+        next()
+    })
+
     app.use('/game', game);
     app.use('/session', session);
     app.use('/words', words);
