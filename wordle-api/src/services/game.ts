@@ -10,7 +10,9 @@ export class GameService {
 
         const playerStateIndex = findStateIndex(game, sessionToken);
         if (playerStateIndex === -1) {
-            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            console.info(
+                `[game] User does not have access to game uuid ${uuid}`
+            );
             throw new NotFoundError(`Game uuid ${uuid} not found`);
         }
 
@@ -32,7 +34,9 @@ export class GameService {
 
         const playerStateIndex = findStateIndex(game, sessionToken);
         if (playerStateIndex === -1 && game.game_status !== 'lobby') {
-            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            console.info(
+                `[game] User does not have access to game uuid ${uuid}`
+            );
             throw new BadRequestError(`Game uuid ${uuid} not found`);
         }
         if (playerState) {
@@ -55,10 +59,12 @@ export class GameService {
 
         const playerStateIndex = findStateIndex(game, sessionToken);
         if (playerStateIndex === -1 && game.game_status !== 'lobby') {
-            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            console.info(
+                `[game] User does not have access to game uuid ${uuid}`
+            );
             throw new BadRequestError(`Game uuid ${uuid} not found`);
         }
-        
+
         const playerState = game.state[playerStateIndex];
 
         const { goalWord, letterStates, board } = playerState;
@@ -100,7 +106,7 @@ export class GameService {
 
         newWordRows[guess.row] = row;
 
-        let gameIsWon=null
+        let gameIsWon = null;
         // check for win
         if (
             currentRowChars.length &&
@@ -128,7 +134,7 @@ export class GameService {
                     board: newWordRows,
                     letterStates: newLetterStates,
                     player: playerState.player,
-                    isWon: gameIsWon
+                    isWon: gameIsWon,
                 },
                 game_status: game.game_status,
             },

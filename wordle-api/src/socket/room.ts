@@ -6,14 +6,14 @@ const EVENT_LIST = ['test', 'send_word', 'start_game'] as const;
 type Event = (typeof EVENT_LIST)[number];
 
 interface SocketResponse {
-    event: Event,
-    data?: string
-} 
+    event: Event;
+    data?: string;
+}
 
 export class Room {
     gameUuid: string;
     roomId: string;
-    game: Game
+    game: Game;
 
     constructor(gameUuid: string) {
         this.gameUuid = gameUuid;
@@ -25,7 +25,10 @@ export class Room {
 
     addPlayer(sessionToken: string, socket: WebSocket) {
         console.info(
-            `${new Date().toISOString()} Added player ${sessionToken.slice(0, 4)} to game ${this.roomId}`
+            `${new Date().toISOString()} Added player ${sessionToken.slice(
+                0,
+                4
+            )} to game ${this.roomId}`
         );
 
         socket.on('message', (msg) => {
@@ -42,9 +45,10 @@ export class Room {
 
     private removePlayer(sessionToken: string) {
         console.info(
-            `${new Date().toISOString()} Removed player ${sessionToken.slice(0, 4)} from game ${
-                this.roomId
-            }`
+            `${new Date().toISOString()} Removed player ${sessionToken.slice(
+                0,
+                4
+            )} from game ${this.roomId}`
         );
         this.clients.delete(sessionToken);
     }
@@ -54,62 +58,76 @@ export class Room {
             const { event, data } = JSON.parse(msg.toString());
             if (!this.eventIsValid(event)) {
                 console.warn(
-                    `${new Date().toISOString()} [room:${this.roomId}] Received invalid event ${event}`
+                    `${new Date().toISOString()} [room:${
+                        this.roomId
+                    }] Received invalid event ${event}`
                 );
                 return;
             }
-    
+
             console.debug(
-                `${new Date().toISOString()} [room:${this.roomId}] Received event ${event} with data ${data}`
+                `${new Date().toISOString()} [room:${
+                    this.roomId
+                }] Received event ${event} with data ${data}`
             );
-    
+
             let responseData;
             switch (event) {
                 case 'send_word':
-                    responseData = await this.handleSendWord(data, sessionToken);
+                    responseData = await this.handleSendWord(
+                        data,
+                        sessionToken
+                    );
                     break;
                 case 'start_game':
                     responseData = await this.handleStartGame(sessionToken);
                     break;
             }
-    
-            return {event, data: responseData}
-        }
-        catch (err) {
+
+            return { event, data: responseData };
+        } catch (err) {
             console.error(
-                `${new Date().toISOString()} [room:${this.roomId}] Error occurred - ${err?.message}`
-            )
+                `${new Date().toISOString()} [room:${
+                    this.roomId
+                }] Error occurred - ${err?.message}`
+            );
         }
     }
 
-    private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {
-        await GameService.postGuess(this.gameUuid, guess, sessionToken)
+    private async handleSendWord(
+        guess: { row: number; word: Letter[] },
+        sessionToken: string
+    ) {
+        await GameService.postGuess(this.gameUuid, guess, sessionToken);
 
         const response: SocketResponse = {
-            event: 'send_word'
-        }
+            event: 'send_word',
+        };
 
         // tell all the clients that the game has started
-        this.clients.forEach(client => {
-            client.send(JSON.stringify(response))
-        })
+        this.clients.forEach((client) => {
+            client.send(JSON.stringify(response));
+        });
     }
 
     private async handleStartGame(sessionToken: string) {
-        await GameService.updateGame({
-            uuid: this.gameUuid,
-            game_status: 'in_progress',
-            player_state: null
-        }, sessionToken)
+        await GameService.updateGame(
+            {
+                uuid: this.gameUuid,
+                game_status: 'in_progress',
+                player_state: null,
+            },
+            sessionToken
+        );
 
         const response: SocketResponse = {
-            event: 'start_game'
-        }
+            event: 'start_game',
+        };
 
         // tell all the clients that the game has started
-        this.clients.forEach(client => {
-            client.send(JSON.stringify(response))
-        })
+        this.clients.forEach((client) => {
+            client.send(JSON.stringify(response));
+        });
     }
 
     private eventIsValid(event): event is Event {

@@ -1,5 +1,10 @@
 import express from 'express';
-import { getSession, createSession, deleteSession, updateSession } from './controller';
+import {
+    getSession,
+    createSession,
+    deleteSession,
+    updateSession,
+} from './controller';
 import bodyParser from 'body-parser';
 
 const router = express.Router();

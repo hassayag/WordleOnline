@@ -9,73 +9,84 @@ export default abstract class Service {
             request = new Request(config.api.host + this.baseUrl + url, {
                 credentials: 'include',
                 headers: {
-                    Authorization: `Bearer ${sessionToken}`
-                }
+                    Authorization: `Bearer ${sessionToken}`,
+                },
             });
         } else {
             request = new Request(config.api.host + this.baseUrl + url);
         }
 
         const response = await fetch(request);
-        return this.catchResponseError(response)
+        return this.catchResponseError(response);
     }
 
-    protected async post<T>(url: string, payload: any, sessionToken: string): Promise<T> {
+    protected async post<T>(
+        url: string,
+        payload: any,
+        sessionToken: string
+    ): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 
         const response = await fetch(request, {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${sessionToken}`
+                Authorization: `Bearer ${sessionToken}`,
             },
             body: JSON.stringify(payload),
             credentials: 'include',
         });
 
-        return this.catchResponseError(response)
+        return this.catchResponseError(response);
     }
 
-    protected async patch<T>(url: string, payload: any, sessionToken: string): Promise<T> {
+    protected async patch<T>(
+        url: string,
+        payload: any,
+        sessionToken: string
+    ): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 
         const response = await fetch(request, {
             method: 'PATCH',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${sessionToken}`
+                Authorization: `Bearer ${sessionToken}`,
             },
             body: JSON.stringify(payload),
             credentials: 'include',
         });
 
-        return this.catchResponseError(response)
+        return this.catchResponseError(response);
     }
 
-    protected async delete<T = void>(url: string, sessionToken: string): Promise<T> {
+    protected async delete<T = void>(
+        url: string,
+        sessionToken: string
+    ): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
 
         const response = await fetch(request, {
             method: 'DELETE',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${sessionToken}`
+                Authorization: `Bearer ${sessionToken}`,
             },
             credentials: 'include',
         });
 
-        return this.catchResponseError(response)
+        return this.catchResponseError(response);
     }
 
     private async catchResponseError(response: Response) {
         const json = await response.json();
-        
+
         if (!response.ok) {
             const error = {
                 status: response.status,

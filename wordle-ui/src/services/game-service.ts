@@ -23,13 +23,25 @@ class GameService extends Service {
     }
 
     public async updateGame(
-        updateOptions: {uuid: string, status: GameStatus, playerState?: Player},
-        sessionToken: string,
+        updateOptions: {
+            uuid: string;
+            status: GameStatus;
+            playerState?: Player;
+        },
+        sessionToken: string
     ) {
-        return this.patch<Game>(updateOptions.uuid, updateOptions, sessionToken);
+        return this.patch<Game>(
+            updateOptions.uuid,
+            updateOptions,
+            sessionToken
+        );
     }
 
-    public async joinGame(uuid: string, playerName: string, sessionToken: string) {
+    public async joinGame(
+        uuid: string,
+        playerName: string,
+        sessionToken: string
+    ) {
         const payload = {
             name: playerName,
         };

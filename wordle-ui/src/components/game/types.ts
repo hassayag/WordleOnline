@@ -4,7 +4,7 @@ export interface Game {
     game_status: GameStatus;
     type: 'standard' | string;
     myState: PlayerState;
-    otherStates: PlayerState[]
+    otherStates: PlayerState[];
 }
 
 export type GameStatus = 'lobby' | 'in_progress' | 'done';

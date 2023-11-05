@@ -11,9 +11,9 @@ const sqlConfig = {
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASS,
     ssl: {
-        rejectUnauthorized: false
-    }
-}
+        rejectUnauthorized: false,
+    },
+};
 
 export default {
     sql: sqlConfig,

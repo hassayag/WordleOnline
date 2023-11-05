@@ -4,10 +4,9 @@ import { NotFoundError } from '../../error';
 
 class GameDbUtils {
     static async get(uuid: string) {
-        const rawGame = await db().query(
-            'SELECT * FROM game WHERE uuid = $1',
-            [uuid]
-        );
+        const rawGame = await db().query('SELECT * FROM game WHERE uuid = $1', [
+            uuid,
+        ]);
 
         if (!rawGame?.rows?.length) {
             throw new NotFoundError(`Game uuid ${uuid} not found`);

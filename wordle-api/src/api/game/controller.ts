@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import {Request, Response} from 'express'
+import { Request, Response } from 'express';
 import { randomWord } from '../words/utils';
 import db from './db-utils';
 import {
@@ -20,16 +20,16 @@ export const getUuids = async (req: Request, res: Response) => {
 };
 
 export const getGame = async (req, res) => {
-    const session = req.headers.authorization.replace('Bearer ', '')
+    const session = req.headers.authorization.replace('Bearer ', '');
 
-    const game = await GameService.getGame(req.params.uuid, session)
+    const game = await GameService.getGame(req.params.uuid, session);
 
-    const returnedGame = formatReturnedGame(game, session)
+    const returnedGame = formatReturnedGame(game, session);
     res.send(returnedGame);
 };
 
 export const createGame = async (req: CreateGameReq, res) => {
-    const session = req.headers.authorization.replace('Bearer ', '')
+    const session = req.headers.authorization.replace('Bearer ', '');
 
     if (!session) {
         throw new BadRequestError('Session token not found');
@@ -39,9 +39,7 @@ export const createGame = async (req: CreateGameReq, res) => {
 
     const uuid: string = v4(),
         game_status: GameStatus = 'lobby',
-        state: PlayerState[] = [
-            initialState(req.body.name, session, randWord),
-        ];
+        state: PlayerState[] = [initialState(req.body.name, session, randWord)];
 
     const game = await db.create({
         uuid,
@@ -50,21 +48,21 @@ export const createGame = async (req: CreateGameReq, res) => {
         state,
     });
 
-    const returnedGame = formatReturnedGame(game, session)
+    const returnedGame = formatReturnedGame(game, session);
     res.send(returnedGame);
 };
 
 export const updateGame = async (req: UpdateGameReq, res) => {
-    const session = req.headers.authorization.replace('Bearer ', '')
+    const session = req.headers.authorization.replace('Bearer ', '');
 
-    const newGame = await GameService.updateGame(req.body, session)
+    const newGame = await GameService.updateGame(req.body, session);
 
-    const returnedGame = formatReturnedGame(newGame, session)
+    const returnedGame = formatReturnedGame(newGame, session);
     res.send(returnedGame);
 };
 
 export const joinGame = async (req: JoinGameReq, res) => {
-    const session = req.headers.authorization.replace('Bearer ', '')
+    const session = req.headers.authorization.replace('Bearer ', '');
 
     const game = await db.get(req.params.uuid);
 
@@ -72,9 +70,9 @@ export const joinGame = async (req: JoinGameReq, res) => {
 
     // player is already in the game, just let them in
     if (playerStateIndex !== -1) {
-        const returnedGame = formatReturnedGame(game, session)
+        const returnedGame = formatReturnedGame(game, session);
         res.send(returnedGame);
-        return
+        return;
     }
 
     // if still in lobby state, add player to game

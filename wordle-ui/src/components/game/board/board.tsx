@@ -3,7 +3,13 @@ import { Paper } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
-const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLetters:boolean }) => {
+const Board = ({
+    playerState,
+    hideLetters,
+}: {
+    playerState: PlayerState;
+    hideLetters: boolean;
+}) => {
     const renderGrid = () => {
         return (
             <div>
@@ -19,7 +25,7 @@ const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLet
 
     const renderRow = (i: number) => {
         return (
-            <div className='row'>
+            <div className="row">
                 {renderSquare(playerState.board[i][0])}
                 {renderSquare(playerState.board[i][1])}
                 {renderSquare(playerState.board[i][2])}
@@ -36,7 +42,13 @@ const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLet
     return <div>{renderGrid()}</div>;
 };
 
-const Square = ({ letter, hideLetters }: { letter: Letter | undefined, hideLetters: boolean }) => {
+const Square = ({
+    letter,
+    hideLetters,
+}: {
+    letter: Letter | undefined;
+    hideLetters: boolean;
+}) => {
     if (!letter) {
         letter = { key: '', state: 'white', isError: false };
     }

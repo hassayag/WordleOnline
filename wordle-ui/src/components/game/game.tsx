@@ -170,21 +170,25 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 {connectionIcon}
                 <Slide direction="up" in={true} mountOnEnter unmountOnExit>
                     <Container maxWidth="sm">
-                        <Box sx ={{
-                            display: 'flex',
-                            flexDirection: 'row',
-
-                        }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                            }}
+                        >
                             <Wordle
                                 validGuesses={validGuesses}
                                 game={game}
                                 setGame={setGame}
                                 sendGuess={sendGuess}
                             />
-                            <Box sx={{
-                                marginLeft: 20
-                            }}>
-                                {opponentBoards}</Box>
+                            <Box
+                                sx={{
+                                    marginLeft: 20,
+                                }}
+                            >
+                                {opponentBoards}
+                            </Box>
                         </Box>
                     </Container>
                 </Slide>

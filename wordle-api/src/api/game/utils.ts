@@ -1,26 +1,30 @@
-import { Game, PlayerState } from "./types";
+import { Game, PlayerState } from './types';
 
 interface ReturnedGame extends Omit<Game, 'state'> {
-    myState: PlayerState,
-    otherStates: PlayerState[]
+    myState: PlayerState;
+    otherStates: PlayerState[];
 }
 
-export function formatReturnedGame(game: Game, sessionToken: string): ReturnedGame {
-    const {state, ...gameWithoutState} = game
-    
-    const myStateIndex = findStateIndex(game, sessionToken)
-    const myState = state[myStateIndex]
-    const otherStates = state.filter((value, index) => index !== myStateIndex)
+export function formatReturnedGame(
+    game: Game,
+    sessionToken: string
+): ReturnedGame {
+    const { state, ...gameWithoutState } = game;
+
+    const myStateIndex = findStateIndex(game, sessionToken);
+    const myState = state[myStateIndex];
+    const otherStates = state.filter((value, index) => index !== myStateIndex);
 
     // cleanse session tokens from other states as it is sensitive information
-    otherStates.forEach(state => state.player.sessionToken = 'nice-try-mate')
+    otherStates.forEach(
+        (state) => (state.player.sessionToken = 'nice-try-mate')
+    );
 
     return {
         ...gameWithoutState,
         myState,
-        otherStates
-    }
-    
+        otherStates,
+    };
 }
 
 export function initialState(
@@ -74,12 +78,12 @@ export function initialState(
 export function findStateIndex(game: Game, sessionToken: string) {
     return game.state.findIndex(
         (item) => item.player.sessionToken === sessionToken
-    )
+    );
 }
 
-export function newPlayer(name, sessionToken){
+export function newPlayer(name, sessionToken) {
     return {
         name,
         sessionToken,
-    }
+    };
 }
