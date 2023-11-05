@@ -19,13 +19,13 @@ export default {
     sql: sqlConfig,
     server: {
         host: process.env.SERVER_HOST || 'https://localhost:8080',
-        port: process.env.SERVER_PORT || 8080,
+        port: parseInt(process.env.SERVER_PORT) || 8080,
     },
     client: {
         host: process.env.CLIENT_HOST || 'http://localhost:3000',
-        port: process.env.CLIENT_PORT || 3000,
+        port: parseInt(process.env.CLIENT_PORT) || 3000,
     },
     websocket: {
-        port: 8081
+        port: parseInt(process.env.WEBSOCKET_PORT) || 80
     }
 };
