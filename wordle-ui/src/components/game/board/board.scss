@@ -1,12 +1,7 @@
-/* .word-grid {
+.row {
     display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    padding-top: 100px;
-    padding-left: 220px;
-} */
+    flex-wrap: nowrap;
+}
 
 .square {
     float: left;

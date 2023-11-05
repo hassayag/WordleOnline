@@ -9,7 +9,7 @@ import { Box } from '@mui/system';
 import { Game, Letter } from '../types';
 import GameEndModal from '../game-end-modal/game-end-modal';
 import { parseRow } from './utils';
-import { PlayerInfo } from '../player-info/player-info';
+import { PlayerBoard } from '../player-info/player-info';
 
 interface Props {
     game: Game,
@@ -126,25 +126,20 @@ const Wordle = ({game, setGame, validGuesses, sendGuess}: Props) => {
 
     return (
         <>
-            <Paper elevation={10}>
-                <Box
-                    sx={{
-                        width: 600,
-                        marginTop: 8,
-                        marginBottom: 8,
-                        display: 'flex',
-                        gap: '80px',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <PlayerInfo playerState={game.myState} isOpponent={false} />
+            <Box sx={{
+                marginLeft: 15
+            }}>
+                <PlayerBoard playerState={game.myState} isOpponent={false} />
+            </Box>
+                <Box sx={{
+                    position: 'absolute',
+                    bottom: 20,
+                }}>
                     <Keyboard
                         keyStates={game.myState.letterStates}
                         onPress={onKeyPress}
-                    />
+                        />
                 </Box>
-            </Paper>
             <GameEndModal
                 isWon={game.myState.isWon!!}
                 isOpen={endModalOpen}

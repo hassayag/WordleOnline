@@ -19,7 +19,7 @@ const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLet
 
     const renderRow = (i: number) => {
         return (
-            <div>
+            <div className='row'>
                 {renderSquare(playerState.board[i][0])}
                 {renderSquare(playerState.board[i][1])}
                 {renderSquare(playerState.board[i][2])}
@@ -33,7 +33,7 @@ const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLet
         return <Square letter={letter} hideLetters={hideLetters} />;
     };
 
-    return <div className="word-grid">{renderGrid()}</div>;
+    return <div>{renderGrid()}</div>;
 };
 
 const Square = ({ letter, hideLetters }: { letter: Letter | undefined, hideLetters: boolean }) => {

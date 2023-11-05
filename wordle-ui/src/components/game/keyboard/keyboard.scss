@@ -4,7 +4,7 @@
     gap: 5px;
     justify-content: center;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .key {
@@ -25,8 +25,8 @@
     margin: 0px;
     padding: 0;
     text-align: center;
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
 }
 
 .green {

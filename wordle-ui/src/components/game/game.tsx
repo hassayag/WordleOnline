@@ -14,56 +14,69 @@ import { Game, Letter } from './types';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 import { useGameCookies } from '@/hooks/useGameCookies';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { PlayerInfo } from './player-info/player-info';
+import { PlayerBoard } from './player-info/player-info';
+import { Keyboard } from './keyboard/keyboard';
 
 // using readyState enum
-const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
+const connectionColorMap: Record<
+    ReadyState,
+    'primary' | 'secondary' | 'error'
+> = {
     [ReadyState.CLOSED]: 'error',
     [ReadyState.CLOSING]: 'secondary',
     [ReadyState.CONNECTING]: 'secondary',
     [ReadyState.OPEN]: 'primary',
-    [ReadyState.UNINSTANTIATED]: 'error', 
-}
+    [ReadyState.UNINSTANTIATED]: 'error',
+};
 
 interface SocketResponse {
-    event: 'start_game' | 'send_word',
-    data?: string
-} 
+    event: 'start_game' | 'send_word';
+    data?: string;
+}
 
 const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const {gameCookie, sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
+    const { gameCookie, sessionCookie, setGameCookie, setSessionCookie } =
+        useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
 
-    const {sendJsonMessage, readyState} = useWebSocket(config.socketUrl+`/?session=${sessionCookie}&game=${gameCookie}`, {
-        onMessage: (msg) => handleMessage(msg),
-    });
+    const { sendJsonMessage, readyState } = useWebSocket(
+        config.socketUrl + `/?session=${sessionCookie}&game=${gameCookie}`,
+        {
+            onMessage: (msg) => handleMessage(msg),
+        }
+    );
 
     const refresh = useCallback(async () => {
         const gameObj = await GameService.getGame(uuid, sessionCookie);
         setGame(gameObj);
-    }, [sessionCookie, uuid])
-    
+    }, [sessionCookie, uuid]);
+
     const startGame = useCallback(async () => {
-        sendJsonMessage({event: 'start_game'})
-    }, [sendJsonMessage])
+        sendJsonMessage({ event: 'start_game' });
+    }, [sendJsonMessage]);
 
-    const sendGuess = useCallback((guess: {row: number, word: Letter[]}) => {
-        sendJsonMessage({event: 'send_word', data: guess})
-    },[sendJsonMessage])
+    const sendGuess = useCallback(
+        (guess: { row: number; word: Letter[] }) => {
+            sendJsonMessage({ event: 'send_word', data: guess });
+        },
+        [sendJsonMessage]
+    );
 
-    const handleMessage = useCallback(async (msg: MessageEvent) => {
-        const response = JSON.parse(msg.data) as SocketResponse
-        if (response.event === 'start_game') {
-            await refresh()
-        }
-        else if (response.event === 'send_word') {
-            await refresh()
-        }
-    }, [refresh])
+    const handleMessage = useCallback(
+        async (msg: MessageEvent) => {
+            const response = JSON.parse(msg.data) as SocketResponse;
+            if (response.event === 'start_game') {
+                await refresh();
+            } else if (response.event === 'send_word') {
+                await refresh();
+            }
+        },
+        [refresh]
+    );
 
     // useEffect(() => {
     //     if (webSocket) {
@@ -79,7 +92,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     //     }
     // }, [handleMessage, webSocket])
 
-
     useEffect(() => {
         // Get a random goal word
         WordService.getValidGuesses()
@@ -94,7 +106,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
 
                 setGame(gameObj);
                 setPlayerIsValid(true);
-                setGameCookie(gameObj.uuid)
+                setGameCookie(gameObj.uuid);
 
                 let session;
 
@@ -116,26 +128,30 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         return <></>;
     }
 
-    const connectionIcon = (<SignalWifiStatusbar4BarIcon
-        sx={{
-            position: 'absolute',
-            right: 5,
-            top: 5
-        }}
-        color={connectionColorMap[readyState]}
-    />)
+    const connectionIcon = (
+        <SignalWifiStatusbar4BarIcon
+            sx={{
+                position: 'absolute',
+                right: 5,
+                top: 5,
+            }}
+            color={connectionColorMap[readyState]}
+        />
+    );
 
     if (!game || !validGuesses) {
         return <div> Retrieving purpose... </div>;
     } else if (game.game_status === 'lobby') {
-        return (<>
-        {connectionIcon}
-        <Lobby game={game} startGame={startGame} />;
-        </>)
+        return (
+            <>
+                {connectionIcon}
+                <Lobby game={game} startGame={startGame} />;
+            </>
+        );
     }
 
     const opponentBoards = game.otherStates.map((state, index) => (
-        <PlayerInfo key={index} playerState={state} isOpponent={true} />
+        <PlayerBoard key={index} playerState={state} isOpponent={true} />
     ));
 
     return (
@@ -147,42 +163,31 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                     gap: '8px',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginLeft: 30,
+                    marginLeft: 10,
                     marginTop: 10,
                 }}
             >
                 {connectionIcon}
                 <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                    <Container component="main" maxWidth="sm">
-                        <Box
-                            sx={{
-                                marginTop: 8,
-                                display: 'flex',
-                                gap: '8px',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Wordle validGuesses={validGuesses} game={game} setGame={setGame} sendGuess={sendGuess} />
-                        </Box>
-                    </Container>
-                </Slide>
-                <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                    <Container component="main" maxWidth="sm">
-                        <Box
-                            sx={{
-                                marginTop: 8,
-                                display: 'flex',
-                                gap: '8px',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            {opponentBoards}
-                        </Box>
-                    </Container>
-                </Slide>
+                    <Container maxWidth="sm">
+                        <Box sx ={{
+                            display: 'flex',
+                            flexDirection: 'row',
 
+                        }}>
+                            <Wordle
+                                validGuesses={validGuesses}
+                                game={game}
+                                setGame={setGame}
+                                sendGuess={sendGuess}
+                            />
+                            <Box sx={{
+                                marginLeft: 20
+                            }}>
+                                {opponentBoards}</Box>
+                        </Box>
+                    </Container>
+                </Slide>
                 {config.feature_flags.synth && <SynthControl />}
             </Box>
         </main>
