@@ -1,6 +1,5 @@
 import React from 'react'
 import { PlayerState } from "../types"
-import OppponentBoard from '../board/opponent-board';
 import { Board } from '../board/board';
 
 interface Props {
@@ -9,11 +8,8 @@ interface Props {
 }
 
 const PlayerInfo = ({playerState, isOpponent}: Props) => {
-    const board = isOpponent ? <OppponentBoard playerState={playerState}/> : <Board playerState={playerState}/>
-
-    return (<>
-        {board}
-        </>
+    return (
+        <Board playerState={playerState} hideLetters={isOpponent}/>
     )
 }
 

@@ -14,6 +14,7 @@ import { Game, Letter } from './types';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 import { useGameCookies } from '@/hooks/useGameCookies';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { PlayerInfo } from './player-info/player-info';
 
 // using readyState enum
 const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {

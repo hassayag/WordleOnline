@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
-const Board = ({ playerState }: { playerState: PlayerState }) => {
+const Board = ({ playerState, hideLetters }: { playerState: PlayerState, hideLetters:boolean }) => {
     const renderGrid = () => {
         return (
             <div>
@@ -30,18 +30,22 @@ const Board = ({ playerState }: { playerState: PlayerState }) => {
     };
 
     const renderSquare = (letter: Letter) => {
-        return <Square letter={letter} />;
+        return <Square letter={letter} hideLetters={hideLetters} />;
     };
 
     return <div className="word-grid">{renderGrid()}</div>;
 };
 
-const Square = ({ letter }: { letter: Letter | undefined }) => {
+const Square = ({ letter, hideLetters }: { letter: Letter | undefined, hideLetters: boolean }) => {
     if (!letter) {
         letter = { key: '', state: 'white', isError: false };
     }
 
     let className = `square ${letter.state}`;
+
+    if (hideLetters) {
+        return <Paper elevation={1} className={className}></Paper>;
+    }
 
     if (letter.isError) {
         className = `${className} bad-word-anim`;
