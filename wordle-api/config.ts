@@ -25,7 +25,4 @@ export default {
         host: process.env.CLIENT_HOST || 'http://localhost:3000',
         port: parseInt(process.env.CLIENT_PORT) || 3000,
     },
-    websocket: {
-        port: parseInt(process.env.WEBSOCKET_PORT) || 80
-    }
 };

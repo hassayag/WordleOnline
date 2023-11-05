@@ -1,10 +1,10 @@
+import { Server } from 'https';
 import WebSocket from 'ws';
-import Config from '../../config'
 import { Game } from '../api/game/types';
 import { Room } from './room';
 
-export const initWsServer = () => {
-    const wss = new WebSocket.Server({ port: Config.websocket.port });
+export const initWsServer = (server: Server) => {
+    const wss = new WebSocket.Server({ server });
 
     const rooms = new Map<Game['uuid'], Room>()
     wss.on('connection', (socket, request) => {
@@ -17,8 +17,6 @@ export const initWsServer = () => {
 
         room.addPlayer(sessionToken, socket)
     })
-
-    console.info(`Websocket Server listening on port ${Config.websocket.port}`)
 }
 
 /** 

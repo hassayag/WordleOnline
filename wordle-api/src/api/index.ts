@@ -1,6 +1,4 @@
 import cookieParser from 'cookie-parser';
-import fs from 'fs'
-import https from 'https'
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
@@ -55,16 +53,5 @@ export const initApp = () => {
         }
     });
 
-    // Create an HTTPS server with a self-signed certificate
-    const options = {
-        key: fs.readFileSync('./local/ssl/key.pem'),     // Path to your private key file
-        cert: fs.readFileSync('./local/ssl/cert.pem'),    // Path to your certificate file
-    };
-    
-    const server = https.createServer(options, app);
-    
-    server.listen(Config.server.port, () => {
-        console.info(`Wordle API listening on port ${Config.server.port}`);
-        console.info(`CORS will only accept requests from ${Config.client.host}`);
-    });
+    return app
 }

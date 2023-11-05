@@ -56,7 +56,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     },[sendJsonMessage])
 
     const handleMessage = useCallback(async (msg: MessageEvent) => {
-        console.debug('===', msg)
         const response = JSON.parse(msg.data) as SocketResponse
         if (response.event === 'start_game') {
             await refresh()
