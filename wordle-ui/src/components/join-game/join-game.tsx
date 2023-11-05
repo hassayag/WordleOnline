@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
+import { useGameCookies } from '@/hooks/useGameCookies';
 
 const JoinGame = () => {
     const navigate = useNavigate();
@@ -14,20 +14,20 @@ const JoinGame = () => {
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState(queryUuid || '');
-    const [cookies, setCookie] = useCookies(['session', 'game']);
+    const {sessionCookie,setGameCookie,setSessionCookie}= useGameCookies();
     const [joinError, setJoinError] = useState<string>('');
 
     const joinGame = async () => {
         let session;
 
-        if (!cookies.session || cookies.session === 'undefined') {
-            session = await SessionService.createSession(name);
-            setCookie('session', session.session_token, { path: '/' });
+        if (!sessionCookie || sessionCookie === 'undefined') {
+            session = await SessionService.createSession(gameId);
+            setSessionCookie(session.session_token);
         }
 
-        GameService.joinGame(gameId, name)
+        GameService.joinGame(gameId, name, sessionCookie)
             .then(() => {
-                setCookie('game', gameId, { path: '/' })
+                setGameCookie(gameId)
                 navigate(`/game/${gameId}`)
             })
             .catch((err: any) => setJoinError(err?.message));

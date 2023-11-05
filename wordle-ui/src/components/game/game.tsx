@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { Box, Container, Slide } from '@mui/material';
 
 import Wordle from './wordle/wordle';
@@ -12,9 +11,9 @@ import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config';
 import './game.scss';
 import { Game, Letter } from './types';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
-import { PlayerInfo } from './player-info/player-info';
+import { useGameCookies } from '@/hooks/useGameCookies';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 // using readyState enum
 const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
@@ -23,7 +22,6 @@ const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> 
     [ReadyState.CONNECTING]: 'secondary',
     [ReadyState.OPEN]: 'primary',
     [ReadyState.UNINSTANTIATED]: 'error', 
-
 }
 
 interface SocketResponse {
@@ -35,16 +33,22 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const [cookies, setCookie] = useCookies(['session', 'game']);
+    const {gameCookie, sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendJsonMessage, readyState } = useWebSocket('ws://localhost:8081', {
-        onMessage: (msg) => handleMessage(msg)
+    // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
+
+    const {sendJsonMessage, readyState} = useWebSocket(config.socketUrl+`/?session=${sessionCookie}&game=${gameCookie}`, {
+        onMessage: (msg) => handleMessage(msg),
     });
 
     const refresh = useCallback(async () => {
-        const gameObj = await GameService.getGame(uuid);
+        const gameObj = await GameService.getGame(uuid, sessionCookie);
         setGame(gameObj);
-    }, [uuid])
+    }, [sessionCookie, uuid])
+    
+    const startGame = useCallback(async () => {
+        sendJsonMessage({event: 'start_game'})
+    }, [sendJsonMessage])
 
     const sendGuess = useCallback((guess: {row: number, word: Letter[]}) => {
         sendJsonMessage({event: 'send_word', data: guess})
@@ -60,9 +64,20 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         }
     }, [refresh])
 
-    const startGame = useCallback(async () => {
-        sendJsonMessage({event: 'start_game'})
-    }, [sendJsonMessage])
+    // useEffect(() => {
+    //     if (webSocket) {
+    //         console.log('LISTENING')
+    //         webSocket.onmessage = (msg) => console.info('MESSAGE', msg)
+    //         webSocket.onopen = () => console.info('SOCKET OPEN')
+    //         webSocket.onclose = () => console.info('SOCKET CLOSED')
+    //         webSocket.onerror = (err) => console.info('SOCKET ERROR -', err)
+
+    //         return () => {
+    //             webSocket.onmessage = null;
+    //         };
+    //     }
+    // }, [handleMessage, webSocket])
+
 
     useEffect(() => {
         // Get a random goal word
@@ -74,20 +89,17 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const gameObj = await GameService.getGame(uuid);
+                const gameObj = await GameService.getGame(uuid, sessionCookie);
 
                 setGame(gameObj);
                 setPlayerIsValid(true);
-                setCookie('game', gameObj.uuid, { path: '/' })
+                setGameCookie(gameObj.uuid)
 
                 let session;
 
-                if (!cookies.session || cookies.session === 'undefined') {
-                    session = await SessionService.createSession(
-                        'Harry',
-                        gameObj.id
-                    );
-                    setCookie('session', session.session_token, { path: '/' });
+                if (!sessionCookie || sessionCookie === 'undefined') {
+                    session = await SessionService.createSession(gameObj.uuid);
+                    setSessionCookie(session.session_token);
                 }
             } catch (err) {
                 setPlayerIsValid(false);
@@ -95,7 +107,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
             }
         }
         fetchData();
-    }, [cookies, navigate, setCookie, uuid]);
+    }, [navigate, sessionCookie, uuid]);
 
     // player has not passed validation, so navigate to hom
     if (playerIsValid === false) {

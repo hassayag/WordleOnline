@@ -1,44 +1,39 @@
-import { Game, GameStatus, PlayerState } from '@/components/game/types';
+import { Game, GameStatus } from '@/components/game/types';
 import Service from './service';
+import { Player } from 'tone';
 
 class GameService extends Service {
     protected baseUrl = '/game/';
 
-    public async getGames() {
-        return this.get<{ uuids: string[] }>('uuids');
+    public async getGames(sessionToken?: string) {
+        return this.get<{ uuids: string[] }>('uuids', sessionToken);
     }
 
-    public async getGame(uuid: string) {
-        return this.get<Game>(uuid);
+    public async getGame(uuid: string, sessionToken: string) {
+        return this.get<Game>(uuid, sessionToken);
     }
 
-    public async createGame(hostName: string) {
+    public async createGame(hostName: string, sessionToken: string) {
         const payload = {
             name: hostName,
             type: 'standard',
         };
 
-        return this.post<Game>('', payload);
+        return this.post<Game>('', payload, sessionToken);
     }
 
     public async updateGame(
-        uuid: string,
-        status: GameStatus,
-        playerState?: PlayerState
+        updateOptions: {uuid: string, status: GameStatus, playerState?: Player},
+        sessionToken: string,
     ) {
-        const payload = {
-            uuid,
-            game_status: status,
-            player_state: playerState,
-        };
-        return this.patch<Game>(uuid, payload);
+        return this.patch<Game>(updateOptions.uuid, updateOptions, sessionToken);
     }
 
-    public async joinGame(uuid: string, playerName: string) {
+    public async joinGame(uuid: string, playerName: string, sessionToken: string) {
         const payload = {
             name: playerName,
         };
-        return this.post<Game>(`${uuid}/join`, payload);
+        return this.post<Game>(`${uuid}/join`, payload, sessionToken);
     }
 }
 

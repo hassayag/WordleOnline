@@ -7,9 +7,9 @@ const config = {
         port,
     },
     feature_flags: {
-        synth: process.env.FEATURE_FLAG_SYNTH || false,
+        synth: process.env.REACT_APP_FEATURE_FLAG_SYNTH || false,
     },
-    socketUrl: process.env.SOCKET_HOST || 'wss://localhost:8081/'
+    socketUrl: process.env.REACT_APP_SOCKET_HOST || 'wss://localhost:8080'
 };
 
 export default config;

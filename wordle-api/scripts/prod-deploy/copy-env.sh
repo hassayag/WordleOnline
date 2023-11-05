@@ -1,0 +1,1 @@
+scp -i "./ssh-key.pem" ../../.env.production ec2-user@$WORDLE_API_EC2_URL:~/WordleOnline/wordle-api/.env

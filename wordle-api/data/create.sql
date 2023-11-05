@@ -12,8 +12,7 @@ DROP TABLE IF EXISTS session;
 
 CREATE TABLE session (
     id SERIAL PRIMARY KEY,
-    name character varying(255),
     session_token character varying(255),
-    game_id integer,
+    game_uuid character varying(255),
     expires_at TIMESTAMP
 );

@@ -4,13 +4,14 @@ import { BadRequestError, NotFoundError } from '../error';
 import { Game, Letter, UpdateGameReq } from '../api/game/types';
 import { findAllInds } from '../utils/array-utils';
 
-export class WordService {
+export class GameService {
     static async getGame(uuid: string, sessionToken: string) {
         const game: Game = await db.get(uuid);
 
         const playerStateIndex = findStateIndex(game, sessionToken);
         if (playerStateIndex === -1) {
-            throw new NotFoundError('Game not found');
+            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            throw new NotFoundError(`Game uuid ${uuid} not found`);
         }
 
         return game;
@@ -31,7 +32,8 @@ export class WordService {
 
         const playerStateIndex = findStateIndex(game, sessionToken);
         if (playerStateIndex === -1 && game.game_status !== 'lobby') {
-            throw new BadRequestError('Game not found');
+            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            throw new BadRequestError(`Game uuid ${uuid} not found`);
         }
         if (playerState) {
             game.state[playerStateIndex] = playerState;
@@ -50,7 +52,13 @@ export class WordService {
         sessionToken: string
     ) {
         const game = await this.getGame(uuid, sessionToken);
+
         const playerStateIndex = findStateIndex(game, sessionToken);
+        if (playerStateIndex === -1 && game.game_status !== 'lobby') {
+            console.info(`[game] User does not have access to game uuid ${uuid}`)
+            throw new BadRequestError(`Game uuid ${uuid} not found`);
+        }
+        
         const playerState = game.state[playerStateIndex];
 
         const { goalWord, letterStates, board } = playerState;
@@ -112,7 +120,7 @@ export class WordService {
         }
 
         // send request to update db
-        await WordService.updateGame(
+        await GameService.updateGame(
             {
                 uuid: game.uuid,
                 player_state: {

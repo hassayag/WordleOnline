@@ -1,6 +1,6 @@
 import { Game, Letter } from '../api/game/types';
 import WebSocket from 'ws';
-import { WordService } from '../services/game';
+import { GameService } from '../services/game';
 
 const EVENT_LIST = ['test', 'send_word', 'start_game'] as const;
 type Event = (typeof EVENT_LIST)[number];
@@ -25,7 +25,7 @@ export class Room {
 
     addPlayer(sessionToken: string, socket: WebSocket) {
         console.info(
-            `Added player ${sessionToken.slice(0, 4)} to game ${this.roomId}`
+            `${new Date().toISOString()} Added player ${sessionToken.slice(0, 4)} to game ${this.roomId}`
         );
 
         socket.on('message', (msg) => {
@@ -42,41 +42,48 @@ export class Room {
 
     private removePlayer(sessionToken: string) {
         console.info(
-            `Removed player ${sessionToken.slice(0, 4)} from game ${
+            `${new Date().toISOString()} Removed player ${sessionToken.slice(0, 4)} from game ${
                 this.roomId
             }`
         );
         this.clients.delete(sessionToken);
     }
 
-    private handleMessage(msg: WebSocket.RawData, sessionToken: string) {
-        const { event, data } = JSON.parse(msg.toString());
-        if (!this.eventIsValid(event)) {
-            console.warn(
-                `[room:${this.roomId}] Received invalid event ${event}`
+    private async handleMessage(msg: WebSocket.RawData, sessionToken: string) {
+        try {
+            const { event, data } = JSON.parse(msg.toString());
+            if (!this.eventIsValid(event)) {
+                console.warn(
+                    `${new Date().toISOString()} [room:${this.roomId}] Received invalid event ${event}`
+                );
+                return;
+            }
+    
+            console.debug(
+                `${new Date().toISOString()} [room:${this.roomId}] Received event ${event} with data ${data}`
             );
-            return;
+    
+            let responseData;
+            switch (event) {
+                case 'send_word':
+                    responseData = await this.handleSendWord(data, sessionToken);
+                    break;
+                case 'start_game':
+                    responseData = await this.handleStartGame(sessionToken);
+                    break;
+            }
+    
+            return {event, data: responseData}
         }
-
-        console.debug(
-            `[room:${this.roomId}] Received event ${event} with data ${data}`
-        );
-
-        let responseData;
-        switch (event) {
-            case 'send_word':
-                responseData = this.handleSendWord(data, sessionToken);
-                break;
-            case 'start_game':
-                responseData = this.handleStartGame(sessionToken);
-                break;
+        catch (err) {
+            console.error(
+                `${new Date().toISOString()} [room:${this.roomId}] Error occurred - ${err?.message}`
+            )
         }
-
-        return {event, data: responseData}
     }
 
     private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {
-        await WordService.postGuess(this.gameUuid, guess, sessionToken)
+        await GameService.postGuess(this.gameUuid, guess, sessionToken)
 
         const response: SocketResponse = {
             event: 'send_word'
@@ -89,7 +96,7 @@ export class Room {
     }
 
     private async handleStartGame(sessionToken: string) {
-        await WordService.updateGame({
+        await GameService.updateGame({
             uuid: this.gameUuid,
             game_status: 'in_progress',
             player_state: null

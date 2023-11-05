@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
 import SessionService from '@/services/session-service';
+import { useGameCookies } from '@/hooks/useGameCookies';
 
 const CreateGame = ({
     gameUuids,
@@ -16,22 +16,22 @@ const CreateGame = ({
     const navigate = useNavigate();
 
     const [name, setName] = useState<string>('');
-    const [gameUuid, setGameUuid] = useState<string>('');
-    const [cookies, setCookie] = useCookies(['session', 'game']);
+    const [gameId, setGameId] = useState<string>('');
+    const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [createError, setCreateError] = useState<string>('');
 
     const _initGame = async () => {
         let session;
 
-        if (!cookies.session || cookies.session === 'undefined') {
-            session = await SessionService.createSession(name);
-            setCookie('session', session.session_token, { path: '/' });
+        if (!sessionCookie|| sessionCookie === 'undefined') {
+            session = await SessionService.createSession(gameId);
+            setSessionCookie(session.session_token);
         }
 
-        GameService.createGame(name)
+        GameService.createGame(name, sessionCookie)
             .then((response) => {
-                setGameUuid(response.uuid)
-                setCookie('game', response.uuid, { path: '/' })
+                setGameId(response.uuid)
+                setGameCookie(response.uuid)
             })
             .catch((err) => setCreateError(err?.message));
     };
@@ -41,13 +41,13 @@ const CreateGame = ({
     };
 
     useEffect(() => {
-        if (gameUuid) {
+        if (gameId) {
             // update game ids so Home component can rerender with the new game route
-            setGameUuids([...gameUuids, gameUuid]);
+            setGameUuids([...gameUuids, gameId]);
 
-            navigate(`/game/${gameUuid}`);
+            navigate(`/game/${gameId}`);
         }
-    }, [setGameUuids, gameUuid, navigate, gameUuids]);
+    }, [setGameUuids, gameId, navigate, gameUuids]);
 
     return (
         <main>
