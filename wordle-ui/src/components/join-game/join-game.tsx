@@ -25,7 +25,7 @@ const JoinGame = () => {
             setSessionCookie(session.session_token);
         }
 
-        GameService.joinGame(gameId, name)
+        GameService.joinGame(gameId, name, sessionCookie)
             .then(() => {
                 setGameCookie(gameId)
                 navigate(`/game/${gameId}`)

@@ -3,9 +3,9 @@ import config from '@/config/config';
 export default abstract class Service {
     protected abstract baseUrl: string;
 
-    protected async get<T>(url: string, useCreds = true, sessionToken?: string): Promise<T> {
+    protected async get<T>(url: string, sessionToken?: string): Promise<T> {
         let request: Request;
-        if (useCreds) {
+        if (sessionToken) {
             request = new Request(config.api.host + this.baseUrl + url, {
                 credentials: 'include',
                 headers: {
@@ -20,7 +20,7 @@ export default abstract class Service {
         return this.catchResponseError(response)
     }
 
-    protected async post<T>(url: string, payload: any, sessionToken?: string): Promise<T> {
+    protected async post<T>(url: string, payload: any, sessionToken: string): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
@@ -38,7 +38,7 @@ export default abstract class Service {
         return this.catchResponseError(response)
     }
 
-    protected async patch<T>(url: string, payload: any, sessionToken?: string): Promise<T> {
+    protected async patch<T>(url: string, payload: any, sessionToken: string): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });
@@ -56,7 +56,7 @@ export default abstract class Service {
         return this.catchResponseError(response)
     }
 
-    protected async delete<T = void>(url: string, sessionToken?: string): Promise<T> {
+    protected async delete<T = void>(url: string, sessionToken: string): Promise<T> {
         const request = new Request(config.api.host + this.baseUrl + url, {
             credentials: 'include',
         });

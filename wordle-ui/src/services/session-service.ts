@@ -11,25 +11,25 @@ class SessionService extends Service {
     baseUrl = '/session/';
 
     public async getSession(token: string) {
-        return this.get<Session>(token, false);
+        return this.get<Session>(token);
     }
 
     public async createSession(gameId: string) {
         const payload = {
             gameId,
         };
-        return this.post<Session>('', payload);
+        return this.post<Session>('', payload, '');
     }
 
     public async updateSession(sessionToken: string, gameId: number) {
         const payload = {
             gameId,
         };
-        return this.patch<Session>(sessionToken, payload);
+        return this.patch<Session>(sessionToken, payload, sessionToken);
     }
 
     public async deleteSession(token: string) {
-        return this.delete(token);
+        return this.delete(token, token);
     }
 }
 

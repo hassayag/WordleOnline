@@ -49,30 +49,37 @@ export class Room {
         this.clients.delete(sessionToken);
     }
 
-    private handleMessage(msg: WebSocket.RawData, sessionToken: string) {
-        const { event, data } = JSON.parse(msg.toString());
-        if (!this.eventIsValid(event)) {
-            console.warn(
-                `${new Date().toISOString()} [room:${this.roomId}] Received invalid event ${event}`
+    private async handleMessage(msg: WebSocket.RawData, sessionToken: string) {
+        try {
+            const { event, data } = JSON.parse(msg.toString());
+            if (!this.eventIsValid(event)) {
+                console.warn(
+                    `${new Date().toISOString()} [room:${this.roomId}] Received invalid event ${event}`
+                );
+                return;
+            }
+    
+            console.debug(
+                `${new Date().toISOString()} [room:${this.roomId}] Received event ${event} with data ${data}`
             );
-            return;
+    
+            let responseData;
+            switch (event) {
+                case 'send_word':
+                    responseData = await this.handleSendWord(data, sessionToken);
+                    break;
+                case 'start_game':
+                    responseData = await this.handleStartGame(sessionToken);
+                    break;
+            }
+    
+            return {event, data: responseData}
         }
-
-        console.debug(
-            `${new Date().toISOString()} [room:${this.roomId}] Received event ${event} with data ${data}`
-        );
-
-        let responseData;
-        switch (event) {
-            case 'send_word':
-                responseData = this.handleSendWord(data, sessionToken);
-                break;
-            case 'start_game':
-                responseData = this.handleStartGame(sessionToken);
-                break;
+        catch (err) {
+            console.error(
+                `${new Date().toISOString()} [room:${this.roomId}] Error occurred - ${err?.message}`
+            )
         }
-
-        return {event, data: responseData}
     }
 
     private async handleSendWord(guess: {row: number, word: Letter[]}, sessionToken: string) {

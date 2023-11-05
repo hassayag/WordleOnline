@@ -12,9 +12,9 @@ import config from '@/config/config';
 import './game.scss';
 import OppponentBoard from './opponent-board/opponent-board';
 import { Game, Letter } from './types';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 import { useGameCookies } from '@/hooks/useGameCookies';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 // using readyState enum
 const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> = {
@@ -23,7 +23,6 @@ const connectionColorMap: Record<ReadyState, 'primary' | 'secondary' | 'error'> 
     [ReadyState.CONNECTING]: 'secondary',
     [ReadyState.OPEN]: 'primary',
     [ReadyState.UNINSTANTIATED]: 'error', 
-
 }
 
 interface SocketResponse {
@@ -37,20 +36,27 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [game, setGame] = useState<Game | null>(null);
     const {gameCookie, sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
-    const { sendJsonMessage, readyState } = useWebSocket(config.socketUrl+`/?session=${sessionCookie}&game=${gameCookie}`, {
+    // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
+
+    const {sendJsonMessage, readyState} = useWebSocket(config.socketUrl+`/?session=${sessionCookie}&game=${gameCookie}`, {
         onMessage: (msg) => handleMessage(msg),
     });
 
     const refresh = useCallback(async () => {
-        const gameObj = await GameService.getGame(uuid);
+        const gameObj = await GameService.getGame(uuid, sessionCookie);
         setGame(gameObj);
-    }, [uuid])
+    }, [sessionCookie, uuid])
+    
+    const startGame = useCallback(async () => {
+        sendJsonMessage({event: 'start_game'})
+    }, [sendJsonMessage])
 
     const sendGuess = useCallback((guess: {row: number, word: Letter[]}) => {
         sendJsonMessage({event: 'send_word', data: guess})
     },[sendJsonMessage])
 
     const handleMessage = useCallback(async (msg: MessageEvent) => {
+        console.debug('===', msg)
         const response = JSON.parse(msg.data) as SocketResponse
         if (response.event === 'start_game') {
             await refresh()
@@ -60,9 +66,20 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         }
     }, [refresh])
 
-    const startGame = useCallback(async () => {
-        sendJsonMessage({event: 'start_game'})
-    }, [sendJsonMessage])
+    // useEffect(() => {
+    //     if (webSocket) {
+    //         console.log('LISTENING')
+    //         webSocket.onmessage = (msg) => console.info('MESSAGE', msg)
+    //         webSocket.onopen = () => console.info('SOCKET OPEN')
+    //         webSocket.onclose = () => console.info('SOCKET CLOSED')
+    //         webSocket.onerror = (err) => console.info('SOCKET ERROR -', err)
+
+    //         return () => {
+    //             webSocket.onmessage = null;
+    //         };
+    //     }
+    // }, [handleMessage, webSocket])
+
 
     useEffect(() => {
         // Get a random goal word
@@ -74,7 +91,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const gameObj = await GameService.getGame(uuid);
+                const gameObj = await GameService.getGame(uuid, sessionCookie);
 
                 setGame(gameObj);
                 setPlayerIsValid(true);

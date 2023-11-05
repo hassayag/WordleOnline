@@ -28,7 +28,7 @@ const CreateGame = ({
             setSessionCookie(session.session_token);
         }
 
-        GameService.createGame(name)
+        GameService.createGame(name, sessionCookie)
             .then((response) => {
                 setGameId(response.uuid)
                 setGameCookie(response.uuid)

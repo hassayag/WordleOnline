@@ -10,7 +10,7 @@ class GameDbUtils {
         );
 
         if (!rawGame?.rows?.length) {
-            throw new NotFoundError(`Game not found`);
+            throw new NotFoundError(`Game uuid ${uuid} not found`);
         }
 
         // get row and parse state to JSON
