@@ -6,11 +6,9 @@ import { PlayerState, Letter } from '../types';
 const Board = ({
     playerState,
     isOpponent,
-    hideLetters,
 }: {
     playerState: PlayerState;
     isOpponent: boolean;
-    hideLetters: boolean;
 }) => {
     const renderGrid = () => {
         return (
@@ -38,7 +36,8 @@ const Board = ({
     };
 
     const renderSquare = (letter: Letter) => {
-        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={hideLetters} />;
+        console.log(playerState.isWon)
+        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={isOpponent && playerState.isWon === null} />;
     };
 
     return <div>{renderGrid()}</div>;
