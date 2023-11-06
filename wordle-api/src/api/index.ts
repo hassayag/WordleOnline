@@ -17,15 +17,19 @@ export const initApp = () => {
             preflightContinue: false,
             optionsSuccessStatus: 204,
             credentials: true,
-            maxAge: 86400
+            maxAge: 86400,
         })
     );
     app.use(cookieParser());
 
     app.use((req: Request, res: Response, next: NextFunction) => {
-        console.info(`${new Date().toISOString()} [api] Received request: ${req.method} ${req.url}`)
-        next()
-    })
+        console.info(
+            `${new Date().toISOString()} [api] Received request: ${
+                req.method
+            } ${req.url}`
+        );
+        next();
+    });
 
     app.use('/game', game);
     app.use('/session', session);
@@ -36,22 +40,25 @@ export const initApp = () => {
         if (err?.statusCode) {
             if (err.statusCode >= 500) {
                 console.error(
-                    `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
-                );        
-            }
-            else {
+                    `${new Date().toISOString()} [api] ${err?.message} - ${
+                        err?.stack
+                    }`
+                );
+            } else {
                 console.info(
                     `${new Date().toISOString()} [api] ${err?.message}`
-                );        
+                );
             }
             res.status(err.statusCode).json({ message: err.message });
         } else {
             console.error(
-                `${new Date().toISOString()} [api] ${err?.message} - ${err?.stack}`
-            );    
+                `${new Date().toISOString()} [api] ${err?.message} - ${
+                    err?.stack
+                }`
+            );
             res.status(500).json({ message: 'Internal Server Error' });
         }
     });
 
-    return app
-}
+    return app;
+};

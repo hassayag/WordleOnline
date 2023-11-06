@@ -40,7 +40,7 @@ export interface CreateGameReq extends Request {
 }
 export interface UpdateGameReq extends Request {
     body: {
-        player_state: PlayerState|null;
+        player_state: PlayerState | null;
         game_status: GameStatus;
         uuid: string;
     };

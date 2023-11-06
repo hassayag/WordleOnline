@@ -2,14 +2,10 @@ import React from 'react';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { Game } from '../game/types';
 
-const Lobby = ({
-    game,
-    startGame,
-}: {
-    game: Game;
-    startGame: () => void;
-}) => {
-    const names = [game.myState, ...game.otherStates].map((item) => item.player.name);
+const Lobby = ({ game, startGame }: { game: Game; startGame: () => void }) => {
+    const names = [game.myState, ...game.otherStates].map(
+        (item) => item.player.name
+    );
 
     return (
         <main>
@@ -65,10 +61,7 @@ const Lobby = ({
                             Share this link to play with a friend - {game.uuid}
                         </Typography>
 
-                        <Button
-                            variant="contained"
-                            onClick={startGame}
-                        >
+                        <Button variant="contained" onClick={startGame}>
                             Start Game
                         </Button>
                     </Box>

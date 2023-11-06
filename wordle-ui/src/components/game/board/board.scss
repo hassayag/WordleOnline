@@ -1,17 +1,12 @@
-/* .word-grid {
+.row {
     display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    padding-top: 100px;
-    padding-left: 220px;
-} */
+    flex-wrap: nowrap;
+}
 
 .square {
     float: left;
     background: white;
-    border: 2px solid lightgray;
+    border: 1px solid lightgray;
 
     /* text */
     color: black;
@@ -26,8 +21,17 @@
     margin: 2.5px;
     padding: 0;
     text-align: center;
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
+}
+
+.small {
+    width: 45px;
+    height: 45px;
+}
+
+.square .text {
+    color: inherit
 }
 
 .square.green {
@@ -56,17 +60,17 @@
 
 .square.bad-word-anim {
     animation-name: bad-word;
-    animation-duration: 0.05s;
+    animation-duration: 0.3s;
 }
 
 @keyframes bad-word {
     0% {
-        background-color: white;
+        border-color: lightgray;
     }
     50% {
-        background-color: red;
+        border-color: #ff1744;
     }
     100% {
-        background-color: white;
+        border-color: lightgray;
     }
 }

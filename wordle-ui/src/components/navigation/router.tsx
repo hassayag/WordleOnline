@@ -30,23 +30,25 @@ const MyRouter = () => {
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>(
         {}
     );
-    const [componentMap, setComponentMap] = useState<Record<string, React.JSX.Element>>({
+    const [componentMap, setComponentMap] = useState<
+        Record<string, React.JSX.Element>
+    >({
         home: <Home />,
         create_game: (
             <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />
         ),
         join_game: <JoinGame />,
-    })
+    });
 
-    const {sessionCookie} = useGameCookies()
+    const { sessionCookie } = useGameCookies();
 
     useEffect(() => {
         GameService.getGames(sessionCookie)
-        .then((response) => {
-            setGameUuids(response.uuids);
-        })
-        .catch(err => console.error(err))
-    }, [])
+            .then((response) => {
+                setGameUuids(response.uuids);
+            })
+            .catch((err) => console.error(err));
+    }, []);
 
     useEffect(() => {
         const initDrawerLinks: Record<string, DrawerItem> = {
@@ -100,7 +102,7 @@ const MyRouter = () => {
             };
         });
 
-        setRoutes(routes => Object.assign(routes, gameRoutes));
+        setRoutes((routes) => Object.assign(routes, gameRoutes));
 
         setComponentMap({
             home: <Home />,
@@ -108,7 +110,7 @@ const MyRouter = () => {
                 <CreateGame gameUuids={gameUuids} setGameUuids={setGameUuids} />
             ),
             join_game: <JoinGame />,
-        })
+        });
     }, [gameUuids, routes]);
 
     if (!routes) {

@@ -29,7 +29,7 @@ export const createSession = async (req, res) => {
 
     await psql().query(
         'INSERT INTO session (session_token, game_uuid, expires_at) values ($1, $2, $3)',
-        [ sessionToken, gameId || null, expiresAt.toISOString()]
+        [sessionToken, gameId || null, expiresAt.toISOString()]
     );
 
     const session = await querySession(sessionToken);
@@ -42,11 +42,11 @@ export const createSession = async (req, res) => {
 };
 
 export const updateSession = async (req, res) => {
-    const sessionToken = req.params.token
+    const sessionToken = req.params.token;
     const session = await querySession(sessionToken);
     if (!session) {
         res.status(404).send('Session not found');
-        return
+        return;
     }
 
     const MILISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;

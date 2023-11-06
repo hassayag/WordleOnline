@@ -17,21 +17,21 @@ const CreateGame = ({
 
     const [name, setName] = useState<string>('');
     const [gameId, setGameId] = useState<string>('');
-    const {sessionCookie, setGameCookie, setSessionCookie} = useGameCookies();
+    const { sessionCookie, setGameCookie, setSessionCookie } = useGameCookies();
     const [createError, setCreateError] = useState<string>('');
 
     const _initGame = async () => {
         let session;
 
-        if (!sessionCookie|| sessionCookie === 'undefined') {
+        if (!sessionCookie || sessionCookie === 'undefined') {
             session = await SessionService.createSession(gameId);
             setSessionCookie(session.session_token);
         }
 
         GameService.createGame(name, sessionCookie)
             .then((response) => {
-                setGameId(response.uuid)
-                setGameCookie(response.uuid)
+                setGameId(response.uuid);
+                setGameCookie(response.uuid);
             })
             .catch((err) => setCreateError(err?.message));
     };

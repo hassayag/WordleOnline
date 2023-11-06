@@ -5,5 +5,6 @@ ssh -i "ssh-key.pem" ec2-user@$WORDLE_API_EC2_URL << EOF
     git pull
     npm ci
     npm run build
-    npm run start.prod &
+    nohup npm run start.prod > app.log 2>&1 &
+    disown
 EOF

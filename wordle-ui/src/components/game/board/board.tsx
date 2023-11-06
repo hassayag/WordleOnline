@@ -1,9 +1,17 @@
-import React from 'react';
-import { Paper } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Fade, Paper, Typography } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
-const Board = ({ state }: { state: PlayerState }) => {
+const Board = ({
+    playerState,
+    isOpponent,
+    hideLetters,
+}: {
+    playerState: PlayerState;
+    isOpponent: boolean;
+    hideLetters: boolean;
+}) => {
     const renderGrid = () => {
         return (
             <div>
@@ -19,37 +27,69 @@ const Board = ({ state }: { state: PlayerState }) => {
 
     const renderRow = (i: number) => {
         return (
-            <div>
-                {renderSquare(state.board[i][0])}
-                {renderSquare(state.board[i][1])}
-                {renderSquare(state.board[i][2])}
-                {renderSquare(state.board[i][3])}
-                {renderSquare(state.board[i][4])}
+            <div className="row">
+                {renderSquare(playerState.board[i][0])}
+                {renderSquare(playerState.board[i][1])}
+                {renderSquare(playerState.board[i][2])}
+                {renderSquare(playerState.board[i][3])}
+                {renderSquare(playerState.board[i][4])}
             </div>
         );
     };
 
     const renderSquare = (letter: Letter) => {
-        return <Square letter={letter} />;
+        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={hideLetters} />;
     };
 
-    return <div className="word-grid">{renderGrid()}</div>;
+    return <div>{renderGrid()}</div>;
 };
 
-const Square = ({ letter }: { letter: Letter | undefined }) => {
+const Square = ({
+    letter,
+    isOpponent,
+    hideLetters,
+}: {
+    letter: Letter | undefined;
+    isOpponent: boolean;
+    hideLetters: boolean;
+}) => {
+    const [previousLetter, setPreviousLetter] = useState<Letter>()
+    const [fadeInLetter, setFadeInLetter] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (!previousLetter?.key && letter?.key) {
+            setFadeInLetter(true)
+        }
+        if (previousLetter?.key && !letter?.key) {
+            setTimeout(() => setFadeInLetter(false), 200)
+        }
+        setPreviousLetter(letter)
+    }, [letter])
+
     if (!letter) {
         letter = { key: '', state: 'white', isError: false };
     }
 
     let className = `square ${letter.state}`;
+    if (isOpponent) {
+        className += ' small'
+    }
+
+    if (hideLetters) {
+        return <Paper elevation={1} className={className}></Paper>;
+    }
 
     if (letter.isError) {
-        className = `${className} bad-word-anim`;
+        className += ' bad-word-anim';
     }
 
     return (
         <Paper elevation={1} className={className}>
-            {letter.key.toUpperCase()}
+            <Fade in={fadeInLetter} timeout={200}>
+                <Typography fontSize={'26px'} className='text'>
+                    {letter.key.toUpperCase()}
+                </Typography>
+            </Fade>
         </Paper>
     );
 };

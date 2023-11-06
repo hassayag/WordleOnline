@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 import './keyboard.scss';
 import synthService from '@/services/synth-service';
@@ -94,7 +94,9 @@ const Key = ({ inputLetter, onPress, keyState }) => {
     return (
         <Paper key={inputLetter} elevation={1}>
             <button className={`key ${keyState}`} onClick={pressKey}>
-                {inputLetter.toUpperCase()}
+                <Typography className='text'>
+                    {inputLetter.toUpperCase()}
+                </Typography>
             </button>
         </Paper>
     );
