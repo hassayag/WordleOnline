@@ -12,7 +12,7 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
     const shadowColor = isOpponent ? '000000' : '#779f74';
     return (
         <Paper
-            elevation={10}
+            elevation={isOpponent ? 4: 10}
             sx={{   
                 border: isOpponent ? `none` : `3px solid ${shadowColor}a0;`,
                 boxShadow: `0px 6px 6px -3px ${shadowColor}33,0px 10px 14px 1px ${shadowColor}4e,0px 4px 18px 3px ${shadowColor}4e;`,

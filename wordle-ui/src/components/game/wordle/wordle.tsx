@@ -51,6 +51,8 @@ const Wordle = ({ game, setGame, validGuesses, sendGuess }: Props) => {
     const triggerError = useCallback(
         (rowInd: number) => {
             const newRows = Object.assign({}, game.myState.board);
+            // reset the isError state so the css is reset
+            newRows[rowInd].forEach((char) => (char.isError = false));
 
             newRows[rowInd].forEach((char) => (char.isError = true));
             setGame({ ...game, myState: { ...game.myState, board: newRows } });
@@ -62,7 +64,7 @@ const Wordle = ({ game, setGame, validGuesses, sendGuess }: Props) => {
                     ...game,
                     myState: { ...game.myState, board: newRows },
                 });
-            }, 50);
+            }, 300);
         },
         [game, setGame]
     );
