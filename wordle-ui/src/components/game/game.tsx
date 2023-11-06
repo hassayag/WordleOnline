@@ -15,7 +15,6 @@ import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar
 import { useGameCookies } from '@/hooks/useGameCookies';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { PlayerBoard } from './player-info/player-info';
-import { Keyboard } from './keyboard/keyboard';
 
 // using readyState enum
 const connectionColorMap: Record<
@@ -151,7 +150,11 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     }
 
     const opponentBoards = game.otherStates.map((state, index) => (
-        <PlayerBoard key={index} playerState={state} isOpponent={true} />
+        <Box sx={{
+            flexBasis: '50%'
+        }}>
+            <PlayerBoard key={index} playerState={state} isOpponent={true} />
+        </Box>
     ));
 
     return (
@@ -163,8 +166,8 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                     gap: '8px',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginLeft: 10,
-                    marginTop: 10,
+                    marginLeft: -27,
+                    marginTop: 0,
                 }}
             >
                 {connectionIcon}
@@ -176,6 +179,17 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                                 flexDirection: 'row',
                             }}
                         >
+                            <Box
+                                sx={{
+                                    marginLeft: -10,
+                                    marginRight: 10,
+                                    display: 'flex',
+                                    flexWrap: 'nowrap',
+                                    flexDirection: 'column'
+                                }}
+                            >
+                                {opponentBoards.slice(0,2)}
+                            </Box>
                             <Wordle
                                 validGuesses={validGuesses}
                                 game={game}
@@ -184,10 +198,13 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                             />
                             <Box
                                 sx={{
-                                    marginLeft: 20,
+                                    marginLeft: 10,
+                                    display: 'flex',
+                                    flexWrap: 'nowrap',
+                                    flexDirection: 'column'
                                 }}
                             >
-                                {opponentBoards}
+                                {opponentBoards.length > 2 && opponentBoards.slice(2,4)}
                             </Box>
                         </Box>
                     </Container>

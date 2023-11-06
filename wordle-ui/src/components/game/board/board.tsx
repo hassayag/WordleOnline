@@ -5,9 +5,11 @@ import { PlayerState, Letter } from '../types';
 
 const Board = ({
     playerState,
+    isOpponent,
     hideLetters,
 }: {
     playerState: PlayerState;
+    isOpponent: boolean;
     hideLetters: boolean;
 }) => {
     const renderGrid = () => {
@@ -36,7 +38,7 @@ const Board = ({
     };
 
     const renderSquare = (letter: Letter) => {
-        return <Square letter={letter} hideLetters={hideLetters} />;
+        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={hideLetters} />;
     };
 
     return <div>{renderGrid()}</div>;
@@ -44,9 +46,11 @@ const Board = ({
 
 const Square = ({
     letter,
+    isOpponent,
     hideLetters,
 }: {
     letter: Letter | undefined;
+    isOpponent: boolean;
     hideLetters: boolean;
 }) => {
     if (!letter) {
@@ -54,6 +58,9 @@ const Square = ({
     }
 
     let className = `square ${letter.state}`;
+    if (isOpponent) {
+        className += ' small'
+    }
 
     if (hideLetters) {
         return <Paper elevation={1} className={className}></Paper>;

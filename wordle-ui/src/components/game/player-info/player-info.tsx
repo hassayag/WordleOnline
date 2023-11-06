@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlayerState } from '../types';
 import { Board } from '../board/board';
-import { Box, Container, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 interface Props {
     playerState: PlayerState;
@@ -18,6 +18,8 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
                 paddingLeft: 5,
                 paddingRight: 5,
                 margin: 10,
+                marginBottom: 1,
+                marginTop: 5,
             }}
         >
             <Box
@@ -32,14 +34,14 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
             </Box>
             <Box
                 sx={{
-                    marginTop: 8,
+                    marginTop: 2,
                     display: 'flex',
                     gap: '8px',
                     flexDirection: 'column',
                     alignItems: 'center',
                 }}
             >
-                <Board playerState={playerState} hideLetters={isOpponent} />
+                <Board playerState={playerState} isOpponent={isOpponent} hideLetters={isOpponent} />
             </Box>
         </Paper>
     );

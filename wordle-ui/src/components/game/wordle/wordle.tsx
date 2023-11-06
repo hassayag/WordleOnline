@@ -1,6 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Paper } from '@mui/material';
-import { Board } from '../board/board';
 import { Keyboard } from '../keyboard/keyboard';
 import synthService from '@/services/synth-service';
 import config from '@/config/config';
@@ -150,17 +148,14 @@ const Wordle = ({ game, setGame, validGuesses, sendGuess }: Props) => {
 
     return (
         <>
-            <Box
-                sx={{
-                    marginLeft: 15,
-                }}
-            >
+            <Box>
                 <PlayerBoard playerState={game.myState} isOpponent={false} />
             </Box>
             <Box
                 sx={{
                     position: 'absolute',
                     bottom: 20,
+                    left: '35%',
                 }}
             >
                 <Keyboard
