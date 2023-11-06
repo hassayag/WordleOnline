@@ -157,7 +157,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     game.otherStates.forEach((state, index) => (
         opponentBoards[index] =
         <Box sx={{
-            flexBasis: '50%'
+            width: 485
         }}>
             <PlayerBoard key={index} playerState={state} isOpponent={true} />
         </Box>
