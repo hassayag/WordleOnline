@@ -149,7 +149,13 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         );
     }
 
-    const opponentBoards = game.otherStates.map((state, index) => (
+    const emptyBox = <Box sx={{
+        width: 485
+    }}/>
+
+    const opponentBoards = [emptyBox,emptyBox,emptyBox,emptyBox]
+    game.otherStates.forEach((state, index) => (
+        opponentBoards[index] =
         <Box sx={{
             flexBasis: '50%'
         }}>

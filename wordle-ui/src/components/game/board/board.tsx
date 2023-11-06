@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Fade, Paper, Typography } from '@mui/material';
+import { Fade, Paper, Typography } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
@@ -54,15 +54,14 @@ const Square = ({
     hideLetters: boolean;
 }) => {
     const [previousLetter, setPreviousLetter] = useState<Letter>()
-    const [fadeInLetter, setFadeInLetter] = useState<boolean>(true)
+    const [fadeInLetter, setFadeInLetter] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log(previousLetter?.key, letter?.key)
         if (!previousLetter?.key && letter?.key) {
             setFadeInLetter(true)
         }
         if (previousLetter?.key && !letter?.key) {
-            setFadeInLetter(false)
+            setTimeout(() => setFadeInLetter(false), 200)
         }
         setPreviousLetter(letter)
     }, [letter])
@@ -81,7 +80,7 @@ const Square = ({
     }
 
     if (letter.isError) {
-        className = `${className} bad-word-anim`;
+        className += ' bad-word-anim';
     }
 
     return (
