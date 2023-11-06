@@ -10,6 +10,7 @@ interface Props {
 
 const PlayerBoard = ({ playerState, isOpponent }: Props) => {
     const shadowColor = isOpponent ? '000000' : '#779f74';
+    const playerScore = '' // TODO
     return (
         <Paper
             elevation={isOpponent ? 4: 10}
@@ -27,13 +28,14 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
         >
             <Box
                 sx={{
+                    paddingLeft: 2,
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}
             >
                 <Typography>{playerState.player.name}</Typography>
-                <Typography>{12345}</Typography>
+                <Typography>{playerScore}</Typography>
             </Box>
             <Box
                 sx={{
