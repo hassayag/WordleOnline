@@ -59,8 +59,8 @@ const Square = ({
         if (!previousLetter?.key && letter?.key) {
             setFadeInLetter(true)
         }
-        if (previousLetter?.key && !letter?.key) {
-            setTimeout(() => setFadeInLetter(false), 200)
+        if (!letter?.key) {
+            setFadeInLetter(false)
         }
         setPreviousLetter(letter)
     }, [letter])
