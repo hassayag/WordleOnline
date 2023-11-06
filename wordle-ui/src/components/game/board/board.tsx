@@ -1,5 +1,5 @@
-import React from 'react';
-import { Paper } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Fade, Paper, Typography } from '@mui/material';
 import './board.scss';
 import { PlayerState, Letter } from '../types';
 
@@ -53,6 +53,20 @@ const Square = ({
     isOpponent: boolean;
     hideLetters: boolean;
 }) => {
+    const [previousLetter, setPreviousLetter] = useState<Letter>()
+    const [fadeInLetter, setFadeInLetter] = useState<boolean>(true)
+
+    useEffect(() => {
+        console.log(previousLetter?.key, letter?.key)
+        if (!previousLetter?.key && letter?.key) {
+            setFadeInLetter(true)
+        }
+        if (previousLetter?.key && !letter?.key) {
+            setFadeInLetter(false)
+        }
+        setPreviousLetter(letter)
+    }, [letter])
+
     if (!letter) {
         letter = { key: '', state: 'white', isError: false };
     }
@@ -72,7 +86,11 @@ const Square = ({
 
     return (
         <Paper elevation={1} className={className}>
-            {letter.key.toUpperCase()}
+            <Fade in={fadeInLetter} timeout={200} className={className}>
+                <Typography fontSize={'26px'}>
+                    {letter.key.toUpperCase()}
+                </Typography>
+            </Fade>
         </Paper>
     );
 };
