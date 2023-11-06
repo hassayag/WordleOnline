@@ -86,8 +86,8 @@ const Square = ({
 
     return (
         <Paper elevation={1} className={className}>
-            <Fade in={fadeInLetter} timeout={200} className={className}>
-                <Typography fontSize={'26px'}>
+            <Fade in={fadeInLetter} timeout={200}>
+                <Typography fontSize={'26px'} className='text'>
                     {letter.key.toUpperCase()}
                 </Typography>
             </Fade>
