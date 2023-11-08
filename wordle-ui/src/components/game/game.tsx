@@ -6,7 +6,6 @@ import Wordle from './wordle/wordle';
 import Lobby from '../lobby/lobby';
 import WordService from '@/services/word-service';
 import GameService from '@/services/game-service';
-import SessionService from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config';
 import './game.scss';
@@ -37,7 +36,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const { gameCookie, sessionCookie, setGameCookie, setSessionCookie } =
+    const { gameCookie, sessionCookie, setGameCookie } =
         useGameCookies();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
@@ -106,13 +105,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 setGame(gameObj);
                 setPlayerIsValid(true);
                 setGameCookie(gameObj.uuid);
-
-                let session;
-
-                if (!sessionCookie || sessionCookie === 'undefined') {
-                    session = await SessionService.createSession(gameObj.uuid);
-                    setSessionCookie(session.session_token);
-                }
             } catch (err) {
                 setPlayerIsValid(false);
                 navigate(`/game/join?uuid=${uuid}`);

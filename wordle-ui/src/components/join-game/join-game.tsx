@@ -3,28 +3,20 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
-import SessionService from '@/services/session-service';
 import { useGameCookies } from '@/hooks/useGameCookies';
 
 const JoinGame = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const query = new URLSearchParams(location.search);
-    const queryUuid = query.get('uuid'); // 'id' is the name of the query parameter
+    const queryUuid = query.get('uuid'); // 'uuid' is the name of the query parameter
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState(queryUuid || '');
-    const { sessionCookie, setGameCookie, setSessionCookie } = useGameCookies();
+    const { sessionCookie, setGameCookie } = useGameCookies();
     const [joinError, setJoinError] = useState<string>('');
 
     const joinGame = async () => {
-        let session;
-
-        if (!sessionCookie || sessionCookie === 'undefined') {
-            session = await SessionService.createSession(gameId);
-            setSessionCookie(session.session_token);
-        }
-
         GameService.joinGame(gameId, name, sessionCookie)
             .then(() => {
                 setGameCookie(gameId);

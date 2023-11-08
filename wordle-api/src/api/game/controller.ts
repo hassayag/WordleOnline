@@ -21,6 +21,9 @@ export const getUuids = async (req: Request, res: Response) => {
 
 export const getGame = async (req, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
 
     const game = await GameService.getGame(req.params.uuid, session);
 
@@ -30,7 +33,6 @@ export const getGame = async (req, res) => {
 
 export const createGame = async (req: CreateGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
-
     if (!session) {
         throw new BadRequestError('Session token not found');
     }
@@ -40,13 +42,14 @@ export const createGame = async (req: CreateGameReq, res) => {
     const uuid: string = v4(),
         game_status: GameStatus = 'lobby',
         state: PlayerState[] = [initialState(req.body.name, session, randWord)];
-
+    console.debug('---', state[0].player.sessionToken)
     const game = await db.create({
         uuid,
         game_status,
         type: req.body.type,
         state,
     });
+    console.debug('---', game.state[0].player.sessionToken)
 
     const returnedGame = formatReturnedGame(game, session);
     res.send(returnedGame);
@@ -54,6 +57,9 @@ export const createGame = async (req: CreateGameReq, res) => {
 
 export const updateGame = async (req: UpdateGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
 
     const newGame = await GameService.updateGame(req.body, session);
 
@@ -63,7 +69,10 @@ export const updateGame = async (req: UpdateGameReq, res) => {
 
 export const joinGame = async (req: JoinGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
-
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
+    
     const game = await db.get(req.params.uuid);
 
     const playerStateIndex = findStateIndex(game, session);
