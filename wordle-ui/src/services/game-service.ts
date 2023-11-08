@@ -47,13 +47,6 @@ class GameService extends Service {
         };
         return this.post<Game>(`${uuid}/join`, payload, sessionToken);
     }
-
-    public async restartGame(
-        uuid: string,
-        sessionToken: string
-    ) {
-        return this.post<Game>(`${uuid}/restart`, {}, sessionToken);
-    }
 }
 
 const service = new GameService();

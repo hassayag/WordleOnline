@@ -28,8 +28,8 @@ const connectionColorMap: Record<
 };
 
 interface SocketResponse {
-    event: 'start_game' | 'send_word';
-    data?: string;
+    event: 'start_game' | 'send_word' | 'restart_game';
+    data: string;
 }
 
 const GameComponent = ({ uuid, setGameUuids }: { uuid: string, setGameUuids: React.Dispatch<React.SetStateAction<string[]>>}) => {
@@ -58,15 +58,7 @@ const GameComponent = ({ uuid, setGameUuids }: { uuid: string, setGameUuids: Rea
     }, [sendJsonMessage]);
 
     const restartGame = () => {
-        if (!game) {
-            return
-        }
-        GameService.restartGame(game.uuid, sessionCookie)
-        .then((game) => {
-            setGameUuids((uuids) => [game.uuid, ...uuids])
-            navigate(`/game/${game.uuid}`)
-        })
-        .catch((err) => console.error(err))
+        sendJsonMessage({ event: 'restart_game'})
     }
 
     const sendGuess = useCallback(
@@ -79,10 +71,22 @@ const GameComponent = ({ uuid, setGameUuids }: { uuid: string, setGameUuids: Rea
     const handleMessage = useCallback(
         async (msg: MessageEvent) => {
             const response = JSON.parse(msg.data) as SocketResponse;
-            if (response.event === 'start_game') {
-                await refresh();
-            } else if (response.event === 'send_word') {
-                await refresh();
+
+            switch (response.event) {
+                case 'start_game':
+                    await refresh();
+                    break;
+                case 'send_word':
+                    await refresh();
+                    break
+                case 'restart_game':
+                    if (!response.data) {
+                        console.error(`Missing uuid in response for "restart_game" socket command`)
+                        return;
+                    }
+                    setGameUuids((uuids) => [response.data, ...uuids])
+                    navigate(`/game/${response.data}`)
+                    break;
             }
         },
         [refresh]

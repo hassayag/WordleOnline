@@ -100,26 +100,3 @@ export const joinGame = async (req: JoinGameReq, res) => {
         throw new BadRequestError('Game has already started');
     }
 };
-
-export const restartGame = async (req: RestartGameReq, res: Response) => {
-    const session = req.headers.authorization.replace('Bearer ', '');
-    if (!session) {
-        throw new BadRequestError('Session token not found');
-    }
-
-    const game = await GameService.getGame(req.params.uuid, session);
-    const goalWord = await randomWord()
-    const initialStates = game.state.map((playerState) => initialState(playerState.player.name, playerState.player.sessionToken, goalWord))
-    
-    // create a new game with all the same players
-    const createGame: Omit<Game, 'id'> = {
-        uuid: v4(),
-        game_status: 'in_progress',
-        type: game.type,
-        state: initialStates
-    }
-
-    const newGame = await db.create(createGame)
-    const returnedGame = formatReturnedGame(newGame, session);
-    res.send(returnedGame)
-}
