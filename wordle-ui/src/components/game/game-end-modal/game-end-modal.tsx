@@ -7,11 +7,13 @@ const GameEndModal = ({
     isOpen,
     goalWord,
     closeModal,
+    restartGame
 }: {
     isWon: boolean;
     isOpen: boolean;
     goalWord: string;
     closeModal: () => void;
+    restartGame: () => void
 }) => {
     return (
         <Modal
@@ -73,7 +75,7 @@ const GameEndModal = ({
                         }}
                         variant="contained"
                         color="primary"
-                        onClick={closeModal}
+                        onClick={restartGame}
                     >
                         Play Again
                     </Button>

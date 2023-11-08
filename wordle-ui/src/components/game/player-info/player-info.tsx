@@ -34,7 +34,7 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
                     justifyContent: 'space-between',
                 }}
             >
-                <Typography>{playerState.player.name}</Typography>
+                <Typography fontSize={isOpponent ? 15 : 23}>{playerState.player.name}</Typography>
                 <Typography>{playerScore}</Typography>
             </Box>
             <Box
@@ -46,7 +46,7 @@ const PlayerBoard = ({ playerState, isOpponent }: Props) => {
                     alignItems: 'center',
                 }}
             >
-                <Board playerState={playerState} isOpponent={isOpponent} hideLetters={isOpponent} />
+                <Board playerState={playerState} isOpponent={isOpponent} />
             </Box>
         </Paper>
     );

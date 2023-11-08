@@ -6,13 +6,12 @@ import Wordle from './wordle/wordle';
 import Lobby from '../lobby/lobby';
 import WordService from '@/services/word-service';
 import GameService from '@/services/game-service';
-import SessionService from '@/services/session-service';
 import SynthControl from '@/components/synth/synth-control';
 import config from '@/config/config';
 import './game.scss';
 import { Game, Letter } from './types';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
-import { useGameCookies } from '@/hooks/useGameCookies';
+import { useSession } from '@/hooks/useSession';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { PlayerBoard } from './player-info/player-info';
 
@@ -29,16 +28,16 @@ const connectionColorMap: Record<
 };
 
 interface SocketResponse {
-    event: 'start_game' | 'send_word';
-    data?: string;
+    event: 'start_game' | 'send_word' | 'restart_game';
+    data: string;
 }
 
-const GameComponent = ({ uuid }: { uuid: string }) => {
+const GameComponent = ({ uuid, setGameUuids }: { uuid: string, setGameUuids: React.Dispatch<React.SetStateAction<string[]>>}) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
-    const { gameCookie, sessionCookie, setGameCookie, setSessionCookie } =
-        useGameCookies();
+    const { gameCookie, sessionCookie, setGameCookie } =
+        useSession();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
 
@@ -58,6 +57,10 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
         sendJsonMessage({ event: 'start_game' });
     }, [sendJsonMessage]);
 
+    const restartGame = () => {
+        sendJsonMessage({ event: 'restart_game'})
+    }
+
     const sendGuess = useCallback(
         (guess: { row: number; word: Letter[] }) => {
             sendJsonMessage({ event: 'send_word', data: guess });
@@ -68,10 +71,22 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const handleMessage = useCallback(
         async (msg: MessageEvent) => {
             const response = JSON.parse(msg.data) as SocketResponse;
-            if (response.event === 'start_game') {
-                await refresh();
-            } else if (response.event === 'send_word') {
-                await refresh();
+
+            switch (response.event) {
+                case 'start_game':
+                    await refresh();
+                    break;
+                case 'send_word':
+                    await refresh();
+                    break
+                case 'restart_game':
+                    if (!response.data) {
+                        console.error(`Missing uuid in response for "restart_game" socket command`)
+                        return;
+                    }
+                    setGameUuids((uuids) => [response.data, ...uuids])
+                    navigate(`/game/${response.data}`)
+                    break;
             }
         },
         [refresh]
@@ -106,13 +121,6 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                 setGame(gameObj);
                 setPlayerIsValid(true);
                 setGameCookie(gameObj.uuid);
-
-                let session;
-
-                if (!sessionCookie || sessionCookie === 'undefined') {
-                    session = await SessionService.createSession(gameObj.uuid);
-                    setSessionCookie(session.session_token);
-                }
             } catch (err) {
                 setPlayerIsValid(false);
                 navigate(`/game/join?uuid=${uuid}`);
@@ -201,6 +209,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                                 game={game}
                                 setGame={setGame}
                                 sendGuess={sendGuess}
+                                restartGame={restartGame}
                             />
                             <Box
                                 sx={{

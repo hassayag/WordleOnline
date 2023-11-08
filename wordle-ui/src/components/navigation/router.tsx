@@ -11,7 +11,7 @@ import Game from '../game/game';
 import Home from '../home/home';
 import JoinGame from '../join-game/join-game';
 import Navbar from './navbar';
-import { useGameCookies } from '@/hooks/useGameCookies';
+import { useSession } from '@/hooks/useSession';
 
 interface RouteItem {
     path: string;
@@ -30,6 +30,7 @@ const MyRouter = () => {
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>(
         {}
     );
+
     const [componentMap, setComponentMap] = useState<
         Record<string, React.JSX.Element>
     >({
@@ -40,7 +41,7 @@ const MyRouter = () => {
         join_game: <JoinGame />,
     });
 
-    const { sessionCookie } = useGameCookies();
+    const { sessionCookie } = useSession();
 
     useEffect(() => {
         GameService.getGames(sessionCookie)
@@ -98,7 +99,7 @@ const MyRouter = () => {
         gameUuids.forEach((id) => {
             gameRoutes[`game_${id}`] = {
                 path: `/game/${id}`,
-                component: <Game uuid={id} />,
+                component: <Game uuid={id} setGameUuids={setGameUuids} />,
             };
         });
 

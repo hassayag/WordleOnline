@@ -2,7 +2,7 @@ import { Game, Letter } from '../api/game/types';
 import WebSocket from 'ws';
 import { GameService } from '../services/game';
 
-const EVENT_LIST = ['test', 'send_word', 'start_game'] as const;
+const EVENT_LIST = ['test', 'send_word', 'start_game', 'restart_game'] as const;
 type Event = (typeof EVENT_LIST)[number];
 
 interface SocketResponse {
@@ -82,6 +82,9 @@ export class Room {
                 case 'start_game':
                     responseData = await this.handleStartGame(sessionToken);
                     break;
+                case 'restart_game':
+                    responseData = await this.handleRestartGame(sessionToken);
+                    break;
             }
 
             return { event, data: responseData };
@@ -122,6 +125,20 @@ export class Room {
 
         const response: SocketResponse = {
             event: 'start_game',
+        };
+
+        // tell all the clients that the game has started
+        this.clients.forEach((client) => {
+            client.send(JSON.stringify(response));
+        });
+    }
+
+    private async handleRestartGame(sessionToken: string) {
+        const newGame = await GameService.restartGame(this.gameUuid, sessionToken);
+
+        const response: SocketResponse = {
+            event: 'restart_game',
+            data: newGame.uuid
         };
 
         // tell all the clients that the game has started

@@ -8,6 +8,7 @@ import {
     GameStatus,
     JoinGameReq,
     PlayerState,
+    RestartGameReq,
     UpdateGameReq,
 } from './types';
 import { BadRequestError } from '../../error';
@@ -21,6 +22,9 @@ export const getUuids = async (req: Request, res: Response) => {
 
 export const getGame = async (req, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
 
     const game = await GameService.getGame(req.params.uuid, session);
 
@@ -30,7 +34,6 @@ export const getGame = async (req, res) => {
 
 export const createGame = async (req: CreateGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
-
     if (!session) {
         throw new BadRequestError('Session token not found');
     }
@@ -41,7 +44,7 @@ export const createGame = async (req: CreateGameReq, res) => {
         game_status: GameStatus = 'lobby',
         state: PlayerState[] = [initialState(req.body.name, session, randWord)];
 
-    const game = await db.create({
+        const game = await db.create({
         uuid,
         game_status,
         type: req.body.type,
@@ -54,6 +57,9 @@ export const createGame = async (req: CreateGameReq, res) => {
 
 export const updateGame = async (req: UpdateGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
 
     const newGame = await GameService.updateGame(req.body, session);
 
@@ -63,7 +69,10 @@ export const updateGame = async (req: UpdateGameReq, res) => {
 
 export const joinGame = async (req: JoinGameReq, res) => {
     const session = req.headers.authorization.replace('Bearer ', '');
-
+    if (!session) {
+        throw new BadRequestError('Session token not found');
+    }
+    
     const game = await db.get(req.params.uuid);
 
     const playerStateIndex = findStateIndex(game, session);

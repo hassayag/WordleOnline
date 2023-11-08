@@ -1,8 +1,10 @@
-import { findStateIndex } from '../api/game/utils';
+import { v4 } from 'uuid';
+import { findStateIndex, initialState } from '../api/game/utils';
 import db from '../api/game/db-utils';
 import { BadRequestError, NotFoundError } from '../error';
 import { Game, Letter, UpdateGameReq } from '../api/game/types';
 import { findAllInds } from '../utils/array-utils';
+import { randomWord } from '../api/words/utils';
 
 export class GameService {
     static async getGame(uuid: string, sessionToken: string) {
@@ -140,5 +142,21 @@ export class GameService {
             },
             sessionToken
         );
+    }
+
+    static async restartGame(uuid: string, sessionToken: string) {
+        const game = await GameService.getGame(uuid, sessionToken);
+        const goalWord = await randomWord()
+        const initialStates = game.state.map((playerState) => initialState(playerState.player.name, playerState.player.sessionToken, goalWord))
+        
+        // create a new game with all the same players
+        const createGame: Omit<Game, 'id'> = {
+            uuid: v4(),
+            game_status: 'in_progress',
+            type: game.type,
+            state: initialStates
+        }
+    
+        return db.create(createGame)
     }
 }

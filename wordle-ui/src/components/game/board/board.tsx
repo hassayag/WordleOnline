@@ -6,11 +6,9 @@ import { PlayerState, Letter } from '../types';
 const Board = ({
     playerState,
     isOpponent,
-    hideLetters,
 }: {
     playerState: PlayerState;
     isOpponent: boolean;
-    hideLetters: boolean;
 }) => {
     const renderGrid = () => {
         return (
@@ -38,7 +36,8 @@ const Board = ({
     };
 
     const renderSquare = (letter: Letter) => {
-        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={hideLetters} />;
+        console.log(playerState.isWon)
+        return <Square letter={letter} isOpponent={isOpponent}  hideLetters={isOpponent && playerState.isWon === null} />;
     };
 
     return <div>{renderGrid()}</div>;
@@ -60,8 +59,8 @@ const Square = ({
         if (!previousLetter?.key && letter?.key) {
             setFadeInLetter(true)
         }
-        if (previousLetter?.key && !letter?.key) {
-            setTimeout(() => setFadeInLetter(false), 200)
+        if (!letter?.key) {
+            setFadeInLetter(false)
         }
         setPreviousLetter(letter)
     }, [letter])

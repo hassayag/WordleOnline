@@ -14,7 +14,7 @@ class SessionService extends Service {
         return this.get<Session>(token);
     }
 
-    public async createSession(gameId: string) {
+    public async createSession(gameId?: string) {
         const payload = {
             gameId,
         };
