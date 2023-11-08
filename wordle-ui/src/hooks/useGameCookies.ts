@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import SessionService from '@/services/session-service';
 
-export const useGameCookies = () => {
+export const useSession = () => {
     const [cookies, setCookie] = useCookies(['session', 'game']);
 
     useEffect(() => {

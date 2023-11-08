@@ -11,7 +11,7 @@ import config from '@/config/config';
 import './game.scss';
 import { Game, Letter } from './types';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
-import { useGameCookies } from '@/hooks/useGameCookies';
+import { useSession } from '@/hooks/useSession';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { PlayerBoard } from './player-info/player-info';
 
@@ -37,7 +37,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
     const { gameCookie, sessionCookie, setGameCookie } =
-        useGameCookies();
+        useSession();
     const [playerIsValid, setPlayerIsValid] = useState<boolean | null>(null);
     // const [webSocket, setWebSocket] = useState<WebSocket>(new WebSocket(`${config.socketUrl}/?session=${sessionCookie}&game=${gameCookie}`));
 

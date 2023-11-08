@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import GameService from '@/services/game-service';
-import { useGameCookies } from '@/hooks/useGameCookies';
+import { useSession } from '@/hooks/useSession';
 
 const JoinGame = () => {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ const JoinGame = () => {
 
     const [name, setName] = useState('');
     const [gameId, setGameId] = useState(queryUuid || '');
-    const { sessionCookie, setGameCookie } = useGameCookies();
+    const { sessionCookie, setGameCookie } = useSession();
     const [joinError, setJoinError] = useState<string>('');
 
     const joinGame = async () => {

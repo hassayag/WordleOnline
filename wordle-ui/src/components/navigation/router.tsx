@@ -11,7 +11,7 @@ import Game from '../game/game';
 import Home from '../home/home';
 import JoinGame from '../join-game/join-game';
 import Navbar from './navbar';
-import { useGameCookies } from '@/hooks/useGameCookies';
+import { useSession } from '@/hooks/useSession';
 
 interface RouteItem {
     path: string;
@@ -40,7 +40,7 @@ const MyRouter = () => {
         join_game: <JoinGame />,
     });
 
-    const { sessionCookie } = useGameCookies();
+    const { sessionCookie } = useSession();
 
     useEffect(() => {
         GameService.getGames(sessionCookie)
