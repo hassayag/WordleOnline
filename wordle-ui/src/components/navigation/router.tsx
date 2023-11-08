@@ -30,6 +30,7 @@ const MyRouter = () => {
     const [drawerLinks, setDrawerLinks] = useState<Record<string, DrawerItem>>(
         {}
     );
+
     const [componentMap, setComponentMap] = useState<
         Record<string, React.JSX.Element>
     >({
@@ -98,7 +99,7 @@ const MyRouter = () => {
         gameUuids.forEach((id) => {
             gameRoutes[`game_${id}`] = {
                 path: `/game/${id}`,
-                component: <Game uuid={id} />,
+                component: <Game uuid={id} setGameUuids={setGameUuids} />,
             };
         });
 

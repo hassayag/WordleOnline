@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Keyboard } from '../keyboard/keyboard';
 import synthService from '@/services/synth-service';
+import GameService from '@/services/game-service';
+
 import config from '@/config/config';
 
 import { Box } from '@mui/system';
@@ -8,15 +10,18 @@ import { Game, Letter } from '../types';
 import GameEndModal from '../game-end-modal/game-end-modal';
 import { parseRow } from './utils';
 import { PlayerBoard } from '../player-info/player-info';
+import { useSession } from '@/hooks/useSession';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     game: Game;
     setGame: React.Dispatch<Game>;
     validGuesses: string[];
     sendGuess: (guess: { row: number; word: Letter[] }) => void;
+    restartGame: () => void;
 }
 
-const Wordle = ({ game, setGame, validGuesses, sendGuess }: Props) => {
+const Wordle = ({ game, setGame, validGuesses, sendGuess, restartGame }: Props) => {
     const [rowInd, setRowInd] = useState<number>(0);
     const [endModalOpen, setEndModalOpen] = useState<boolean>(false);
 
@@ -170,6 +175,7 @@ const Wordle = ({ game, setGame, validGuesses, sendGuess }: Props) => {
                 isOpen={endModalOpen}
                 goalWord={game.myState.goalWord}
                 closeModal={() => setEndModalOpen(false)}
+                restartGame={restartGame}
             />
         </>
     );

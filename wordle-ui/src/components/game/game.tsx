@@ -32,7 +32,7 @@ interface SocketResponse {
     data?: string;
 }
 
-const GameComponent = ({ uuid }: { uuid: string }) => {
+const GameComponent = ({ uuid, setGameUuids }: { uuid: string, setGameUuids: React.Dispatch<React.SetStateAction<string[]>>}) => {
     const navigate = useNavigate();
     const [validGuesses, setValidGuesses] = useState<string[] | null>(null);
     const [game, setGame] = useState<Game | null>(null);
@@ -56,6 +56,18 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
     const startGame = useCallback(async () => {
         sendJsonMessage({ event: 'start_game' });
     }, [sendJsonMessage]);
+
+    const restartGame = () => {
+        if (!game) {
+            return
+        }
+        GameService.restartGame(game.uuid, sessionCookie)
+        .then((game) => {
+            setGameUuids((uuids) => [game.uuid, ...uuids])
+            navigate(`/game/${game.uuid}`)
+        })
+        .catch((err) => console.error(err))
+    }
 
     const sendGuess = useCallback(
         (guess: { row: number; word: Letter[] }) => {
@@ -193,6 +205,7 @@ const GameComponent = ({ uuid }: { uuid: string }) => {
                                 game={game}
                                 setGame={setGame}
                                 sendGuess={sendGuess}
+                                restartGame={restartGame}
                             />
                             <Box
                                 sx={{

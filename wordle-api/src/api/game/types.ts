@@ -47,8 +47,16 @@ export interface UpdateGameReq extends Request {
 }
 
 export interface JoinGameReq extends Request {
+    params: {
+        uuid: string
+    },
     body: {
-        uuid: string;
         name: string;
     };
+}
+
+export interface RestartGameReq extends Request {
+    params: {
+        uuid: string
+    }
 }
